@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Electronic_G5.Models.ProductOption>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Product.product_name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.product_option_name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.product_option_value)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.product_option_price)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Product.product_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.product_option_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.product_option_value)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.product_option_price)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.product_option_id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.product_option_id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.product_option_id })
+        </td>
+    </tr>
+}
+
+</table>

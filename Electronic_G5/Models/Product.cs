@@ -1,7 +1,8 @@
-namespace Electronic_G5.Models
+﻿namespace Electronic_G5.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
@@ -20,29 +21,38 @@ namespace Electronic_G5.Models
         [Key]
         public int product_id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Tên sản phẩm không được bỏ trống")]
         [StringLength(100)]
+        [DisplayName("Tên sản phẩm")]
         public string product_name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "SKU không được bỏ trống")]
         [StringLength(100)]
         public string SKU { get; set; }
 
         [Column(TypeName = "text")]
-        [Required]
+        [Required(ErrorMessage = "Ảnh sản phẩm không được bỏ trống")]
+        [DisplayName("Ảnh")]
         public string image_url { get; set; }
 
         [StringLength(100)]
+        [DisplayName("Mô tả")]
+
         public string description { get; set; }
+        [DisplayName("Số lượng")]
 
         public int stock { get; set; }
 
         public int category_id { get; set; }
 
         [Column(TypeName = "datetime2")]
+        [DisplayName("Ngày tạo mới")]
+
         public DateTime? created_at { get; set; }
 
         [Column(TypeName = "datetime2")]
+        [DisplayName("Ngày cập nhật")]
+
         public DateTime? updated_at { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

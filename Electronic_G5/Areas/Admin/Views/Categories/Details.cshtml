@@ -5,11 +5,8 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2>Details</h2>
-
 <div>
-    <h4>Category</h4>
-    <hr />
+    <h4>Chi tiết danh mục</h4>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Category1.category_name)
@@ -45,7 +42,9 @@
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.category_id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<div class="d-flex gap-3 mt-3">
+    @Html.ActionLink("Sửa", "Edit", new { id = Model.category_id }, new { @class = "btn btn-primary btn-sm", @style = "width: 100px" })
+    @Html.ActionLink("Quay lại", "Index", null, new { @class = "btn btn-sm btn-light", @style = "width: 160px" })
+
+</div>
+
