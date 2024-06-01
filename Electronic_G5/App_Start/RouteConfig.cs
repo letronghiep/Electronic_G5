@@ -18,6 +18,13 @@ namespace Electronic_G5
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+              name: "Admin",
+              url: "admin/{controller}/{action}/{id}",
+              defaults: new { controller = "AdminHome", action = "Index", id = UrlParameter.Optional },
+              namespaces: new[] { "Electronic_G5.Areas.Admin.Controllers" } // Định rõ namespace cho Controller bên ngoài Area
+          );
         }
     }
 }
