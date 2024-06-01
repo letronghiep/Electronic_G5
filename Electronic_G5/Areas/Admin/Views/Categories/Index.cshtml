@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Electronic_G5.Models.Category>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Danh mục sản phẩm</h2>
+
+@Html.ActionLink("Create New", "Create", null, new { @class = "text-bg-primary btn btn-outline-primary" })
+<div class="w-100 d-flex h-100 mx-auto">
+
+    <table class="table d-lg-table-cell table-bordered mx-auto my-5 d-block">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.parent_id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.category_name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.created_at)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.updated_at)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.parent_id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.category_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.created_at)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.updated_at)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.category_id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.category_id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.category_id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
