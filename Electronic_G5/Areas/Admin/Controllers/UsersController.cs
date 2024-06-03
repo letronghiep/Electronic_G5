@@ -127,5 +127,49 @@ namespace Electronic_G5.Areas.Admin.Controllers
             }
             base.Dispose(disposing);
         }
+
+        // GET: Users/Login
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        // POST: Users/Login
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(User model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password);
+                if (user != null)
+                {
+                    // Đăng nhập thành công, lưu thông tin người dùng vào session hoặc cookie
+                    // Session["user_id"] = user.user_id;
+                    Session["email"] = user.email;
+                    Session["password"] = user.password;
+
+                    // Chuyển hướng đến trang chính sau khi đăng nhập thành công
+                    return RedirectToAction("Index", "AdminHome");
+                }
+                else
+                {
+                    // Thông báo lỗi khi đăng nhập không thành công
+                    ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không chính xác!");
+                }
+            }
+
+            // Trả về view đăng nhập với model nếu có lỗi
+            return View(model);
+        }
+
+        // GET: Users/Logout
+        public ActionResult Logout()
+        {
+            // Xóa thông tin người dùng từ session hoặc cookie
+            Session.Clear();
+            // Chuyển hướng đến trang đăng nhập sau khi đăng xuất
+            return RedirectToAction("Login");
+        }
     }
 }

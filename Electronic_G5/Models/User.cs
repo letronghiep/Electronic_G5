@@ -1,4 +1,4 @@
-namespace Electronic_G5.Models
+﻿namespace Electronic_G5.Models
 {
     using System;
     using System.Collections.Generic;
@@ -50,6 +50,9 @@ namespace Electronic_G5.Models
 
         [Column(TypeName = "datetime2")]
         public DateTime? updated_at { get; set; }
+        // Thêm các thuộc tính mới
+        public string PasswordResetToken { get; set; }
+        public DateTime? TokenExpiration { get; set; }
 
         public int role_id { get; set; }
 
