@@ -13,7 +13,7 @@ namespace Electronic_G5.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202406031443077_AddResetPass"; }
+            get { return "202406031451044_AddResetPass"; }
         }
         
         string IMigrationMetadata.Source

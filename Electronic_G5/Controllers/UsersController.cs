@@ -151,7 +151,8 @@ namespace Electronic_G5.Controllers
                   // Session["user_id"] = user.user_id;
                     Session["email"] = user.email;
                     Session["password"] = user.password;
-
+                    // Lưu thông báo vào TempData
+                    TempData["SuccessMessage"] = "Bạn đã đăng nhập thành công.";
                     // Chuyển hướng đến trang chính sau khi đăng nhập thành công
                     return RedirectToAction("Index", "Home");
                 }
@@ -223,6 +224,7 @@ namespace Electronic_G5.Controllers
                 Session["email"] = newUser.email;
                 Session["password"] = newUser.password;
 
+                ViewBag.tb = "Đăng ký tài khoản thành công. Hãy đăng nhập vào tài khoản của bạn!";
                 // Chuyển hướng đến trang chính sau khi đăng ký thành công
                 return RedirectToAction("Login", "Users");
             }
@@ -270,7 +272,7 @@ namespace Electronic_G5.Controllers
 
             var smtp = new SmtpClient
             {
-                Host = "smtp.example.com", // Update with your SMTP server
+                Host = "smtp.gmail.com", // Update with your SMTP server
                 Port = 587,
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,

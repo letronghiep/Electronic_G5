@@ -49,16 +49,16 @@
                                                    id="exampleInputEmail" aria-describedby="emailHelp"
                                                    placeholder="Nhập email khôi phục...">
                                         </div>
-                                        <a href="login.html" class="btn btn-primary btn-user btn-block">
+                                        <a href="@Url.Action("Login","Users")" class="btn btn-primary btn-user btn-block">
                                             Lấy lại mật khẩu
                                         </a>
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="~/Views/Users/Register.cshtml">Tạo tài khoản!</a>
+                                        <a class="small" href="@Url.Action("Register","Users")>Tạo tài khoản!</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="~/Views/Users/Login.cshtml">Đã có tài khoản? Đăng nhập!!</a>
+                                        <a class="small" href="@Url.Action("Login","Users")>Đã có tài khoản? Đăng nhập!!</a>
                                     </div>
                                 </div>
                             </div>
