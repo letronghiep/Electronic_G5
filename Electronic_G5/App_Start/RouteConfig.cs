@@ -16,8 +16,9 @@ namespace Electronic_G5
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
-            );
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                namespaces: new[] { "Electronic_G5.Controllers" } // Định rõ namespace cho Controller trong không gian tên mặc định
+                );
 
             routes.MapRoute(
               name: "Admin",

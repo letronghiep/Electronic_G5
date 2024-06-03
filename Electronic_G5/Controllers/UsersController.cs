@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using Electronic_G5.Models;
@@ -150,9 +151,10 @@ namespace Electronic_G5.Controllers
                   // Session["user_id"] = user.user_id;
                     Session["email"] = user.email;
                     Session["password"] = user.password;
-
+                    // Lưu thông báo vào TempData
+                    TempData["SuccessMessage"] = "Bạn đã đăng nhập thành công.";
                     // Chuyển hướng đến trang chính sau khi đăng nhập thành công
-                    return RedirectToAction("Index", "AdminHome");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -194,13 +196,22 @@ namespace Electronic_G5.Controllers
                     ModelState.AddModelError("Email", "Email đã được sử dụng.");
                     return View(model);
                 }
-
+                //tìm role
+                var userRole = db.Roles.FirstOrDefault(r => r.role_name == "user");
+                /*if (userRole == null)
+                {
+                    // Nếu vai trò "user" không tồn tại, tạo mới vai trò này
+                    userRole = new Role { role_name = "user" };
+                    db.Roles.Add(userRole);
+                    db.SaveChanges();
+                }*/
                 // Tạo một đối tượng User mới từ dữ liệu đăng ký
                 var newUser = new User
                 {
                     full_name = model.full_name,
                     email = model.email,
                     password = model.password,
+                    role_id = userRole.role_id,
                     // Các thuộc tính khác nếu có
                 };
 
@@ -209,10 +220,11 @@ namespace Electronic_G5.Controllers
                 db.SaveChanges();
 
                 // Đăng nhập người dùng mới sau khi đăng ký thành công
-                //Session["UserId"] = newUser.UserId;
+                Session["user_id"] = newUser.user_id;
                 Session["email"] = newUser.email;
                 Session["password"] = newUser.password;
 
+                ViewBag.tb = "Đăng ký tài khoản thành công. Hãy đăng nhập vào tài khoản của bạn!";
                 // Chuyển hướng đến trang chính sau khi đăng ký thành công
                 return RedirectToAction("Login", "Users");
             }
@@ -220,9 +232,70 @@ namespace Electronic_G5.Controllers
             // Trả về view đăng ký với model nếu có lỗi
             return View(model);
         }
+
+        [HttpGet]
+        public ActionResult ForgotPass()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ForgotPass(string email)
+        {
+            var user = db.Users.FirstOrDefault(u => u.email == email);
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = "Không tìm thấy email!";
+                return View();
+            }
+
+            // Generate a reset token (you can use any method to generate a token)
+            var resetToken = Guid.NewGuid().ToString();
+            user.PasswordResetToken = resetToken;
+            user.TokenExpiration = DateTime.Now.AddHours(1); // Token valid for 1 hour
+            db.SaveChanges();
+
+            // Send reset email
+            SendResetEmail(user.email, resetToken);
+
+            ViewBag.Message = "Link lấy lại mật khẩu đã được gửi tới email của bạn!";
+            return View();
+        }
+
+        private void SendResetEmail(string email, string resetToken)
+        {
+            var resetUrl = Url.Action("ForgotPass", "Users", new { token = resetToken }, protocol: Request.Url.Scheme);
+            var fromAddress = new MailAddress("your-email@example.com", "Your App Name");
+            var toAddress = new MailAddress(email);
+            const string subject = "Password Reset";
+            string body = $"Please reset your password by clicking <a href='{resetUrl}'>here</a>.";
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com", // Update with your SMTP server
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, "your-email-password")
+            };
+
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            })
+            {
+                smtp.Send(message);
+            }
+        }
+
     }
     //hehe
 }
+  
+
 
     
 
