@@ -186,19 +186,16 @@
         var imageUploadBox = document.getElementById('imageUploadBox');
         imageUploadBox.addEventListener('dragover', function (e) {
             e.preventDefault();
-            e.stopPropagation();
             this.classList.add('dragging');
         });
 
         imageUploadBox.addEventListener('dragleave', function (e) {
             e.preventDefault();
-            e.stopPropagation();
             this.classList.remove('dragging');
         });
 
         imageUploadBox.addEventListener('drop', function (e) {
             e.preventDefault();
-            e.stopPropagation();
             this.classList.remove('dragging');
 
             var file = e.dataTransfer.files[0];

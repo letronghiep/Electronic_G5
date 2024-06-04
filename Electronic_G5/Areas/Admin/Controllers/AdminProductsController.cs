@@ -133,13 +133,13 @@ namespace Electronic_G5.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         //[Bind(Include = "product_id,product_name,SKU,image_url,description,stock,category_id,created_at,updated_at,ProductOptions")]
         [HttpPost]
-        public ActionResult Create(ProductViewModel viewModel)
+        public ActionResult Create(ProductViewModel viewModel, HttpPostedFileBase file)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var file = Request.Files["ImageInput"];
+                    //var file = Request.Files["ImageInput"];
                     viewModel.Product.image_url = "";
                     // Kiểm tra xem có ảnh được tải lên hay không
                     if (file != null && file.ContentLength > 0)
@@ -147,7 +147,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
                         // Lấy tên tệp và đường dẫn để lưu trữ
                         var fileName = Path.GetFileName(file.FileName);
                         var path = Path.Combine(Server.MapPath("~/wwwroot/Images/"), fileName);
-
+                        System.Diagnostics.Debug.WriteLine("Path" + path);
                         // Lưu tệp vào thư mục wwwroot/Images
                         file.SaveAs(path);
 
