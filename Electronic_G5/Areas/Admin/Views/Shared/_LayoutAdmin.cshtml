@@ -9,9 +9,23 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-    <link href="~/wwwroot/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/assets/css/style.css?v=1.1")" rel="stylesheet" type="text/css" />
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <!-- Place the first <script> tag in your HTML's <head> -->
+    <script src="https://cdn.tiny.cloud/1/cke32k0wq2yl0yduvpskdsobi8z1wbl0j6ah9s4jky5sgmes/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+    <script>
+        tinymce.init({
+            selector: '#Product_description',
+            menubar: false,
+            plugins: 'lists link',
+            toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link',
+            toolbar_mode: 'floating',
+        });
+    </script>
 </head>
 <body>
     <div id="wrapper">
@@ -46,7 +60,7 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="@Url.Action("Index", "Categories")" data-toggle="collapse" data-target="#collapseTwo"
+                <a class="nav-link collapsed" href="@Url.Action("Index", "AdminCategories")" data-toggle="collapse" data-target="#collapseTwo"
                    aria-expanded="true" aria-controls="collapseTwo">
                     <span>Quản lý danh mục</span>
                 </a>
@@ -60,7 +74,7 @@
             </li>
             <!--Quản lý sản phẩm-->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="@Url.Action("Index", "Products")" data-toggle="collapse" data-target="#collapseTwo"
+                <a class="nav-link collapsed" href="@Url.Action("Index", "AdminProducts")" data-toggle="collapse" data-target="#collapseTwo"
                    aria-expanded="true" aria-controls="collapseTwo">
                     <span>Quản lý sản phẩm</span>
                 </a>
@@ -136,20 +150,8 @@
                 </a>
             </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
 
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
 
-            <!-- Sidebar Message -->
-            <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-            </div>
 
         </ul>
         <div class="container body-content h-100 w-100">

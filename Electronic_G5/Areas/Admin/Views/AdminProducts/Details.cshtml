@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Details";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var image = Model.image_url;
 }
 
 <h2>Details</h2>
@@ -36,7 +37,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.image_url)
+            <img width="120" height="120" src="@Url.Content(image)" />
         </dt>
 
         <dd>

@@ -18,6 +18,7 @@
         }
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int user_id { get; set; }
 
         [Required]
