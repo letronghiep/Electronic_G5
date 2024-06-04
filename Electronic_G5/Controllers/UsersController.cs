@@ -200,17 +200,8 @@ namespace Electronic_G5.Controllers
                     ModelState.AddModelError("Email", "Email đã được sử dụng.");
                     return View(model);
                 }
-                //tìm role
-                var userRole = db.Roles.FirstOrDefault(r => r.role_name == "user");
-                /*if (userRole == null)
-                {
-                    // Nếu vai trò "user" không tồn tại, tạo mới vai trò này
-                    userRole = new Role { role_name = "user" };
-                    db.Roles.Add(userRole);
-                    db.SaveChanges();
-                }*/
+
                 // Tạo một đối tượng User mới từ dữ liệu đăng ký
-<<<<<<< HEAD
                 User user = new User();
                 user.full_name = model.full_name;
                 user.email = model.email;
@@ -235,33 +226,16 @@ namespace Electronic_G5.Controllers
                 //};
                 user.created_at = DateTime.Now;
                 user.updated_at = DateTime.Now;
-=======
-                var newUser = new User
-                {
-                    full_name = model.full_name,
-                    email = model.email,
-                    password = model.password,
-                    role_id = userRole.role_id,
-                    // Các thuộc tính khác nếu có
-                };
->>>>>>> 5f404e694151abe96ddb1b85d44eac3892f08e24
 
                 // Thêm người dùng mới vào cơ sở dữ liệu
                 db.Users.Add(user);
                 db.SaveChanges();
 
                 // Đăng nhập người dùng mới sau khi đăng ký thành công
-<<<<<<< HEAD
                 //Session["UserId"] = newUser.UserId;
                 Session["email"] = user.email;
                 Session["password"] = user.password;
-=======
-                Session["user_id"] = newUser.user_id;
-                Session["email"] = newUser.email;
-                Session["password"] = newUser.password;
->>>>>>> 5f404e694151abe96ddb1b85d44eac3892f08e24
 
-                ViewBag.tb = "Đăng ký tài khoản thành công. Hãy đăng nhập vào tài khoản của bạn!";
                 // Chuyển hướng đến trang chính sau khi đăng ký thành công
                 return RedirectToAction("Login", "Users");
                 //}else
@@ -295,8 +269,9 @@ namespace Electronic_G5.Controllers
 
 
         }
+    }
 
-        [HttpGet]
+    [HttpGet]
         public ActionResult ForgotPass()
         {
             return View();
