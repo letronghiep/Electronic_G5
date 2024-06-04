@@ -269,9 +269,9 @@ namespace Electronic_G5.Controllers
 
 
         }
-    }
 
-    [HttpGet]
+
+        [HttpGet]
         public ActionResult ForgotPass()
         {
             return View();
@@ -332,7 +332,7 @@ namespace Electronic_G5.Controllers
     }
     //hehe
 }
-  
+
 
 
 
