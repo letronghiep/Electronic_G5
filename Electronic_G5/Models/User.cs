@@ -18,6 +18,7 @@ namespace Electronic_G5.Models
         }
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int user_id { get; set; }
 
         [Required]

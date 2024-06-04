@@ -10,112 +10,112 @@ using Electronic_G5.Models;
 
 namespace Electronic_G5.Areas.Admin.Controllers
 {
-    public class ImagesController : Controller
+    public class AdminProductOptionsController : Controller
     {
         private ElectronicDb db = new ElectronicDb();
 
-        // GET: Admin/Images
+        // GET: Admin/ProductOptions
         public ActionResult Index()
         {
-            var images = db.Images.Include(i => i.Product);
-            return View(images.ToList());
+            var productOptions = db.ProductOptions.Include(p => p.Product);
+            return View(productOptions.ToList());
         }
 
-        // GET: Admin/Images/Details/5
+        // GET: Admin/ProductOptions/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Image image = db.Images.Find(id);
-            if (image == null)
+            ProductOption productOption = db.ProductOptions.Find(id);
+            if (productOption == null)
             {
                 return HttpNotFound();
             }
-            return View(image);
+            return View(productOption);
         }
 
-        // GET: Admin/Images/Create
+        // GET: Admin/ProductOptions/Create
         public ActionResult Create()
         {
             ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name");
             return View();
         }
 
-        // POST: Admin/Images/Create
+        // POST: Admin/ProductOptions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "image_id,product_id,image_url")] Image image)
+        public ActionResult Create([Bind(Include = "product_option_id,product_id,product_option_name,product_option_value,product_option_price")] ProductOption productOption)
         {
             if (ModelState.IsValid)
             {
-                db.Images.Add(image);
+                db.ProductOptions.Add(productOption);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", image.product_id);
-            return View(image);
+            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", productOption.product_id);
+            return View(productOption);
         }
 
-        // GET: Admin/Images/Edit/5
+        // GET: Admin/ProductOptions/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Image image = db.Images.Find(id);
-            if (image == null)
+            ProductOption productOption = db.ProductOptions.Find(id);
+            if (productOption == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", image.product_id);
-            return View(image);
+            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", productOption.product_id);
+            return View(productOption);
         }
 
-        // POST: Admin/Images/Edit/5
+        // POST: Admin/ProductOptions/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "image_id,product_id,image_url")] Image image)
+        public ActionResult Edit([Bind(Include = "product_option_id,product_id,product_option_name,product_option_value,product_option_price")] ProductOption productOption)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(image).State = EntityState.Modified;
+                db.Entry(productOption).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", image.product_id);
-            return View(image);
+            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", productOption.product_id);
+            return View(productOption);
         }
 
-        // GET: Admin/Images/Delete/5
+        // GET: Admin/ProductOptions/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Image image = db.Images.Find(id);
-            if (image == null)
+            ProductOption productOption = db.ProductOptions.Find(id);
+            if (productOption == null)
             {
                 return HttpNotFound();
             }
-            return View(image);
+            return View(productOption);
         }
 
-        // POST: Admin/Images/Delete/5
+        // POST: Admin/ProductOptions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Image image = db.Images.Find(id);
-            db.Images.Remove(image);
+            ProductOption productOption = db.ProductOptions.Find(id);
+            db.ProductOptions.Remove(productOption);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

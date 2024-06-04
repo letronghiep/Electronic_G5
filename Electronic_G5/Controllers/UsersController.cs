@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Electronic_G5.Models;
 
 namespace Electronic_G5.Controllers
@@ -147,7 +149,7 @@ namespace Electronic_G5.Controllers
                 if (user != null)
                 {
                     // Đăng nhập thành công, lưu thông tin người dùng vào session hoặc cookie
-                  // Session["user_id"] = user.user_id;
+                    // Session["user_id"] = user.user_id;
                     Session["email"] = user.email;
                     Session["password"] = user.password;
 
@@ -183,11 +185,13 @@ namespace Electronic_G5.Controllers
 
         // POST: Users/Register
         [HttpPost]
-        [ValidateAntiForgeryToken]
+
         public ActionResult Register(User model)
         {
-            if (ModelState.IsValid)
+            try
             {
+                //if (ModelState.IsValid)
+                //{
                 // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu chưa
                 if (db.Users.Any(u => u.email == model.email))
                 {
@@ -196,33 +200,76 @@ namespace Electronic_G5.Controllers
                 }
 
                 // Tạo một đối tượng User mới từ dữ liệu đăng ký
-                var newUser = new User
-                {
-                    full_name = model.full_name,
-                    email = model.email,
-                    password = model.password,
-                    // Các thuộc tính khác nếu có
-                };
+                User user = new User();
+                user.full_name = model.full_name;
+                user.email = model.email;
+                user.password = model.password;
+                user.address = model.address;
+                user.phone_number = model.phone_number;
+                user.image = model.image;
+                user.role = model.role;
+                user.role_id = model.role_id;
+                //User newUser = new User
+                //{
+                //    full_name = 
+                //    email =,
+                //    password = ,
+                //    address = string.Empty,
+                //    phone_number = string.Empty,
+                //    image = string.Empty,
+                //    role = model.role,
+                //    role_id = model.role_id,
+                // Các thuộc tính khác nếu có
+
+                //};
+                user.created_at = DateTime.Now;
+                user.updated_at = DateTime.Now;
 
                 // Thêm người dùng mới vào cơ sở dữ liệu
-                db.Users.Add(newUser);
+                db.Users.Add(user);
                 db.SaveChanges();
 
                 // Đăng nhập người dùng mới sau khi đăng ký thành công
                 //Session["UserId"] = newUser.UserId;
-                Session["email"] = newUser.email;
-                Session["password"] = newUser.password;
+                Session["email"] = user.email;
+                Session["password"] = user.password;
 
                 // Chuyển hướng đến trang chính sau khi đăng ký thành công
                 return RedirectToAction("Login", "Users");
+                //}else
+                //{
+                //    ViewBag.error = "Loi xay ra";
+                //    return View(model);
+                //}
+
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
+                        System.Diagnostics.Debug.WriteLine($"{validationError.PropertyName}: {validationError.ErrorMessage}");
+
+                    }
+                }
+                ViewBag.error = "Có lỗi xác thực. Vui lòng kiểm tra lại thông tin.";
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                // Hiển thị lỗi chung
+                ViewBag.error = "Có lỗi xảy ra: " + ex.Message;
+                return View(model);
             }
 
-            // Trả về view đăng ký với model nếu có lỗi
-            return View(model);
+
+
         }
     }
     //hehe
 }
 
-    
+
 

@@ -248,7 +248,9 @@ textarea {
     font-size: inherit;
     line-height: inherit;
 }
-
+input, select, textarea {
+    max-width: unset !important;
+}
 button,
 input {
     overflow: visible;

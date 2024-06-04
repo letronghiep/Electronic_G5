@@ -10,116 +10,112 @@ using Electronic_G5.Models;
 
 namespace Electronic_G5.Areas.Admin.Controllers
 {
-    public class CartsController : Controller
+    public class AdminPaymentsController : Controller
     {
         private ElectronicDb db = new ElectronicDb();
 
-        // GET: Admin/Carts
+        // GET: Admin/Payments
         public ActionResult Index()
         {
-            var carts = db.Carts.Include(c => c.Product).Include(c => c.User);
-            return View(carts.ToList());
+            var payments = db.Payments.Include(p => p.User);
+            return View(payments.ToList());
         }
 
-        // GET: Admin/Carts/Details/5
+        // GET: Admin/Payments/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Cart cart = db.Carts.Find(id);
-            if (cart == null)
+            Payment payment = db.Payments.Find(id);
+            if (payment == null)
             {
                 return HttpNotFound();
             }
-            return View(cart);
+            return View(payment);
         }
 
-        // GET: Admin/Carts/Create
+        // GET: Admin/Payments/Create
         public ActionResult Create()
         {
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name");
             ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name");
             return View();
         }
 
-        // POST: Admin/Carts/Create
+        // POST: Admin/Payments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "cart_id,user_id,quantity,product_id")] Cart cart)
+        public ActionResult Create([Bind(Include = "payment_id,payment_date,payment_method,amount,user_id,created_at,updated_at")] Payment payment)
         {
             if (ModelState.IsValid)
             {
-                db.Carts.Add(cart);
+                db.Payments.Add(payment);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", cart.product_id);
-            ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name", cart.user_id);
-            return View(cart);
+            ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name", payment.user_id);
+            return View(payment);
         }
 
-        // GET: Admin/Carts/Edit/5
+        // GET: Admin/Payments/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Cart cart = db.Carts.Find(id);
-            if (cart == null)
+            Payment payment = db.Payments.Find(id);
+            if (payment == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", cart.product_id);
-            ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name", cart.user_id);
-            return View(cart);
+            ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name", payment.user_id);
+            return View(payment);
         }
 
-        // POST: Admin/Carts/Edit/5
+        // POST: Admin/Payments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "cart_id,user_id,quantity,product_id")] Cart cart)
+        public ActionResult Edit([Bind(Include = "payment_id,payment_date,payment_method,amount,user_id,created_at,updated_at")] Payment payment)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(cart).State = EntityState.Modified;
+                db.Entry(payment).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", cart.product_id);
-            ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name", cart.user_id);
-            return View(cart);
+            ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name", payment.user_id);
+            return View(payment);
         }
 
-        // GET: Admin/Carts/Delete/5
+        // GET: Admin/Payments/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Cart cart = db.Carts.Find(id);
-            if (cart == null)
+            Payment payment = db.Payments.Find(id);
+            if (payment == null)
             {
                 return HttpNotFound();
             }
-            return View(cart);
+            return View(payment);
         }
 
-        // POST: Admin/Carts/Delete/5
+        // POST: Admin/Payments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Cart cart = db.Carts.Find(id);
-            db.Carts.Remove(cart);
+            Payment payment = db.Payments.Find(id);
+            db.Payments.Remove(payment);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

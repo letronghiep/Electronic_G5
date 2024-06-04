@@ -10,116 +10,111 @@ using Electronic_G5.Models;
 
 namespace Electronic_G5.Areas.Admin.Controllers
 {
-    public class Order_ItemsController : Controller
+    public class AdminUsersController : Controller
     {
         private ElectronicDb db = new ElectronicDb();
 
-        // GET: Admin/Order_Items
+        // GET: Admin/Users
         public ActionResult Index()
         {
-            var order_Items = db.Order_Items.Include(o => o.Order).Include(o => o.Product);
-            return View(order_Items.ToList());
+            var users = db.Users.Include(u => u.Role1);
+            return View(users.ToList());
         }
-
-        // GET: Admin/Order_Items/Details/5
+        // GET: Admin/Users/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order_Items order_Items = db.Order_Items.Find(id);
-            if (order_Items == null)
+            User user = db.Users.Find(id);
+            if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(order_Items);
+            return View(user);
         }
 
-        // GET: Admin/Order_Items/Create
+        // GET: Admin/Users/Create
         public ActionResult Create()
         {
-            ViewBag.order_id = new SelectList(db.Orders, "order_id", "order_id");
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name");
+            ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_name");
             return View();
         }
 
-        // POST: Admin/Order_Items/Create
+        // POST: Admin/Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "order_item_id,order_id,quantity,price,product_id,created_at,updated_at")] Order_Items order_Items)
+        public ActionResult Create([Bind(Include = "user_id,full_name,email,password,address,phone_number,image,role,created_at,updated_at,role_id")] User user)
         {
             if (ModelState.IsValid)
             {
-                db.Order_Items.Add(order_Items);
+                db.Users.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.order_id = new SelectList(db.Orders, "order_id", "order_id", order_Items.order_id);
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", order_Items.product_id);
-            return View(order_Items);
+            ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_name", user.role_id);
+            return View(user);
         }
 
-        // GET: Admin/Order_Items/Edit/5
+        // GET: Admin/Users/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order_Items order_Items = db.Order_Items.Find(id);
-            if (order_Items == null)
+            User user = db.Users.Find(id);
+            if (user == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.order_id = new SelectList(db.Orders, "order_id", "order_id", order_Items.order_id);
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", order_Items.product_id);
-            return View(order_Items);
+            ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_name", user.role_id);
+            return View(user);
         }
 
-        // POST: Admin/Order_Items/Edit/5
+        // POST: Admin/Users/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "order_item_id,order_id,quantity,price,product_id,created_at,updated_at")] Order_Items order_Items)
+        public ActionResult Edit([Bind(Include = "user_id,full_name,email,password,address,phone_number,image,role,created_at,updated_at,role_id")] User user)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(order_Items).State = EntityState.Modified;
+                db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.order_id = new SelectList(db.Orders, "order_id", "order_id", order_Items.order_id);
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", order_Items.product_id);
-            return View(order_Items);
+            ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_name", user.role_id);
+            return View(user);
         }
 
-        // GET: Admin/Order_Items/Delete/5
+        // GET: Admin/Users/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order_Items order_Items = db.Order_Items.Find(id);
-            if (order_Items == null)
+            User user = db.Users.Find(id);
+            if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(order_Items);
+            return View(user);
         }
 
-        // POST: Admin/Order_Items/Delete/5
+        // POST: Admin/Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Order_Items order_Items = db.Order_Items.Find(id);
-            db.Order_Items.Remove(order_Items);
+            User user = db.Users.Find(id);
+            db.Users.Remove(user);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
