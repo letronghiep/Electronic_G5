@@ -281,7 +281,7 @@
     <Content Include="Areas\Admin\Views\Users\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Index.cshtml" />
-<<<<<<< HEAD
+
     <Content Include="Areas\Admin\Views\AdminOrders\Create.cshtml" />
     <Content Include="Areas\Admin\Views\AdminOrders\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\AdminOrders\Details.cshtml" />
@@ -290,16 +290,10 @@
     <Content Include="Areas\Admin\Views\Shared\_ProductOptionList.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_ImageList.cshtml" />
     <Content Include="wwwroot\Images\z4918593887110_1ef08e1661fdde167275504b7b67b0de.jpg" />
-=======
-    <Content Include="Areas\Admin\Views\Orders\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\Orders\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\Orders\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Orders\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\Orders\Index.cshtml" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Login.cshtml" />
->>>>>>> 5f404e694151abe96ddb1b85d44eac3892f08e24
+
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
