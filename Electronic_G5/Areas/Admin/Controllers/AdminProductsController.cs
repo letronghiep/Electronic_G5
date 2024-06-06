@@ -18,6 +18,7 @@ using PagedList;
 using Antlr.Runtime.Misc;
 using System.Data.Entity.Validation;
 using System.IO;
+using System.Data.Entity.Infrastructure;
 
 namespace Electronic_G5.Areas.Admin.Controllers
 {
@@ -127,32 +128,38 @@ namespace Electronic_G5.Areas.Admin.Controllers
             ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
             return View(viewModel);
         }
-
-        // POST: Admin/Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        //[Bind(Include = "product_id,product_name,SKU,image_url,description,stock,category_id,created_at,updated_at,ProductOptions")]
         [HttpPost]
-        public ActionResult Create(ProductViewModel viewModel, HttpPostedFileBase file)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(ProductViewModel viewModel)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    //var file = Request.Files["ImageInput"];
-                    viewModel.Product.image_url = "";
-                    // Kiểm tra xem có ảnh được tải lên hay không
-                    if (file != null && file.ContentLength > 0)
+                    System.Diagnostics.Debug.WriteLine(viewModel.Product.category_id);
+                    var existingCategory = db.Categories.FirstOrDefault(c => c.category_id == viewModel.Product.category_id);
+                    if (existingCategory == null)
                     {
-                        // Lấy tên tệp và đường dẫn để lưu trữ
-                        var fileName = Path.GetFileName(file.FileName);
-                        var path = Path.Combine(Server.MapPath("~/wwwroot/Images/"), fileName);
-                        System.Diagnostics.Debug.WriteLine("Path" + path);
-                        // Lưu tệp vào thư mục wwwroot/Images
-                        file.SaveAs(path);
+                        ModelState.AddModelError("Product.category_id", "Mã danh mục không hợp lệ. Vui lòng chọn một danh mục đã tồn tại.");
+                        ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                        return View(viewModel);
+                    }
+                    viewModel.Product.image_url = "";
 
+                    var imageInput = Request.Files["imageInput"];
+                    System.Diagnostics.Debug.WriteLine(imageInput);
+
+                    // Kiểm tra xem có ảnh được tải lên hay không
+                    if (imageInput != null && imageInput.ContentLength > 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine(imageInput);
+
+                        // Lấy tên tệp và đường dẫn để lưu trữ
+                        string filename = Path.GetFileName(imageInput.FileName);
+                        string path = Path.Combine(Server.MapPath("~/wwwroot/Images/"), filename);
+                        imageInput.SaveAs(path);
                         // Cập nhật thuộc tính image_url của sản phẩm
-                        viewModel.Product.image_url = fileName;
+                        viewModel.Product.image_url = filename;
                     }
 
                     // Cập nhật thời gian tạo và cập nhật của sản phẩm
@@ -168,6 +175,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
                         option.product_id = viewModel.Product.product_id;
                         db.ProductOptions.Add(option);
                     }
+                    System.Diagnostics.Debug.WriteLine(viewModel.Product.image_url);
 
                     // Lưu các hình ảnh khác của sản phẩm
                     foreach (var image in viewModel.Images)
@@ -179,10 +187,13 @@ namespace Electronic_G5.Areas.Admin.Controllers
                     // Lưu thay đổi vào cơ sở dữ liệu
                     db.SaveChanges();
 
-                    return Json(new { success = true, JsonRequestBehavior.AllowGet });
+                    return RedirectToAction("Index");
                 }
-
-                return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors) });
+                else
+                {
+                    ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                    return View(viewModel);
+                }
             }
             catch (DbEntityValidationException ex)
             {
@@ -193,15 +204,35 @@ namespace Electronic_G5.Areas.Admin.Controllers
                         System.Diagnostics.Debug.WriteLine($"Validation Error: {validationError.PropertyName} - {validationError.ErrorMessage}");
                     }
                 }
-                return Json(new { success = false, message = "Validation failed for one or more entities. See 'EntityValidationErrors' property for more details." });
+                ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                return View(viewModel);
+            }
+            catch (DbUpdateException ex)
+            {
+                // Xử lý lỗi
+                // Kiểm tra log lỗi để tìm hiểu thêm thông tin
+                if (ex.InnerException != null && ex.InnerException.InnerException != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Update Exception Error: {ex.InnerException.InnerException.Message}");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Update Exception Error: {ex.Message}");
+                }
+
+                ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                return View(viewModel);
             }
             catch (Exception ex)
             {
                 // Log lỗi nếu có
                 System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
-                return Json(new { success = false, message = ex.Message });
+                ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                return View(viewModel);
             }
         }
+
+
 
         //partial
         [HttpPost]
@@ -330,13 +361,23 @@ namespace Electronic_G5.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            var product = db.Products.Include(p => p.ProductOptions)
+                                     .Include(p => p.Images)
+                                     .FirstOrDefault(p => p.product_id == id);
             if (product == null)
             {
                 return HttpNotFound();
             }
+
+            var viewModel = new ProductViewModel
+            {
+                Product = product,
+                ProductOptions = product.ProductOptions.ToList(),
+                Images = product.Images.ToList()
+            };
+
             ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name", product.category_id);
-            return View(product);
+            return View(viewModel);
         }
 
         // POST: Admin/Products/Edit/5
@@ -344,17 +385,99 @@ namespace Electronic_G5.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "product_id,product_name,SKU,image_url,description,stock,category_id,created_at,updated_at")] Product product)
+        public ActionResult Edit(ProductViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(product).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    var existingCategory = db.Categories.FirstOrDefault(c => c.category_id == viewModel.Product.category_id);
+                    if (existingCategory == null)
+                    {
+                        ModelState.AddModelError("Product.category_id", "Mã danh mục không hợp lệ. Vui lòng chọn một danh mục đã tồn tại.");
+                        ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                        return View(viewModel);
+                    }
+
+                    var imageInput = Request.Files["imageInput"];
+                    if (imageInput != null && imageInput.ContentLength > 0)
+                    {
+                        string filename = Path.GetFileName(imageInput.FileName);
+                        string path = Path.Combine(Server.MapPath("~/wwwroot/Images/"), filename);
+                        imageInput.SaveAs(path);
+                        viewModel.Product.image_url = filename;
+                    }
+                    viewModel.Product.updated_at = DateTime.Now;
+
+                    System.Diagnostics.Debug.WriteLine("Product not ", viewModel.Product.image_url);
+                    var productToUpdate = db.Products.Include(p => p.ProductOptions)
+                                                     .Include(p => p.Images)
+                                                     .FirstOrDefault(p => p.product_id == viewModel.Product.product_id);
+
+                    if (productToUpdate == null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Product not found", productToUpdate);
+                    }
+
+                    db.Entry(productToUpdate).CurrentValues.SetValues(viewModel.Product);
+
+                    db.ProductOptions.RemoveRange(productToUpdate.ProductOptions);
+                    foreach (var option in viewModel.ProductOptions)
+                    {
+                        option.product_id = viewModel.Product.product_id;
+                        db.ProductOptions.Add(option);
+                    }
+
+                    db.Images.RemoveRange(productToUpdate.Images);
+                    foreach (var image in viewModel.Images)
+                    {
+                        image.product_id = viewModel.Product.product_id;
+                        db.Images.Add(image);
+                    }
+
+                    db.SaveChanges();
+                    return RedirectToAction("Index", "AdminProducts");
+                }
+                else
+                {
+                    ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                    return View(viewModel);
+                }
             }
-            ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name", product.category_id);
-            return View(product);
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var entityValidationError in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in entityValidationError.ValidationErrors)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Lỗi xác thực: {validationError.PropertyName} - {validationError.ErrorMessage}");
+                    }
+                }
+                ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                return View(viewModel);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.InnerException != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Lỗi cập nhật: {ex.InnerException.InnerException.Message}");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"Lỗi cập nhật: {ex.Message}");
+                }
+                ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Lỗi: " + ex.StackTrace);
+                ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                return View(viewModel);
+            }
         }
+
+
 
         // GET: Admin/Products/Delete/5
         public ActionResult Delete(int? id)
@@ -376,10 +499,30 @@ namespace Electronic_G5.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Product product = db.Products.Find(id);
-            db.Products.Remove(product);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                var productOptions = db.ProductOptions.Where(pr => pr.product_id == id);
+                if (productOptions != null)
+                {
+                    db.ProductOptions.RemoveRange(productOptions);
+                }
+                var imageList = db.Images.Where(image => image.product_id == id);
+                if (imageList != null)
+                {
+                    db.Images.RemoveRange(imageList);
+                }
+                Product product = db.Products.Find(id);
+                db.Products.Remove(product);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+
+                ViewBag.error = "Bạn chưa thể xóa trường này " + ex.Message;
+                return View();
+            }
+
         }
 
         protected override void Dispose(bool disposing)

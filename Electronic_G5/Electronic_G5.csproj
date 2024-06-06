@@ -177,6 +177,14 @@
     <Compile Include="Migrations\202406031451044_AddResetPass.Designer.cs">
       <DependentUpon>202406031451044_AddResetPass.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202406050250236_InitialCreate.cs" />
+    <Compile Include="Migrations\202406050250236_InitialCreate.designer.cs">
+      <DependentUpon>202406050250236_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202406050255365_UpdateTableName.cs" />
+    <Compile Include="Migrations\202406050255365_UpdateTableName.Designer.cs">
+      <DependentUpon>202406050255365_UpdateTableName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
@@ -281,7 +289,6 @@
     <Content Include="Areas\Admin\Views\Users\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Index.cshtml" />
-
     <Content Include="Areas\Admin\Views\AdminOrders\Create.cshtml" />
     <Content Include="Areas\Admin\Views\AdminOrders\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\AdminOrders\Details.cshtml" />
@@ -293,7 +300,6 @@
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\Users\Login.cshtml" />
-
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -366,6 +372,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202406031451044_AddResetPass.resx">
       <DependentUpon>202406031451044_AddResetPass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406050250236_InitialCreate.resx">
+      <DependentUpon>202406050250236_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406050255365_UpdateTableName.resx">
+      <DependentUpon>202406050255365_UpdateTableName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
