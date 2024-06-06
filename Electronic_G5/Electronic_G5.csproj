@@ -164,18 +164,14 @@
     <Compile Include="Areas\Admin\Controllers\AdminPaymentsController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminProductOptionsController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminProductsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\AdminUsersController.cs" />
     <Compile Include="Areas\Admin\Controllers\RolesController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminShipmentsController.cs" />
-    <Compile Include="Areas\Admin\Controllers\AdminUsersController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202406031451044_AddResetPass.cs" />
-    <Compile Include="Migrations\202406031451044_AddResetPass.Designer.cs">
-      <DependentUpon>202406031451044_AddResetPass.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202406050250236_InitialCreate.cs" />
     <Compile Include="Migrations\202406050250236_InitialCreate.designer.cs">
@@ -184,6 +180,14 @@
     <Compile Include="Migrations\202406050255365_UpdateTableName.cs" />
     <Compile Include="Migrations\202406050255365_UpdateTableName.Designer.cs">
       <DependentUpon>202406050255365_UpdateTableName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202406060354406_alterUser.cs" />
+    <Compile Include="Migrations\202406060354406_alterUser.designer.cs">
+      <DependentUpon>202406060354406_alterUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202406060435148_update.cs" />
+    <Compile Include="Migrations\202406060435148_update.designer.cs">
+      <DependentUpon>202406060435148_update.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
@@ -284,11 +288,6 @@
     <Content Include="Areas\Admin\Views\Shipments\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Shipments\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Shipments\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Users\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\Users\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\Users\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Users\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\Users\Index.cshtml" />
     <Content Include="Areas\Admin\Views\AdminOrders\Create.cshtml" />
     <Content Include="Areas\Admin\Views\AdminOrders\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\AdminOrders\Details.cshtml" />
@@ -299,7 +298,12 @@
     <Content Include="wwwroot\Images\z4918593887110_1ef08e1661fdde167275504b7b67b0de.jpg" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\Admin\Views\Users\Login.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminUsers\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminUsers\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminUsers\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminUsers\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminUsers\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminUsers\Login.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -370,14 +374,17 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202406031451044_AddResetPass.resx">
-      <DependentUpon>202406031451044_AddResetPass.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202406050250236_InitialCreate.resx">
       <DependentUpon>202406050250236_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202406050255365_UpdateTableName.resx">
       <DependentUpon>202406050255365_UpdateTableName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406060354406_alterUser.resx">
+      <DependentUpon>202406060354406_alterUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406060435148_update.resx">
+      <DependentUpon>202406060435148_update.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -51,9 +51,6 @@
 
         [Column(TypeName = "datetime2")]
         public DateTime? updated_at { get; set; }
-        // Thêm các thuộc tính mới
-        public string PasswordResetToken { get; set; }
-        public DateTime? TokenExpiration { get; set; }
 
         public int role_id { get; set; }
 
