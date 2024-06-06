@@ -231,6 +231,7 @@
     <Content Include="Areas\Admin\Views\Categories\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Categories\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Categories\Index.cshtml" />
+    <Content Include="wwwroot\css\clientHome.css" />
     <Content Include="wwwroot\css\sb-admin-2.css" />
     <Content Include="wwwroot\css\sb-admin-2.min.css" />
     <Content Include="wwwroot\css\style.css" />

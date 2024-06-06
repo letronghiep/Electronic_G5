@@ -36,7 +36,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Chào mừng bạn!</h1>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" method="post" action="@Url.Action("Login","Users", new {area="Admin"})>
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
                                                    id="txtEmail" aria-describedby="emailHelp"
@@ -54,9 +54,10 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <a href="@Url.Action("Index", "AdminHome", new { area = "Admin" })" class="btn btn-primary btn-user btn-block">
+                                        @*<a href="@Url.Action("Index", "AdminHome", new { area = "Admin" })" class="btn btn-primary btn-user btn-block">
                                             Đăng nhập
-                                        </a>
+                                        </a>*@
+                                        <input type="submit" value="Đăng nhập" class="btn btn-primary btn-user btn-block" />
                                         <hr>
 
                                     </form>

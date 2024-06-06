@@ -32,7 +32,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Tạo tài khoản!</h1>
                             </div>
-                            <form class="user">
+                            <form class="user" method="post" action="@Url.Action("Register","Users")>
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-user" id="txtHoTen"
                                            placeholder="Họ tên">
@@ -51,9 +51,10 @@
                                                id="txtRePass" placeholder="Nhập lại mật khẩu">
                                     </div>
                                 </div>
-                                <a href="@Url.Action("Login", "Users")" class="btn btn-primary btn-user btn-block">
+                                @*<a href="@Url.Action("Login", "Users")" class="btn btn-primary btn-user btn-block">
                                     Đăng ký
-                                </a>
+                                </a>*@
+                                <input type="submit" value="Đăng ký" class="btn btn-primary btn-user btn-block" />
                                 <hr>
                             </form>
                             <hr>
