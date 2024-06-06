@@ -1,0 +1,310 @@
+﻿@model Electronic_G5.Models.ProductViewModel
+
+@{
+    ViewBag.Title = "Thêm sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+    .image-upload-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .image-upload-box {
+        border: 2px dashed #cccccc;
+        border-radius: 5px;
+        padding: 30px;
+        position: relative;
+        width: 100%;
+        height: 300px;
+        margin: 0 auto;
+        background-color: #f8f8f8;
+        background-size: cover;
+        background-position: center;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column
+    }
+
+        .image-upload-box.dragging {
+            background-color: #e0e0e0;
+        }
+
+        .image-upload-box p {
+            font-size: 16px;
+            color: #666666;
+            margin: 0;
+        }
+
+        .image-upload-box a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+            .image-upload-box a:hover {
+                text-decoration: underline;
+            }
+
+    .upload-icon {
+        margin-top: 20px;
+    }
+
+        .upload-icon img {
+            width: 50px;
+            height: 50px;
+            opacity: 0.5;
+        }
+</style>
+
+@using (Html.BeginForm("Create", "AdminProducts", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row g-2">
+        <h4>Thêm sản phẩm</h4>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="form-group">
+                <div class="order-1 col-md-4 text-end ml-auto">
+                    @*<button type="button" id="btnSave" class="btn btn-primary">Thêm</button>*@
+                    <button type="submit" id="btnSave" class="btn btn-primary">Thêm</button>
+                </div>
+            </div>
+            <div class="col-8 shadow p-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.product_name, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.Product.product_name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Product.product_name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.image_url, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+                    <div class="col-md-12">
+                        <div class="image-upload-container">
+                            <div class="image-upload-box" id="imageUploadBox">
+                                <p>Kéo thả tệp hoặc <label for="imageInput" class="text-decoration-underline text-primary">Chọn từ thiết bị</label></p>
+                                <div class="upload-icon">
+                                    <img src="~/assets/image/upload.png" alt="Upload Icon" />
+                                </div>
+                                <input type="file" name="imageInput" id="imageInput" accept="image/*" style="display: none;" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.description, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.Product.description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Product.description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-3 shadow">
+                    <h5>Tổ chức</h5>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Product.category_id, "Danh mục", htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                        <div class="col-md-12">
+                            @*@Html.DropDownList("category_id", null, htmlAttributes: new { @class = "form-control", @id = "Product_category_id" })*@
+                            @Html.DropDownListFor(model => model.Product.category_id,
+                            new SelectList(ViewBag.category_id as System.Collections.IEnumerable, "Value", "Text"),
+                            "Select Category",
+                            new { @class = "form-control", @id = "Product_category_id" })
+                            @Html.ValidationMessageFor(model => model.Product.category_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Product.SKU, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.Product.SKU, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Product.SKU, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Product.stock, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.Product.stock, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Product.stock, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 shadow mt-3">
+                    <h5 style="padding-left: 12px">Lựa chọn</h5>
+
+                    <div id="productOptions">
+                        <div class="form-group option-item">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control option-name" placeholder="Tên: " />
+                            </div>
+                        </div>
+                        <div class="form-group option-item">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control option-value" placeholder="Giá trị: " />
+                            </div>
+                        </div>
+                        <div class="form-group option-item">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control option-price" placeholder="Giá tiền: " />
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="add_option" class="btn btn-outline-primary w-100">Thêm lựa chọn</button>
+                    <div id="productOptionContainer">
+                        @Html.Partial("_ProductOptionList", Model.ProductOptions)
+                    </div>
+                </div>
+                <div class="p-3 shadow mt-3">
+                    <h5>Gallery</h5>
+                    <div>
+                        <input class="form-control" type="file" id="imageUpload" name="imageUpload" />
+                        <button type="button" id="uploadImageButton" class="btn btn-outline-primary mt-2 w-100">Tải ảnh lên</button>
+                    </div>
+                    <div id="imageContainer" class="d-flex flex-wrap gap-2 mt-2">
+                        @Html.Partial("_ImageList", Model.Images)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<p id="msg"></p>
+@if (@ViewBag.product != null)
+{
+    <p class="alert-danger text-bg-danger bg-danger">@ViewBag.product</p>
+}
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        document.getElementById('imageInput').addEventListener('change', function () {
+            var file = this.files[0];
+            if (file) {
+                var imageUploadBox = document.getElementById('imageUploadBox');
+                imageUploadBox.style.backgroundImage = 'url(' + URL.createObjectURL(file) + ')';
+            }
+        });
+
+        var imageUploadBox = document.getElementById('imageUploadBox');
+        imageUploadBox.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            this.classList.add('dragging');
+        });
+
+        imageUploadBox.addEventListener('dragleave', function (e) {
+            e.preventDefault();
+            this.classList.remove('dragging');
+        });
+
+        $(document).ready(function () {
+            var options = @Html.Raw(Json.Encode(Model.ProductOptions));
+            var images = @Html.Raw(Json.Encode(Model.Images));
+
+            $("#add_option").click(function () {
+                var optionName = $(".option-name").val();
+                var optionValue = $(".option-value").val();
+                var optionPrice = $(".option-price").val();
+                if (optionName && optionValue && optionPrice) {
+                    var newOption = {
+                        product_option_name: optionName,
+                        product_option_value: optionValue,
+                        product_option_price: optionPrice
+                    };
+                    options.push(newOption);
+
+                    $.ajax({
+                        url: "@Url.Action("AddOptionPartial", "AdminProducts")",
+                        type: "POST",
+                        data: newOption,
+                        success: function (response) {
+                            $("#productOptionContainer").html(response.html);
+                            $(".option-name").val('');
+                            $(".option-value").val('');
+                            $(".option-price").val('');
+                        },
+                        error: function () {
+                            alert("Failed to add option. Please try again.");
+                        }
+                    });
+                } else {
+                    alert('Please fill all fields.');
+                }
+            });
+
+            // Upload Image
+            $('#uploadImageButton').click(function () {
+                var formData = new FormData();
+                var files = $('#imageUpload')[0].files;
+
+                if (files.length > 0) {
+                    formData.append('file', files[0]);
+
+                    $.ajax({
+                        url: '@Url.Action("UploadImage", "AdminProducts")',
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            if (response.success) {
+                                images.push(response.image);
+                                $('#imageContainer').html(response.html);
+                                $("#imageUpload").val('');
+                            } else {
+                                alert('Failed to upload image. Please try again.');
+                            }
+                        },
+                        error: function () {
+                            alert('Error occurred. Please try again.');
+                        }
+                    });
+                } else {
+                    alert('Please select a file to upload.');
+                }
+            });
+
+
+            $(document).on('click', '.remove-option', function () {
+                var optionId = $(this).data('id');
+                options = options.filter(function (option) {
+                    return option.Id !== optionId;
+                });
+
+                $.ajax({
+                    url: '@Url.Action("RemoveOptionPartial", "AdminProducts")',
+                    type: 'POST',
+                    data: { id: optionId },
+                    success: function (response) {
+                        $('#productOptionContainer').html(response.html);
+                    },
+                    error: function () {
+                        alert('Failed to remove option. Please try again.');
+                    }
+                });
+            });
+
+            $(document).on('click', '.remove-image', function () {
+                var imageId = $(this).data('id');
+                images = images.filter(function (image) {
+                    return image.image_id !== imageId;
+                });
+
+                $.ajax({
+                    url: '@Url.Action("RemoveImage", "AdminProducts")',
+                    type: 'POST',
+                    data: { id: imageId },
+                    success: function (response) {
+                        $('#imageContainer').html(response.html);
+                    },
+                    error: function () {
+                        alert('Failed to remove image. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+}

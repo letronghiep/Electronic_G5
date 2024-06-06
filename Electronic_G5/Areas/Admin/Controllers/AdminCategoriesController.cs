@@ -15,7 +15,7 @@ using System.Drawing;
 
 namespace Electronic_G5.Areas.Admin.Controllers
 {
-    public class CategoriesController : Controller
+    public class AdminCategoriesController : Controller
     {
         private ElectronicDb db = new ElectronicDb();
 

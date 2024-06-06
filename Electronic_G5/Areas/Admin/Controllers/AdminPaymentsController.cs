@@ -10,116 +10,112 @@ using Electronic_G5.Models;
 
 namespace Electronic_G5.Areas.Admin.Controllers
 {
-    public class Order_ItemsController : Controller
+    public class AdminPaymentsController : Controller
     {
         private ElectronicDb db = new ElectronicDb();
 
-        // GET: Admin/Order_Items
+        // GET: Admin/Payments
         public ActionResult Index()
         {
-            var order_Items = db.Order_Items.Include(o => o.Order).Include(o => o.Product);
-            return View(order_Items.ToList());
+            var payments = db.Payments.Include(p => p.User);
+            return View(payments.ToList());
         }
 
-        // GET: Admin/Order_Items/Details/5
+        // GET: Admin/Payments/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order_Items order_Items = db.Order_Items.Find(id);
-            if (order_Items == null)
+            Payment payment = db.Payments.Find(id);
+            if (payment == null)
             {
                 return HttpNotFound();
             }
-            return View(order_Items);
+            return View(payment);
         }
 
-        // GET: Admin/Order_Items/Create
+        // GET: Admin/Payments/Create
         public ActionResult Create()
         {
-            ViewBag.order_id = new SelectList(db.Orders, "order_id", "order_id");
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name");
+            ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name");
             return View();
         }
 
-        // POST: Admin/Order_Items/Create
+        // POST: Admin/Payments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "order_item_id,order_id,quantity,price,product_id,created_at,updated_at")] Order_Items order_Items)
+        public ActionResult Create([Bind(Include = "payment_id,payment_date,payment_method,amount,user_id,created_at,updated_at")] Payment payment)
         {
             if (ModelState.IsValid)
             {
-                db.Order_Items.Add(order_Items);
+                db.Payments.Add(payment);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.order_id = new SelectList(db.Orders, "order_id", "order_id", order_Items.order_id);
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", order_Items.product_id);
-            return View(order_Items);
+            ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name", payment.user_id);
+            return View(payment);
         }
 
-        // GET: Admin/Order_Items/Edit/5
+        // GET: Admin/Payments/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order_Items order_Items = db.Order_Items.Find(id);
-            if (order_Items == null)
+            Payment payment = db.Payments.Find(id);
+            if (payment == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.order_id = new SelectList(db.Orders, "order_id", "order_id", order_Items.order_id);
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", order_Items.product_id);
-            return View(order_Items);
+            ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name", payment.user_id);
+            return View(payment);
         }
 
-        // POST: Admin/Order_Items/Edit/5
+        // POST: Admin/Payments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "order_item_id,order_id,quantity,price,product_id,created_at,updated_at")] Order_Items order_Items)
+        public ActionResult Edit([Bind(Include = "payment_id,payment_date,payment_method,amount,user_id,created_at,updated_at")] Payment payment)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(order_Items).State = EntityState.Modified;
+                db.Entry(payment).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.order_id = new SelectList(db.Orders, "order_id", "order_id", order_Items.order_id);
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", order_Items.product_id);
-            return View(order_Items);
+            ViewBag.user_id = new SelectList(db.Users, "user_id", "full_name", payment.user_id);
+            return View(payment);
         }
 
-        // GET: Admin/Order_Items/Delete/5
+        // GET: Admin/Payments/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Order_Items order_Items = db.Order_Items.Find(id);
-            if (order_Items == null)
+            Payment payment = db.Payments.Find(id);
+            if (payment == null)
             {
                 return HttpNotFound();
             }
-            return View(order_Items);
+            return View(payment);
         }
 
-        // POST: Admin/Order_Items/Delete/5
+        // POST: Admin/Payments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Order_Items order_Items = db.Order_Items.Find(id);
-            db.Order_Items.Remove(order_Items);
+            Payment payment = db.Payments.Find(id);
+            db.Payments.Remove(payment);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

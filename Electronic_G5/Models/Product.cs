@@ -6,6 +6,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
+    using System.Web.Mvc;
 
     public partial class Product
     {
@@ -31,13 +32,12 @@
         public string SKU { get; set; }
 
         [Column(TypeName = "text")]
-        [Required(ErrorMessage = "Ảnh sản phẩm không được bỏ trống")]
         [DisplayName("Ảnh")]
         public string image_url { get; set; }
 
         [StringLength(100)]
         [DisplayName("Mô tả")]
-
+        [AllowHtml]
         public string description { get; set; }
         [DisplayName("Số lượng")]
 
@@ -59,6 +59,7 @@
         public virtual ICollection<Cart> Carts { get; set; }
 
         public virtual Category Category { get; set; }
+
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Image> Images { get; set; }

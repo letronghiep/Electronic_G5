@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Electronic_G5.Models;
 
 namespace Electronic_G5.Controllers
@@ -148,7 +150,7 @@ namespace Electronic_G5.Controllers
                 if (user != null)
                 {
                     // Đăng nhập thành công, lưu thông tin người dùng vào session hoặc cookie
-                  // Session["user_id"] = user.user_id;
+                    // Session["user_id"] = user.user_id;
                     Session["email"] = user.email;
                     Session["password"] = user.password;
                     // Lưu thông báo vào TempData
@@ -185,53 +187,89 @@ namespace Electronic_G5.Controllers
 
         // POST: Users/Register
         [HttpPost]
-        [ValidateAntiForgeryToken]
+
         public ActionResult Register(User model)
         {
-            if (ModelState.IsValid)
+            try
             {
+                //if (ModelState.IsValid)
+                //{
                 // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu chưa
                 if (db.Users.Any(u => u.email == model.email))
                 {
                     ModelState.AddModelError("Email", "Email đã được sử dụng.");
                     return View(model);
                 }
-                //tìm role
-                var userRole = db.Roles.FirstOrDefault(r => r.role_name == "user");
-                /*if (userRole == null)
-                {
-                    // Nếu vai trò "user" không tồn tại, tạo mới vai trò này
-                    userRole = new Role { role_name = "user" };
-                    db.Roles.Add(userRole);
-                    db.SaveChanges();
-                }*/
+
                 // Tạo một đối tượng User mới từ dữ liệu đăng ký
-                var newUser = new User
-                {
-                    full_name = model.full_name,
-                    email = model.email,
-                    password = model.password,
-                    role_id = userRole.role_id,
-                    // Các thuộc tính khác nếu có
-                };
+                User user = new User();
+                user.full_name = model.full_name;
+                user.email = model.email;
+                user.password = model.password;
+                user.address = model.address;
+                user.phone_number = model.phone_number;
+                user.image = model.image;
+                user.role = model.role;
+                user.role_id = model.role_id;
+                //User newUser = new User
+                //{
+                //    full_name = 
+                //    email =,
+                //    password = ,
+                //    address = string.Empty,
+                //    phone_number = string.Empty,
+                //    image = string.Empty,
+                //    role = model.role,
+                //    role_id = model.role_id,
+                // Các thuộc tính khác nếu có
+
+                //};
+                user.created_at = DateTime.Now;
+                user.updated_at = DateTime.Now;
 
                 // Thêm người dùng mới vào cơ sở dữ liệu
-                db.Users.Add(newUser);
+                db.Users.Add(user);
                 db.SaveChanges();
 
                 // Đăng nhập người dùng mới sau khi đăng ký thành công
-                Session["user_id"] = newUser.user_id;
-                Session["email"] = newUser.email;
-                Session["password"] = newUser.password;
+                //Session["UserId"] = newUser.UserId;
+                Session["email"] = user.email;
+                Session["password"] = user.password;
 
-                ViewBag.tb = "Đăng ký tài khoản thành công. Hãy đăng nhập vào tài khoản của bạn!";
                 // Chuyển hướng đến trang chính sau khi đăng ký thành công
                 return RedirectToAction("Login", "Users");
+                //}else
+                //{
+                //    ViewBag.error = "Loi xay ra";
+                //    return View(model);
+                //}
+
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
+                        System.Diagnostics.Debug.WriteLine($"{validationError.PropertyName}: {validationError.ErrorMessage}");
+
+                    }
+                }
+                ViewBag.error = "Có lỗi xác thực. Vui lòng kiểm tra lại thông tin.";
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                // Hiển thị lỗi chung
+                ViewBag.error = "Có lỗi xảy ra: " + ex.Message;
+                return View(model);
             }
 
-            // Trả về view đăng ký với model nếu có lỗi
-            return View(model);
+
+
         }
+
 
         [HttpGet]
         public ActionResult ForgotPass()
@@ -294,8 +332,8 @@ namespace Electronic_G5.Controllers
     }
     //hehe
 }
-  
 
 
-    
+
+
 

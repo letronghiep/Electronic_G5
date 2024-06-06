@@ -10,7 +10,7 @@ using Electronic_G5.Models;
 
 namespace Electronic_G5.Areas.Admin.Controllers
 {
-    public class OrdersController : Controller
+    public class AdminOrdersController : Controller
     {
         private ElectronicDb db = new ElectronicDb();
 
