@@ -278,6 +278,7 @@
     <Content Include="Areas\Admin\Views\AdminProductOptions\Details.cshtml" />
     <Content Include="Areas\Admin\Views\AdminProductOptions\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\AdminProductOptions\Index.cshtml" />
+
     <Content Include="Areas\Admin\Views\Roles\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Details.cshtml" />

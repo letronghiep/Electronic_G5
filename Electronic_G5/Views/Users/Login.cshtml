@@ -37,14 +37,14 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Chào mừng bạn!</h1>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" method="post" action="@Url.Action("Login","Users")>
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
+                                            <input type="email" name="email" class="form-control form-control-user"
                                                    id="txtEmail" aria-describedby="emailHelp"
                                                    placeholder="Nhập email">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
+                                            <input type="password" name="password" class="form-control form-control-user"
                                                    id="txtPass" placeholder="Mật khẩu">
                                         </div>
                                         <div class="form-group">
@@ -55,9 +55,11 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <a href="@Url.Action("Index", "Home", new { area = "" })" class="btn btn-primary btn-user btn-block">
+                                        @*<a href="@Url.Action("Index", "Home", new { area = "" })" class="btn btn-primary btn-user btn-block">
                                             Đăng nhập
-                                        </a>
+                                        </a>*@
+                                        <input type="submit" value="Đăng nhập" class="btn btn-primary btn-user btn-block" />
+
                                         <hr>
 
                                     </form>
