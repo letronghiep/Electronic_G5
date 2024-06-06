@@ -14,13 +14,14 @@ namespace Electronic_G5.Areas.Admin.Controllers
     {
         private ElectronicDb db = new ElectronicDb();
 
-        // GET: Admin/Users
+        // GET: Admin/AdminUsers
         public ActionResult Index()
         {
             var users = db.Users.Include(u => u.Role1);
             return View(users.ToList());
         }
-        // GET: Admin/Users/Details/5
+
+        // GET: Admin/AdminUsers/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -35,14 +36,14 @@ namespace Electronic_G5.Areas.Admin.Controllers
             return View(user);
         }
 
-        // GET: Admin/Users/Create
+        // GET: Admin/AdminUsers/Create
         public ActionResult Create()
         {
             ViewBag.role_id = new SelectList(db.Roles, "role_id", "role_name");
             return View();
         }
 
-        // POST: Admin/Users/Create
+        // POST: Admin/AdminUsers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -60,7 +61,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             return View(user);
         }
 
-        // GET: Admin/Users/Edit/5
+        // GET: Admin/AdminUsers/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -76,7 +77,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             return View(user);
         }
 
-        // POST: Admin/Users/Edit/5
+        // POST: Admin/AdminUsers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -93,7 +94,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             return View(user);
         }
 
-        // GET: Admin/Users/Delete/5
+        // GET: Admin/AdminUsers/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -108,7 +109,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             return View(user);
         }
 
-        // POST: Admin/Users/Delete/5
+        // POST: Admin/AdminUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -127,13 +128,6 @@ namespace Electronic_G5.Areas.Admin.Controllers
             }
             base.Dispose(disposing);
         }
-
-        // GET: Users/Login
-        public ActionResult Login()
-        {
-            return View();
-        }
-
         // POST: Users/Login
         [HttpPost]
         [ValidateAntiForgeryToken]

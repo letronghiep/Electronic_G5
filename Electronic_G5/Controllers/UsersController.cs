@@ -286,15 +286,9 @@ namespace Electronic_G5.Controllers
                 ViewBag.ErrorMessage = "Không tìm thấy email!";
                 return View();
             }
-
-            // Generate a reset token (you can use any method to generate a token)
-            var resetToken = Guid.NewGuid().ToString();
-            user.PasswordResetToken = resetToken;
-            user.TokenExpiration = DateTime.Now.AddHours(1); // Token valid for 1 hour
             db.SaveChanges();
 
             // Send reset email
-            SendResetEmail(user.email, resetToken);
 
             ViewBag.Message = "Link lấy lại mật khẩu đã được gửi tới email của bạn!";
             return View();

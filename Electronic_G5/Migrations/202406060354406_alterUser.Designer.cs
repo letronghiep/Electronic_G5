@@ -7,13 +7,13 @@ namespace Electronic_G5.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class AddResetPass : IMigrationMetadata
+    public sealed partial class alterUser : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddResetPass));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(alterUser));
         
         string IMigrationMetadata.Id
         {
-            get { return "202406031451044_AddResetPass"; }
+            get { return "202406060354406_alterUser"; }
         }
         
         string IMigrationMetadata.Source
