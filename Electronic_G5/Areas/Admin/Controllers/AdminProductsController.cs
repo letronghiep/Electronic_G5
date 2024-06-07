@@ -20,13 +20,14 @@ using System.Data.Entity.Validation;
 using System.IO;
 using System.Data.Entity.Infrastructure;
 
+
 namespace Electronic_G5.Areas.Admin.Controllers
 {
     public class AdminProductsController : Controller
     {
         private ElectronicDb db = new ElectronicDb();
 
-        // GET: Admin/Products
+        // GET: Admin/AdminProducts
         public ActionResult Index(int? page, int? pageSize, string searchString, string sortProperty, string sortOrder = "")
         {
             //return View(products.ToList());
@@ -101,7 +102,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             return View(products.ToPagedList(pageNumber, defaultPageSize));
         }
 
-        // GET: Admin/Products/Details/5
+        // GET: Admin/AdminProducts/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -116,7 +117,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             return View(product);
         }
 
-        // GET: Admin/Products/Create
+        // GET: Admin/AdminProducts/Create
         public ActionResult Create()
         {
             var viewModel = new ProductViewModel
@@ -128,6 +129,9 @@ namespace Electronic_G5.Areas.Admin.Controllers
             ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
             return View(viewModel);
         }
+        // POST: Admin/AdminProducts/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(ProductViewModel viewModel)
@@ -136,16 +140,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    System.Diagnostics.Debug.WriteLine(viewModel.Product.category_id);
-                    var existingCategory = db.Categories.FirstOrDefault(c => c.category_id == viewModel.Product.category_id);
-                    if (existingCategory == null)
-                    {
-                        ModelState.AddModelError("Product.category_id", "Mã danh mục không hợp lệ. Vui lòng chọn một danh mục đã tồn tại.");
-                        ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
-                        return View(viewModel);
-                    }
                     viewModel.Product.image_url = "";
-
                     var imageInput = Request.Files["imageInput"];
                     System.Diagnostics.Debug.WriteLine(imageInput);
 
@@ -158,42 +153,63 @@ namespace Electronic_G5.Areas.Admin.Controllers
                         string filename = Path.GetFileName(imageInput.FileName);
                         string path = Path.Combine(Server.MapPath("~/wwwroot/Images/"), filename);
                         imageInput.SaveAs(path);
+                        System.Diagnostics.Debug.WriteLine("OKE");
+
                         // Cập nhật thuộc tính image_url của sản phẩm
                         viewModel.Product.image_url = filename;
                     }
-
                     // Cập nhật thời gian tạo và cập nhật của sản phẩm
                     viewModel.Product.created_at = DateTime.Now;
                     viewModel.Product.updated_at = DateTime.Now;
 
-                    // Thêm sản phẩm vào cơ sở dữ liệu
+                    // Lưu product vào database
                     db.Products.Add(viewModel.Product);
+                    db.SaveChanges();
 
-                    // Lưu các lựa chọn sản phẩm
+                    // Lưu product options vào database
                     foreach (var option in viewModel.ProductOptions)
                     {
                         option.product_id = viewModel.Product.product_id;
                         db.ProductOptions.Add(option);
                     }
-                    System.Diagnostics.Debug.WriteLine(viewModel.Product.image_url);
-
-                    // Lưu các hình ảnh khác của sản phẩm
+                    // Lưu images vào database
                     foreach (var image in viewModel.Images)
                     {
-                        image.product_id = viewModel.Product.product_id;
-                        db.Images.Add(image);
+                        if (!string.IsNullOrEmpty(image.image_url)) // Kiểm tra image_url có rỗng không
+                        {
+                            image.product_id = viewModel.Product.product_id; // Gán product_id cho ảnh
+                            db.Images.Add(image);
+                        }
                     }
-
-                    // Lưu thay đổi vào cơ sở dữ liệu
                     db.SaveChanges();
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index"); // Chu
                 }
                 else
                 {
-                    ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
+                    System.Diagnostics.Debug.WriteLine("Data::");
+                    System.Diagnostics.Debug.WriteLine(viewModel.Product.product_name);
+                    System.Diagnostics.Debug.WriteLine(viewModel.Product.SKU);
+                    System.Diagnostics.Debug.WriteLine(viewModel.Product.category_id);
+                    System.Diagnostics.Debug.WriteLine(viewModel.Product.description);
+                    System.Diagnostics.Debug.WriteLine(viewModel.Product.image_url);
+                    System.Diagnostics.Debug.WriteLine(viewModel.Product.stock);
+                    foreach (var item in viewModel.ProductOptions)
+                    {
+                        System.Diagnostics.Debug.WriteLine(item.product_option_name);
+
+                    }
+
+                    foreach (var item in viewModel.Images)
+                    {
+                        System.Diagnostics.Debug.WriteLine(item.image_url);
+
+                    }
+
+                    ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name", viewModel.Product.category_id);
                     return View(viewModel);
                 }
+
             }
             catch (DbEntityValidationException ex)
             {
@@ -225,136 +241,14 @@ namespace Electronic_G5.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-                // Log lỗi nếu có
-                System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("Exceptions:: " + ex.StackTrace);
                 ViewBag.category_id = new SelectList(db.Categories, "category_id", "category_name");
                 return View(viewModel);
             }
-        }
-
-
-
-        //partial
-        [HttpPost]
-        public ActionResult AddOptionPartial(ProductOption option)
-        {
-            try
-            {
-                var options = (List<ProductOption>)Session["ProductOptions"] ?? new List<ProductOption>();
-                options.Add(option);
-                Session["ProductOptions"] = options;
-
-                var html = this.RenderPartialViewToString("_ProductOptionList", options);
-                return Json(new { success = true, html });
-            }
-            catch (Exception ex)
-            {
-                // Log error
-                System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
-                return Json(new { success = false, message = ex.Message });
-            }
 
         }
 
-        [HttpPost]
-        public ActionResult RemoveOptionPartial(int id)
-        {
-            try
-            {
-                var options = (List<ProductOption>)Session["ProductOptions"];
-                var option = options.FirstOrDefault(o => o.product_option_id == id);
-                if (option != null)
-                {
-                    options.Remove(option);
-                    Session["ProductOptions"] = options;
-                    var html = this.RenderPartialViewToString("_ProductOptionList", options);
-                    return Json(new { success = true, html });
-                }
-                return Json(new { success = false });
-            }
-            catch (Exception ex)
-            {
-                // Log error
-                System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
-                return Json(new { success = false, message = ex.Message });
-            }
-
-        }
-
-        // POST: Products/UploadImage
-        [HttpPost]
-        public ActionResult UploadImage(HttpPostedFileBase file)
-        {
-            try
-            {
-                if (file != null && file.ContentLength > 0)
-                {
-                    var fileName = System.IO.Path.GetFileName(file.FileName);
-                    var path = System.IO.Path.Combine(Server.MapPath("~/wwwroot/Images/"), fileName);
-                    file.SaveAs(path);
-                    var image = new Image { image_url = "/wwwroot/Images/" + fileName };
-                    // Add image to session or database as needed
-                    var images = (List<Image>)Session["Images"] ?? new List<Image>();
-                    images.Add(image);
-                    Session["Images"] = images;
-
-                    var html = this.RenderPartialViewToString("_ImageList", images);
-                    return Json(new { success = true, image, html });
-                }
-
-                return Json(new { success = false });
-            }
-            catch (Exception ex)
-            {
-                // Log error
-                System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
-
-        // POST: Products/RemoveImage
-        [HttpPost]
-        public ActionResult RemoveImage(int id)
-        {
-            try
-            {
-                var images = (List<Image>)Session["Images"];
-                var image = images.FirstOrDefault(i => i.image_id == id);
-                if (image != null)
-                {
-                    images.Remove(image);
-                    Session["Images"] = images;
-                    var html = this.RenderPartialViewToString("_ImageList", images);
-                    return Json(new { success = true, html });
-                }
-                return Json(new { success = false });
-            }
-            catch (Exception ex)
-            {
-                // Log error
-                System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
-                return Json(new { success = false, message = ex.Message });
-            }
-
-        }
-
-        protected string RenderPartialViewToString(string viewName, object model)
-        {
-            if (string.IsNullOrEmpty(viewName))
-                viewName = ControllerContext.RouteData.GetRequiredString("action");
-
-            ViewData.Model = model;
-            using (var sw = new System.IO.StringWriter())
-            {
-                var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
-                var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
-                viewResult.View.Render(viewContext, sw);
-                return sw.GetStringBuilder().ToString();
-            }
-        }
-        //end 
-
-        // GET: Admin/Products/Edit/5
+        // GET: Admin/AdminProducts/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -380,7 +274,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        // POST: Admin/Products/Edit/5
+        // POST: Admin/AdminProducts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -477,9 +371,79 @@ namespace Electronic_G5.Areas.Admin.Controllers
             }
         }
 
+        //Upload ímage
+        // POST: Products/UploadImage
+        [HttpPost]
+        public ActionResult UploadImage(HttpPostedFileBase file)
+        {
+            try
+            {
+                if (file != null && file.ContentLength > 0)
+                {
+                    System.Diagnostics.Debug.WriteLine(file);
+                    var fileName = System.IO.Path.GetFileName(file.FileName);
+                    var path = System.IO.Path.Combine(Server.MapPath("~/wwwroot/Images/"), fileName);
+                    file.SaveAs(path);
+                    var image = new Image { image_url =  fileName };
+                    // Add image to session or database as needed
+                    var images = (List<Image>)Session["Images"] ?? new List<Image>();
+                    images.Add(image);
+                    Session["Images"] = images;
 
+                    var html = this.RenderPartialViewToString("_ImageList", images);
+                    return Json(new { success = true, image, html });
+                }
 
-        // GET: Admin/Products/Delete/5
+                return Json(new { success = false });
+            }
+            catch (Exception ex)
+            {
+                // Log error
+                System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        // POST: Products/RemoveImage
+        [HttpPost]
+        public ActionResult RemoveImage(int id)
+        {
+            try
+            {
+                var images = (List<Image>)Session["Images"];
+                var image = images.FirstOrDefault(i => i.image_id == id);
+                if (image != null)
+                {
+                    images.Remove(image);
+                    Session["Images"] = images;
+                    var html = this.RenderPartialViewToString("_ImageList", images);
+                    return Json(new { success = true, html });
+                }
+                return Json(new { success = false });
+            }
+            catch (Exception ex)
+            {
+                // Log error
+                System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
+                return Json(new { success = false, message = ex.Message });
+            }
+
+        }
+        protected string RenderPartialViewToString(string viewName, object model)
+        {
+            if (string.IsNullOrEmpty(viewName))
+                viewName = ControllerContext.RouteData.GetRequiredString("action");
+
+            ViewData.Model = model;
+            using (var sw = new System.IO.StringWriter())
+            {
+                var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
+                var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                return sw.GetStringBuilder().ToString();
+            }
+        }
+        // GET: Admin/AdminProducts/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -494,7 +458,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             return View(product);
         }
 
-        // POST: Admin/Products/Delete/5
+        // POST: Admin/AdminProducts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -511,9 +475,15 @@ namespace Electronic_G5.Areas.Admin.Controllers
                 {
                     db.Images.RemoveRange(imageList);
                 }
+               
                 Product product = db.Products.Find(id);
                 db.Products.Remove(product);
                 db.SaveChanges();
+                var filePath = Path.Combine(Server.MapPath("~/wwwroot/Images/"), product.image_url);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
                 return RedirectToAction("Index");
             }
             catch (Exception ex)

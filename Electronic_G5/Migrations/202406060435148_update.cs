@@ -13,8 +13,8 @@
         
         public override void Down()
         {
-            AddColumn("dbo.User", "TokenExpiration", c => c.DateTime());
-            AddColumn("dbo.User", "ResetPassToken", c => c.String());
+            AddColumn("dbo.Users", "TokenExpiration", c => c.DateTime());
+            AddColumn("dbo.Users", "ResetPassToken", c => c.String());
         }
     }
 }

@@ -31,7 +31,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("Danh mục", "Index", new { sortProperty = "parent_id", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
+            @Html.ActionLink("Hình ảnh", "Index", new { sortProperty = "parent_id", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
 
         </th>
         <th>
@@ -39,15 +39,11 @@
 
         </th>
         <th>
+            @Html.ActionLink("Danh mục", "Index", new { sortProperty = "parent_id", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
+
+        </th>
+        <th>
             @Html.ActionLink("SKU", "Index", new { sortProperty = "parent_id", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-
-        </th>
-        <th>
-            @Html.ActionLink("Hình ảnh", "Index", new { sortProperty = "parent_id", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-
-        </th>
-        <th>
-            @Html.ActionLink("Mô tả", "Index", new { sortProperty = "parent_id", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
 
         </th>
         <th>
@@ -65,19 +61,16 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Category.category_name)
+                <img width="100" height="100" src="~/wwwroot/Images/@item.image_url" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.product_name)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Category.category_name)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.SKU)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.image_url)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.stock)
