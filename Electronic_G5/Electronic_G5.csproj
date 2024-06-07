@@ -189,6 +189,10 @@
     <Compile Include="Migrations\202406060435148_update.designer.cs">
       <DependentUpon>202406060435148_update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202406060913585_DelRole.cs" />
+    <Compile Include="Migrations\202406060913585_DelRole.Designer.cs">
+      <DependentUpon>202406060913585_DelRole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
@@ -210,6 +214,7 @@
     <Content Include="App_Data\Electronic_log.ldf">
       <DependentUpon>Electronic.mdf</DependentUpon>
     </Content>
+    <Content Include="assets\css\home.css" />
     <Content Include="assets\image\upload.png" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -278,7 +283,6 @@
     <Content Include="Areas\Admin\Views\AdminProductOptions\Details.cshtml" />
     <Content Include="Areas\Admin\Views\AdminProductOptions\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\AdminProductOptions\Index.cshtml" />
-
     <Content Include="Areas\Admin\Views\Roles\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Details.cshtml" />
@@ -340,9 +344,9 @@
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
-    <Content Include="Views\Users\Login.cshtml" />
     <Content Include="Views\Users\Register.cshtml" />
     <Content Include="Views\Users\ForgotPass.cshtml" />
+    <Content Include="Views\Users\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
@@ -386,6 +390,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202406060435148_update.resx">
       <DependentUpon>202406060435148_update.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406060913585_DelRole.resx">
+      <DependentUpon>202406060913585_DelRole.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

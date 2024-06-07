@@ -44,8 +44,6 @@
         [Column(TypeName = "text")]
         public string image { get; set; }
 
-        public int role { get; set; }
-
         [Column(TypeName = "datetime2")]
         public DateTime? created_at { get; set; }
 
