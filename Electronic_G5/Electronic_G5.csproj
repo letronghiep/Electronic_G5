@@ -189,7 +189,9 @@
     <Compile Include="Migrations\202406060913585_DelRole.cs" />
     <Compile Include="Migrations\202406060913585_DelRole.Designer.cs">
       <DependentUpon>202406060913585_DelRole.cs</DependentUpon>
-
+    </Compile>
+    <Compile Include="Migrations\202406060839133_deleteRole.cs" />
+    <Compile Include="Migrations\202406060839133_deleteRole.Designer.cs">
       <DependentUpon>202406060839133_deleteRole.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\202406061715200_UpdateTable.cs" />
@@ -403,7 +405,7 @@
 
     <EmbeddedResource Include="Migrations\202406060913585_DelRole.resx">
       <DependentUpon>202406060913585_DelRole.cs</DependentUpon>
-
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202406060839133_deleteRole.resx">
       <DependentUpon>202406060839133_deleteRole.cs</DependentUpon>
     </EmbeddedResource>
