@@ -7,8 +7,10 @@
     {
         public override void Up()
         {
-            //DropColumn("dbo.Users", "ResetPassToken");
-            //DropColumn("dbo.Users", "TokenExpiration");
+
+            //DropColumn("dbo.User", "ResetPassToken");
+            //DropColumn("dbo.User", "TokenExpiration");
+
 
             //DropColumn("dbo.User", "PasswordResetToken");
         }

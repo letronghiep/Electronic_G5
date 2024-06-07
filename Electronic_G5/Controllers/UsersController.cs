@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -141,32 +143,49 @@ namespace Electronic_G5.Controllers
 
         // POST: Users/Login
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Login(User model)
+        // [ValidateAntiForgeryToken]
+        public ActionResult Login(User model, bool remember = false)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password);
-                if (user != null)
-                {
-                    // Đăng nhập thành công, lưu thông tin người dùng vào session hoặc cookie
-                    // Session["user_id"] = user.user_id;
-                    Session["email"] = user.email;
-                    Session["password"] = user.password;
-                    // Lưu thông báo vào TempData
-                    TempData["SuccessMessage"] = "Bạn đã đăng nhập thành công.";
-                    // Chuyển hướng đến trang chính sau khi đăng nhập thành công
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    // Thông báo lỗi khi đăng nhập không thành công
-                    ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không chính xác!");
-                }
-            }
+            //    if (ModelState.IsValid)
+            //    {
+                    // Tìm user trong database
+                    var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password);
+                    
+                    if (user != null)
+                    {
+                        // Tạo session cho user
+                        //Session["email"] = user.email.ToString();
+                        //Session["password"] = user.password.ToString();
+                        Session["UserID"] = user.user_id.ToString();
+                        Session["UserName"] = user.full_name.ToString();
 
-            // Trả về view đăng nhập với model nếu có lỗi
-            return View(model);
+                        if (remember)
+                        {
+                            // Lưu thông tin đăng nhập vào cookie
+                            HttpCookie cookie = new HttpCookie("UserLogin");
+                            cookie.Values.Add("email", model.email);
+                            cookie.Values.Add("password", model.password);
+                            cookie.Expires = DateTime.Now.AddDays(15);
+                            Response.Cookies.Add(cookie);
+                        }
+
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ViewBag.error = "Email hoặc mật khẩu không đúng.";
+                    }
+               // }
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+
+                ViewBag.error = "Có lỗi" + ex.Message;
+                return View(model);
+            }
         }
 
         // GET: Users/Logout
@@ -210,24 +229,12 @@ namespace Electronic_G5.Controllers
                 user.phone_number = model.phone_number;
                 user.image = model.image;
                 user.role_id = model.role_id;
-                //User newUser = new User
-                //{
-                //    full_name = 
-                //    email =,
-                //    password = ,
-                //    address = string.Empty,
-                //    phone_number = string.Empty,
-                //    image = string.Empty,
-                //    role = model.role,
-                //    role_id = model.role_id,
-                // Các thuộc tính khác nếu có
-
-                //};
                 user.created_at = DateTime.Now;
                 user.updated_at = DateTime.Now;
 
                 // Thêm người dùng mới vào cơ sở dữ liệu
                 db.Users.Add(user);
+
                 db.SaveChanges();
 
                 // Đăng nhập người dùng mới sau khi đăng ký thành công
@@ -258,12 +265,18 @@ namespace Electronic_G5.Controllers
                 ViewBag.error = "Có lỗi xác thực. Vui lòng kiểm tra lại thông tin.";
                 return View(model);
             }
+            catch(DbUpdateException ex)
+            {
+                ViewBag.error = "Có lỗi: " + ex.StackTrace;
+                return View(model);
+            }
             catch (Exception ex)
             {
                 // Hiển thị lỗi chung
                 ViewBag.error = "Có lỗi xảy ra: " + ex.Message;
                 return View(model);
             }
+
 
 
 

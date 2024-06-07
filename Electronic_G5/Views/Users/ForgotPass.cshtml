@@ -43,13 +43,13 @@
                                             và chúng tôi sẽ gửi cho bạn một liên kết để đặt lại mật khẩu của bạn!
                                         </p>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" >
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
                                                    id="exampleInputEmail" aria-describedby="emailHelp"
                                                    placeholder="Nhập email khôi phục...">
                                         </div>
-                                        <a href="@Url.Action("Login","Users")" class="btn btn-primary btn-user btn-block">
+                                        <a href="@ViewBag.Message" class="btn btn-primary btn-user btn-block">
                                             Lấy lại mật khẩu
                                         </a>
                                     </form>
