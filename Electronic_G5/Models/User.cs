@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
@@ -21,37 +22,47 @@
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int user_id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Họ tên không được để trống")]
         [StringLength(100)]
+        [DisplayName("Họ tên")]
+
         public string full_name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Email không được bỏ trống")]
         [StringLength(100)]
+        [DisplayName("Email")]
+
         public string email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Mật khẩu không được bỏ trống")]
         [StringLength(100)]
+        [DisplayName("Mật khẩu")]
+
         public string password { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Địa chỉ không được bỏ trống")]
         [StringLength(100)]
-        public string address { get; set; }
+        [DisplayName("Địa chỉ")]
 
-        [Required]
+        public string address { get; set; }
+        [DisplayName("Sô điện thoại")]
+
+        [Required(ErrorMessage = "Số điện thoại không được bỏ trống")]
         [StringLength(100)]
         public string phone_number { get; set; }
+        [DisplayName("Hình ảnh")]
 
         [Column(TypeName = "text")]
         public string image { get; set; }
 
-        public int role { get; set; }
+      
 
         [Column(TypeName = "datetime2")]
         public DateTime? created_at { get; set; }
 
         [Column(TypeName = "datetime2")]
         public DateTime? updated_at { get; set; }
-
+        [DisplayName("Quyền")]
         public int role_id { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -63,7 +74,7 @@
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Payment> Payments { get; set; }
 
-        public virtual Role Role1 { get; set; }
+        public virtual Role Role { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Shipment> Shipments { get; set; }

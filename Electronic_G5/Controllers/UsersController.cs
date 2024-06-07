@@ -20,7 +20,7 @@ namespace Electronic_G5.Controllers
         // GET: Users
         public ActionResult Index()
         {
-            var users = db.Users.Include(u => u.Role1);
+            var users = db.Users.Include(u => u.Role);
             return View(users.ToList());
         }
 
@@ -209,7 +209,6 @@ namespace Electronic_G5.Controllers
                 user.address = model.address;
                 user.phone_number = model.phone_number;
                 user.image = model.image;
-                user.role = model.role;
                 user.role_id = model.role_id;
                 //User newUser = new User
                 //{

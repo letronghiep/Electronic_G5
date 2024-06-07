@@ -50,7 +50,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "order_id,order_date,total_price,user_id,payment_status,fulfillment_status,payment_id,shipment_id,created_at,updated_at")] Order order)
+        public ActionResult Create([Bind(Include = "order_id,order_date,total_price,user_id,order_status,fulfillment_status,payment_id,shipment_id,created_at,updated_at")] Order order)
         {
             if (ModelState.IsValid)
             {

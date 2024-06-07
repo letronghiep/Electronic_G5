@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Electronic_G5.Models.Image>
 @foreach (var image in Model) {
     <div class="image-item position-relative" style="width: 100px; height: 100px">
-        <img src="@image.image_url" alt="Product Image" class="w-100 h-100"  />
+        <img src="~/wwwroot/Images/@image.image_url" alt="Product Image" class="w-100 h-100"  />
         <button type="button" class="position-absolute top-0 end-0 me-1 text-white border-0 outline-none bg-transparent remove-image" data-id="@image.image_id">x</button>
     </div>
 }
