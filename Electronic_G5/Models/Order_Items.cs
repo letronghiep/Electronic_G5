@@ -10,6 +10,7 @@ namespace Electronic_G5.Models
     {
         [Key]
         [Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int order_item_id { get; set; }
 
         public int quantity { get; set; }

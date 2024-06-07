@@ -23,7 +23,7 @@ namespace Electronic_G5.Models
 
         public int user_id { get; set; }
 
-        public string payment_status { get; set; }
+        public string order_status { get; set; }
         public string fulfillment_status { get; set; }
         public int payment_id { get; set; }
 

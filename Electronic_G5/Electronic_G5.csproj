@@ -177,10 +177,6 @@
     <Compile Include="Migrations\202406050250236_InitialCreate.designer.cs">
       <DependentUpon>202406050250236_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202406050255365_UpdateTableName.cs" />
-    <Compile Include="Migrations\202406050255365_UpdateTableName.Designer.cs">
-      <DependentUpon>202406050255365_UpdateTableName.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\202406060354406_alterUser.cs" />
     <Compile Include="Migrations\202406060354406_alterUser.designer.cs">
       <DependentUpon>202406060354406_alterUser.cs</DependentUpon>
@@ -189,13 +185,29 @@
     <Compile Include="Migrations\202406060435148_update.designer.cs">
       <DependentUpon>202406060435148_update.cs</DependentUpon>
     </Compile>
+
     <Compile Include="Migrations\202406060913585_DelRole.cs" />
     <Compile Include="Migrations\202406060913585_DelRole.Designer.cs">
       <DependentUpon>202406060913585_DelRole.cs</DependentUpon>
+
+      <DependentUpon>202406060839133_deleteRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202406061715200_UpdateTable.cs" />
+    <Compile Include="Migrations\202406061715200_UpdateTable.designer.cs">
+      <DependentUpon>202406061715200_UpdateTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202406071925461_update-orderTable.cs" />
+    <Compile Include="Migrations\202406071925461_update-orderTable.designer.cs">
+      <DependentUpon>202406071925461_update-orderTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202406071939032_OrderItem.cs" />
+    <Compile Include="Migrations\202406071939032_OrderItem.designer.cs">
+      <DependentUpon>202406071939032_OrderItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\ElectronicDb.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\Order.cs" />
@@ -253,11 +265,6 @@
     <Content Include="assets\css\sb-admin-2.css" />
     <Content Include="assets\css\sb-admin-2.min.css" />
     <Content Include="assets\css\style.css" />
-    <Content Include="Areas\Admin\Views\AdminProducts\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\AdminProducts\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\AdminProducts\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\AdminProducts\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\AdminProducts\Index.cshtml" />
     <Content Include="Areas\Admin\Views\AdminCarts\Create.cshtml" />
     <Content Include="Areas\Admin\Views\AdminCarts\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\AdminCarts\Details.cshtml" />
@@ -288,11 +295,11 @@
     <Content Include="Areas\Admin\Views\Roles\Details.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Roles\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Shipments\Create.cshtml" />
-    <Content Include="Areas\Admin\Views\Shipments\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\Shipments\Details.cshtml" />
-    <Content Include="Areas\Admin\Views\Shipments\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\Shipments\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminShipments\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminShipments\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminShipments\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminShipments\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminShipments\Index.cshtml" />
     <Content Include="Areas\Admin\Views\AdminOrders\Create.cshtml" />
     <Content Include="Areas\Admin\Views\AdminOrders\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\AdminOrders\Details.cshtml" />
@@ -300,7 +307,6 @@
     <Content Include="Areas\Admin\Views\AdminOrders\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_ProductOptionList.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_ImageList.cshtml" />
-    <Content Include="wwwroot\Images\z4918593887110_1ef08e1661fdde167275504b7b67b0de.jpg" />
     <Content Include="Areas\Admin\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Admin\Views\AdminUsers\Create.cshtml" />
@@ -309,6 +315,11 @@
     <Content Include="Areas\Admin\Views\AdminUsers\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\AdminUsers\Index.cshtml" />
     <Content Include="Areas\Admin\Views\AdminUsers\Login.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminProducts\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminProducts\Delete.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminProducts\Details.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminProducts\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminProducts\Index.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -350,6 +361,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="wwwroot\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -382,17 +394,27 @@
     <EmbeddedResource Include="Migrations\202406050250236_InitialCreate.resx">
       <DependentUpon>202406050250236_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202406050255365_UpdateTableName.resx">
-      <DependentUpon>202406050255365_UpdateTableName.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202406060354406_alterUser.resx">
       <DependentUpon>202406060354406_alterUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202406060435148_update.resx">
       <DependentUpon>202406060435148_update.cs</DependentUpon>
     </EmbeddedResource>
+
     <EmbeddedResource Include="Migrations\202406060913585_DelRole.resx">
       <DependentUpon>202406060913585_DelRole.cs</DependentUpon>
+
+    <EmbeddedResource Include="Migrations\202406060839133_deleteRole.resx">
+      <DependentUpon>202406060839133_deleteRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406061715200_UpdateTable.resx">
+      <DependentUpon>202406061715200_UpdateTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406071925461_update-orderTable.resx">
+      <DependentUpon>202406071925461_update-orderTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406071939032_OrderItem.resx">
+      <DependentUpon>202406071939032_OrderItem.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

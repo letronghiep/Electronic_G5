@@ -22,7 +22,7 @@ namespace Electronic_G5.Controllers
         // GET: Users
         public ActionResult Index()
         {
-            var users = db.Users.Include(u => u.Role1);
+            var users = db.Users.Include(u => u.Role);
             return View(users.ToList());
         }
 

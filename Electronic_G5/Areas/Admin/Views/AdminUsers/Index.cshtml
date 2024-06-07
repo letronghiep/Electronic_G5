@@ -1,88 +1,113 @@
-﻿@model IEnumerable<Electronic_G5.Models.User>
-
+﻿﻿@model PagedList.IPagedList<Electronic_G5.Models.Customer>
+@using PagedList.Mvc
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Khách hàng</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<div class="mb-2">
+    <div>
+        @Html.ActionLink("Thêm mới", "Create", null, new { @class = "btn btn-primary btn-sm text-bg-primary mb-3" })
+        @using (Html.BeginForm("Index", "AdminUsers", FormMethod.Get, new { @class = "d-flex justify-content-between" }))
+        {
+            <div>
+                <label for="page">Hiển thị</label>
+                <input style="width: 50px" type="number" name="pageSize" value="@Model.PageSize" min="10" id="pageSize" onchange="updateTable()" />
+                <span>dữ liệu</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <input type="text" value="@ViewBag.Keyword" name="searchString" placeholder="Nhập danh mục" class="form-control" />
+                <input type="submit" value="Tìm kiếm" class="btn btn-info text-bg-primary btn-group" />
+            </div>
+        }
+    </div>
+
+</div>
 <table class="table">
     <tr>
+        <th></th>
         <th>
-            @Html.DisplayNameFor(model => model.Role1.role_name)
+            @Html.ActionLink("Tên khách hàng", "Index", new { sortProperty = "customer_name", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.full_name)
+            @Html.ActionLink("Email", "Index", new { sortProperty = "customer_email", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.email)
+            @Html.ActionLink("Order", "Index", new { sortProperty = "customer_order_count", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.password)
+            @Html.ActionLink("Tổng tiền", "Index", new { sortProperty = "customer_order_price", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.address)
+            @Html.ActionLink("Số điện thoại", "Index", new { sortProperty = "customer_phone", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.phone_number)
+            @Html.ActionLink("Địa chỉ", "Index", new { sortProperty = "customer_city", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.image)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.role)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.created_at)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.updated_at)
+            @Html.ActionLink("Đặt hàng mới nhất", "Index", new { sortProperty = "customer_last_order", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Role1.role_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.full_name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.password)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.address)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.phone_number)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.image)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.role)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.created_at)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.updated_at)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.user_id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.user_id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.user_id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img src="~/wwwroot/Images/@item.customer_image_url" width="50" height="50" class="rounded-circle" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.customer_name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.customer_email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.customer_order_count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.customer_order_price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.customer_phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.customer_city)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.customer_last_order)
+            </td>
+            <td align="center">
+                <a href="@Url.Action("Details", new {id = item.customer_id})" class="btn btn-outline-info btn-sm text-black">
+                    <i class='bx bx-search-alt-2'></i>
+                </a>
+                <a href="@Url.Action("Edit", new {id = item.customer_id})" class="btn btn-primary btn-sm">
+                    <i class='bx bxs-pencil'></i>
+                </a>
+                <a href="@Url.Action("Delete", new {id = item.customer_id})" class="btn btn-danger btn-sm">
+                    <i class='bx bx-trash-alt'></i>
+                </a>
+            </td>
+        </tr>
+    }
 
 </table>
+<div class="row">
+    <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6">
+        @using (Html.BeginForm("Index", "Categories", FormMethod.Get))
+        {
+            <p>
+                Kích thước trang: @Html.DropDownList("size", (List<SelectListItem>)ViewBag.size, new { @onchange = "this.form.submit();" })
+            </p>
+        }
+    </div>
+    <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6 text-right">
+        Trang: @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+    </div>
+</div>
+<nav class="database-pagination" style="display: flex; justify-content: center; margin-top: 20px">
+    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, pageSize = ViewBag.currentSize }))
+</nav>

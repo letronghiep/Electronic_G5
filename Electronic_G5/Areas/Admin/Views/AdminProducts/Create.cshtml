@@ -1,4 +1,4 @@
-﻿@model Electronic_G5.Models.ProductViewModel
+﻿﻿@model Electronic_G5.Models.ProductViewModel
 
 @{
     ViewBag.Title = "Thêm sản phẩm";
@@ -136,26 +136,34 @@
                     <h5 style="padding-left: 12px">Lựa chọn</h5>
 
                     <div id="productOptions">
-                        <div class="form-group option-item">
-                            <div class="col-md-12">
-                                <input type="text" class="form-control option-name" placeholder="Tên: " />
-                            </div>
-                        </div>
-                        <div class="form-group option-item">
-                            <div class="col-md-12">
-                                <input type="text" class="form-control option-value" placeholder="Giá trị: " />
-                            </div>
-                        </div>
-                        <div class="form-group option-item">
-                            <div class="col-md-12">
-                                <input type="text" class="form-control option-price" placeholder="Giá tiền: " />
-                            </div>
-                        </div>
+                        @*@for (int i = 0; i < Model.ProductOptions.Count; i++)
+                            {
+                                <div class="option-list">
+                                    <h5>Option @(i + 1) <a href="#" class="remove-variant">Remove</a></h5>
+                                    @Html.HiddenFor(model => model.ProductOptions[i].product_option_id)
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ProductOptions[i].product_option_name, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.DropDownListFor(model => model.ProductOptions[i].product_option_name, new SelectList(new List<string> { "Size", "Color", "Weight", "Smell" }), htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ProductOptions[i].product_option_name, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ProductOptions[i].product_option_value, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.ProductOptions[i].product_option_value, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.ProductOptions[i].product_option_value, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.ProductOptions[i].product_option_price, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.ProductOptions[i].product_option_price, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            }*@
                     </div>
                     <button type="button" id="add_option" class="btn btn-outline-primary w-100">Thêm lựa chọn</button>
-                    <div id="productOptionContainer">
-                        @Html.Partial("_ProductOptionList", Model.ProductOptions)
-                    </div>
+
                 </div>
                 <div class="p-3 shadow mt-3">
                     <h5>Gallery</h5>
@@ -171,8 +179,6 @@
         </div>
     </div>
 }
-
-<p id="msg"></p>
 @if (@ViewBag.product != null)
 {
     <p class="alert-danger text-bg-danger bg-danger">@ViewBag.product</p>
@@ -201,40 +207,44 @@
         });
 
         $(document).ready(function () {
-            var options = @Html.Raw(Json.Encode(Model.ProductOptions));
-            var images = @Html.Raw(Json.Encode(Model.Images));
-
+            var optionIndex = parseInt(@Model.ProductOptions.Count);
+             var images = @Html.Raw(Json.Encode(Model.Images));
             $("#add_option").click(function () {
-                var optionName = $(".option-name").val();
-                var optionValue = $(".option-value").val();
-                var optionPrice = $(".option-price").val();
-                if (optionName && optionValue && optionPrice) {
-                    var newOption = {
-                        product_option_name: optionName,
-                        product_option_value: optionValue,
-                        product_option_price: optionPrice
-                    };
-                    options.push(newOption);
+                var newOption = `
+                        <div class="option-list">
+                            <a href="#" class="remove-option text-end float-end">Xóa</a>
+                            <input type="hidden" name="ProductOptions[${optionIndex}].product_option_id" value="0" />
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <select class="form-control" id="ProductOptions_${optionIndex}_product_option_name" name="ProductOptions[${optionIndex}].product_option_name">
+                                        <option value="Size">Size</option>
+                                        <option value="Color">Color</option>
+                                        <option value="Weight">Weight</option>
+                                        <option value="Smell">Smell</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text" id="ProductOptions_${optionIndex}_product_option_value" name="ProductOptions[${optionIndex}].product_option_value" value="" placeholder="Value" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text" id="ProductOptions_${optionIndex}_product_option_price" name="ProductOptions[${optionIndex}].product_option_price" value="" placeholder="Price" />
+                                </div>
+                            </div>
+                        </div>
+                    `;
 
-                    $.ajax({
-                        url: "@Url.Action("AddOptionPartial", "AdminProducts")",
-                        type: "POST",
-                        data: newOption,
-                        success: function (response) {
-                            $("#productOptionContainer").html(response.html);
-                            $(".option-name").val('');
-                            $(".option-value").val('');
-                            $(".option-price").val('');
-                        },
-                        error: function () {
-                            alert("Failed to add option. Please try again.");
-                        }
-                    });
-                } else {
-                    alert('Please fill all fields.');
-                }
+                    $("#productOptions").append(newOption);
+                    optionIndex++;
             });
 
+                 $("#productOptions").on("click", ".remove-option", function () {
+                            $(this).closest(".option-list").remove();
+                            return false;
+                 });
             // Upload Image
             $('#uploadImageButton').click(function () {
                 var formData = new FormData();
@@ -266,28 +276,7 @@
                     alert('Please select a file to upload.');
                 }
             });
-
-
-            $(document).on('click', '.remove-option', function () {
-                var optionId = $(this).data('id');
-                options = options.filter(function (option) {
-                    return option.Id !== optionId;
-                });
-
-                $.ajax({
-                    url: '@Url.Action("RemoveOptionPartial", "AdminProducts")',
-                    type: 'POST',
-                    data: { id: optionId },
-                    success: function (response) {
-                        $('#productOptionContainer').html(response.html);
-                    },
-                    error: function () {
-                        alert('Failed to remove option. Please try again.');
-                    }
-                });
-            });
-
-            $(document).on('click', '.remove-image', function () {
+             $(document).on('click', '.remove-image', function () {
                 var imageId = $(this).data('id');
                 images = images.filter(function (image) {
                     return image.image_id !== imageId;
@@ -305,6 +294,7 @@
                     }
                 });
             });
+
         });
     </script>
 }

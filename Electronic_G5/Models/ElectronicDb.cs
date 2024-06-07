@@ -97,7 +97,7 @@ namespace Electronic_G5.Models
 
             modelBuilder.Entity<Role>()
                 .HasMany(e => e.Users)
-                .WithRequired(e => e.Role1)
+                .WithRequired(e => e.Role)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Shipment>()

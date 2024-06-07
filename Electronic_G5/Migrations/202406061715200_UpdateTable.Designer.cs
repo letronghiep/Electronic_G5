@@ -7,13 +7,13 @@ namespace Electronic_G5.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class UpdateTableName : IMigrationMetadata
+    public sealed partial class UpdateTable : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(UpdateTableName));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(UpdateTable));
         
         string IMigrationMetadata.Id
         {
-            get { return "202406050255365_UpdateTableName"; }
+            get { return "202406061715200_UpdateTable"; }
         }
         
         string IMigrationMetadata.Source
