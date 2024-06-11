@@ -234,7 +234,14 @@ namespace Electronic_G5.Controllers
 
                 // Thêm người dùng mới vào cơ sở dữ liệu
                 db.Users.Add(user);
-
+                System.Diagnostics.Debug.WriteLine("full_name:", model.full_name);
+                System.Diagnostics.Debug.WriteLine("email:", model.email);
+                System.Diagnostics.Debug.WriteLine("pass:", model.password);
+                System.Diagnostics.Debug.WriteLine("address:", model.address);
+                System.Diagnostics.Debug.WriteLine("phone:", model.phone_number);
+                System.Diagnostics.Debug.WriteLine("image:", model.image);
+                System.Diagnostics.Debug.WriteLine("role_id:", model.role_id);
+                
                 db.SaveChanges();
 
                 // Đăng nhập người dùng mới sau khi đăng ký thành công

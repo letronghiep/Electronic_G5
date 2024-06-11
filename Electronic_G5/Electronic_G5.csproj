@@ -169,6 +169,7 @@
     <Compile Include="Areas\Admin\Controllers\AdminShipmentsController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -185,7 +186,6 @@
     <Compile Include="Migrations\202406060435148_update.designer.cs">
       <DependentUpon>202406060435148_update.cs</DependentUpon>
     </Compile>
-
     <Compile Include="Migrations\202406060913585_DelRole.cs" />
     <Compile Include="Migrations\202406060913585_DelRole.Designer.cs">
       <DependentUpon>202406060913585_DelRole.cs</DependentUpon>
@@ -204,11 +204,16 @@
     <Compile Include="Migrations\202406071939032_OrderItem.designer.cs">
       <DependentUpon>202406071939032_OrderItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202406080543250_test1.cs" />
+    <Compile Include="Migrations\202406080543250_test1.Designer.cs">
+      <DependentUpon>202406080543250_test1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\ElectronicDb.cs" />
+    <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Order_Items.cs" />
@@ -227,6 +232,9 @@
       <DependentUpon>Electronic.mdf</DependentUpon>
     </Content>
     <Content Include="assets\css\home.css" />
+    <Content Include="assets\css\product_detail.css" />
+    <Content Include="assets\css\style_client.css" />
+    <Content Include="assets\css\vendor.css" />
     <Content Include="assets\image\upload.png" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
@@ -248,6 +256,11 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="wwwroot\Images\dayloa.jpg" />
+    <Content Include="wwwroot\Images\daynguon.jpg" />
+    <Content Include="wwwroot\Images\dgtcable.jpg" />
+    <Content Include="wwwroot\Images\logo %282%29.png" />
+    <Content Include="wwwroot\Images\pkdiy.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -358,10 +371,18 @@
     <Content Include="Views\Users\Register.cshtml" />
     <Content Include="Views\Users\ForgotPass.cshtml" />
     <Content Include="Views\Users\Login.cshtml" />
+    <Content Include="Views\Products\Create.cshtml" />
+    <Content Include="Views\Products\Delete.cshtml" />
+    <Content Include="Views\Products\Details.cshtml" />
+    <Content Include="Views\Products\Edit.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\Categories\Menu2.cshtml" />
+    <Content Include="Views\Home\ChiTietSP.cshtml" />
+    <Content Include="Views\Home\Cart.cshtml" />
+    <Content Include="Views\Home\BYID1.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="wwwroot\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -400,7 +421,6 @@
     <EmbeddedResource Include="Migrations\202406060435148_update.resx">
       <DependentUpon>202406060435148_update.cs</DependentUpon>
     </EmbeddedResource>
-
     <EmbeddedResource Include="Migrations\202406060913585_DelRole.resx">
       <DependentUpon>202406060913585_DelRole.cs</DependentUpon>
 
@@ -415,6 +435,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202406071939032_OrderItem.resx">
       <DependentUpon>202406071939032_OrderItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202406080543250_test1.resx">
+      <DependentUpon>202406080543250_test1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
