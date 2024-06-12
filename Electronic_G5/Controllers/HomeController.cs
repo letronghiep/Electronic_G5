@@ -42,15 +42,9 @@ namespace Electronic_G5.Controllers
             
         }
 
-        public ActionResult ChiTietSP(int product_id)
+        public ActionResult ChiTietSP(int? id)
         {
-            var product = db.Products.FirstOrDefault(
-                p=>p.product_id==product_id);
-
-            //if (product == null)
-            //{
-            //    return NotFound();
-            //}
+            Product product = db.Products.SingleOrDefault(p=>p.product_id==id);
 
             return View(product);
         }
