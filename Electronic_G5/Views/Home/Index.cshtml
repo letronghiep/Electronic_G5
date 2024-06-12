@@ -248,12 +248,13 @@
                 <!--all-->
                 @foreach (var product in Model.AllProducts)
                 {
+                    var imageUrl = "~/wwwroot/Images/" + product.Product.image_url;
                     <div class=" item all col-md-4 col-lg-3 my-4">
                         <div class="card position-relative">
-                            <a href="single-product.html">
-                                @if (product.Images != null && product.Images.Count > 0)
+                            <a href="@Url.Action("ChiTietSP","Home", new {product_id = product.Product.product_id})">
+                                @if (product.Product.image_url != null)
                                 {
-                                    <img src="@product.Images.First().image_url" class="img-fluid rounded-4" alt="ảnh">
+                                    <img src="@Url.Content(imageUrl)" class="img-fluid rounded-4" alt="ảnh">
                                 }
                                 else
                                 {
@@ -279,12 +280,13 @@
                 <!--Latest-->
                 @foreach (var product in Model.LatestProducts)
                 {
+                    var imageUrl = "~/wwwroot/Images/" + product.Product.image_url;
                     <div class="item new col-md-4 col-lg-3 my-4">
                         <div class="card position-relative">
-                            <a href="single-product.html">
-                                @if (product.Images != null && product.Images.Count > 0)
+                            <a href="@Url.Action("ChiTietSP","Home", new {product_id = product.Product.product_id})">
+                                @if (product.Product.image_url != null)
                                 {
-                                    <img src="@product.Images.First().image_url" class="img-fluid rounded-4" alt="@product.Product.product_name">
+                                    <img src="@Url.Content(imageUrl)" class="img-fluid rounded-4" alt="@product.Product.product_name">
                                 }
                                 else
                                 {
@@ -292,7 +294,7 @@
                                 }
                             </a>
                             <div class="card-body p-0">
-                                <a href="@Url.Action("ChiTietSP","Home")">
+                                <a href="@Url.Action("ChiTietSP","Home", new {product_id = product.Product.product_id})">
                                     <h3 class="card-title pt-4 m-0">@product.Product.product_name</h3>
                                 </a>
                                 <div class="card-text">
