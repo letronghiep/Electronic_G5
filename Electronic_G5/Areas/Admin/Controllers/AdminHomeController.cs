@@ -111,7 +111,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             try
             {
 
-                ExcelPackage.LicenseContext = LicenseContext.Commercial;
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
                 using (ExcelPackage package = new ExcelPackage())
                 {
 
@@ -201,6 +201,13 @@ namespace Electronic_G5.Areas.Admin.Controllers
 
                     return File(package.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{output}.xlsx");
                 }
+            }
+            catch (FileNotFoundException ex)
+            {
+                // Log detailed error
+                System.Diagnostics.Debug.WriteLine("FileNotFounds" + ex.Message);
+
+                return View("Index");
             }
             catch (Exception ex)
             {
