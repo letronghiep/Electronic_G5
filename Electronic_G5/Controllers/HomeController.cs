@@ -12,6 +12,9 @@ namespace Electronic_G5.Controllers
         private ElectronicDb db = new ElectronicDb();
 
        
+
+        [AllowAnonymous]
+
         public ActionResult Index()
         {
             //lấy all
