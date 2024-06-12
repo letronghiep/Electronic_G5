@@ -1,0 +1,7 @@
+﻿@model IEnumerable<Electronic_G5.Models.Category>
+    @foreach (var item in Model)
+            {
+                <li class="nav-link">
+                    <a style="text-decoration:none" href="BYID1/@item.category_id">@item.category_name </a>
+                </li>
+            }  

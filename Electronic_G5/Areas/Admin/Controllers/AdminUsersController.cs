@@ -308,33 +308,56 @@ namespace Electronic_G5.Areas.Admin.Controllers
             }
             base.Dispose(disposing);
         }
+        public ActionResult Login()
+        {
+            return View();
+        }
+
         // POST: Users/Login
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Login(User model)
+        // [ValidateAntiForgeryToken]
+        public ActionResult Login(User model, bool remember = false)
         {
-            if (ModelState.IsValid)
+            try
             {
+                //    if (ModelState.IsValid)
+                //    {
+                // Tìm user trong database
                 var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password);
+
                 if (user != null)
                 {
-                    // Đăng nhập thành công, lưu thông tin người dùng vào session hoặc cookie
-                    // Session["user_id"] = user.user_id;
-                    Session["email"] = user.email;
-                    Session["password"] = user.password;
+                    // Tạo session cho user
+                    //Session["email"] = user.email.ToString();
+                    //Session["password"] = user.password.ToString();
+                    Session["UserID"] = user.user_id.ToString();
+                    Session["UserName"] = user.full_name.ToString();
 
-                    // Chuyển hướng đến trang chính sau khi đăng nhập thành công
+                    if (remember)
+                    {
+                        // Lưu thông tin đăng nhập vào cookie
+                        HttpCookie cookie = new HttpCookie("UserLogin");
+                        cookie.Values.Add("email", model.email);
+                        cookie.Values.Add("password", model.password);
+                        cookie.Expires = DateTime.Now.AddDays(15);
+                        Response.Cookies.Add(cookie);
+                    }
+
                     return RedirectToAction("Index", "AdminHome");
                 }
                 else
                 {
-                    // Thông báo lỗi khi đăng nhập không thành công
-                    ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không chính xác!");
+                    ViewBag.error = "Email hoặc mật khẩu không đúng.";
                 }
+                // }
+                return View(model);
             }
+            catch (Exception ex)
+            {
 
-            // Trả về view đăng nhập với model nếu có lỗi
-            return View(model);
+                ViewBag.error = "Có lỗi" + ex.Message;
+                return View(model);
+            }
         }
 
         // GET: Users/Logout

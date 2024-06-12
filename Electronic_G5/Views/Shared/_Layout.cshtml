@@ -6,17 +6,59 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <style>
+        /* Custom navbar styles */
+        .navbar-custom {
+            background-color: lightblue;
+        }
+
+            .navbar-custom .navbar-nav .nav-link {
+                color: white;
+            }
+
+                .navbar-custom .navbar-nav .nav-link:hover {
+                    color: white;
+                }
+
+                .navbar-custom .navbar-nav .nav-link.active {
+                    color: white;
+                }
+
+            .navbar-custom .navbar-toggler {
+                border-color: white;
+            }
+
+            .navbar-custom .navbar-toggler-icon {
+                background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+            }
+
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light">
-        <div class="col-sm-4 col-lg-3 text-center text-sm-start">
-            <div class="main-logo">
-                <a href="index.html">
-                    <img src="images/logo.png" alt="logo" class="img-fluid">
-                </a>
+        <div class="container-fluid">
+            <!-- Thêm container-fluid để bao bọc nội dung -->
+            <div class="row align-items-center justify-content-between w-100">
+                <!-- Sử dụng row và các class align-items-center, justify-content-between để căn giữa và căn đều nội dung -->
+                <div class="col-sm-4 col-lg-3 text-center text-sm-start">
+                    <!-- Thêm text-sm-start để căn trái với màn hình lớn -->
+                    <div class="main-logo">
+                        <a href="index.html">
+                            <img src="~/wwwroot/Images/logo (2).png" alt="logo" class="img-fluid" width="200">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-8 col-lg-9 text-center text-sm-end">
+                    <!-- Thêm text-sm-end để căn phải với màn hình lớn -->
+                    <div>
+                        <h1 class="text-dark">Electronic Accessories</h1>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+    </nav>
+
+    @*<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
 
             <div class="offcanvas-header justify-content-center">
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -119,8 +161,20 @@
                 </ul>
             </div>
 
+        </div>*@
+
+    <nav class="navbar navbar-custom navbar-expand-sm navbar-toggleable-sm navbar-dark ">
+        <div class="container">
+            <div class="navbar-collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav mx-auto">
+                    <!-- Thêm class mx-auto để căn giữa các thành phần trong nav -->
+                    @{ Html.RenderAction("Menu2", "Categories");}
+                </ul>
+            </div>
         </div>
     </nav>
+
+
     <div class="container body-content">
         @RenderBody()
         <hr />
