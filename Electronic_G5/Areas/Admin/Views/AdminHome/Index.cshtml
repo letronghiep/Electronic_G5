@@ -2,7 +2,187 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var currentYear = ViewBag.year;
+    var currentMonth = ViewBag.month;
 }
 
-<h2>Index</h2>
+<h2>Dashboard</h2>
 
+<div class="d-flex align-items-center gap-3">
+    <div class="d-flex gap-2">
+        @*<img src="~/assets/image/neworders.svg" />*@
+        <div class="rounded-sm p-4" style="background-color: #d9fbd0">
+            <h5 class=""><span id="productOrderCount"></span> lượt đặt hàng mới</h5>
+            <span class="text-sm text-center">Đang chờ được xử lý</span>
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        @*<img src="~/assets/image/neworders.svg" />*@
+        <div class="rounded-sm p-4" style="background-color: #ffe0db">
+            <h5 class=""><span id="outStock"></span> sản phẩm</h5>
+            <span class="text-sm text-center text-danger">Hết hàng</span>
+        </div>
+    </div>
+</div>
+<hr />
+<div>
+    <div class="d-flex align-items-center justify-content-between ">
+        <div>
+            <h2>Doanh thu</h2>
+            <p>Doanh thu dựa trên số lượng bán hàng tháng</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button id="exportExcel" class="btn btn-success btn-sm">
+                <i class='bx bx-check'></i>
+            </button>
+            <form id="formAction" method="get" class="d-flex align-items-center gap-2" action="@Url.Action("MonthlyRevenue", "AdminHome")">
+                <select class="form-control" name="month">
+                    @for (int i = 0; i < 12; i++)
+                    {
+                        <option value="@(i+1)" @(currentMonth == (i + 1) ? "selected" : "")>Tháng @(i+1)</option>
+                    }
+                </select>
+                <input name="year" type="number" min="2000" class="form-control" value="@(currentYear)" placeholder="Năm 2024" />
+                <input type="submit" class="btn btn-primary" value="Thống kê" />
+            </form>
+
+        </div>
+    </div>
+    <canvas id="monthlyChart" width="400" height="100"></canvas>
+</div>
+<hr />
+<div>
+    <h2>Top 5 sản phẩm bán chạy nhất</h2>
+    <table id="topSalesProductList" class="table">
+        <tr>
+            <th>Top sản phẩm bán chạy</th>
+            <th id="total_order" class="text-center"></th>
+            <th class="text-center">Order(%)</th>
+            <th class="text-center">Doanh thu</th>
+            <th class="text-center">Doanh thu(%)</th>
+        </tr>
+
+    </table>
+</div>
+<div>
+    <h2>Top 5 sản phẩm không bán được</h2>
+    <table id="bottomSalesProductList" class="table">
+        <tr>
+            <th>Top 5</th>
+            <th class="text-center">Giá</th>
+            <th class="text-center">Số lượng</th>
+            <th class="text-center">Ngày nhập</th>
+        </tr>
+
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var monthlyStats = @Html.Raw(ViewBag.MonthlyStats ?? "[]");
+        var labels = monthlyStats.map(stat => `Day ${stat.Day}`);
+        var revenueData = monthlyStats.map(stat => stat.Revenue);
+        console.log(monthlyStats)
+        var monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+        var monthlyChart = new Chart(monthlyCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: revenueData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+         // Hiển thị top 5 sản phẩm bán chạy nhất
+        var topSalesProduct = @Html.Raw(ViewBag.TopSalesProduct ?? "[]");
+        var bottomSalesProducts = @Html.Raw(ViewBag.BottomSalesProduct ?? "[]");
+        var productOrderCount = @Html.Raw(ViewBag.productOrderCount ?? "0");
+        var outStock = @Html.Raw(ViewBag.outStock ?? "0");
+
+        var topSalesProductList = document.getElementById("topSalesProductList");
+        var bottomSalesProductList = document.getElementById("bottomSalesProductList")
+        var totalOrder = topSalesProduct.map(item => item.order_quantity).reduce((currentValue, total) => total += currentValue, 0);
+        var totalRevenue = topSalesProduct.map(item => item.revenue).reduce((currentValue, total) => total += currentValue, 0);
+        console.log(bottomSalesProducts)
+        $("#total_order").html(`Orders(${totalOrder})`)
+        console.log(topSalesProduct)
+        topSalesProduct.forEach(product => {
+            var listItem = `
+                <tr class="text-center">
+                    <td class="d-flex align-items-center gap-2">
+                        <img src="~/wwwroot/Images/${product.image_url}" width="40" height="40" />
+                        <h6 class="font-bold">${product.product_name}</h6>
+                    </td>
+                    <td >
+                        ${product.order_quantity}
+                    </td>
+                    <td>
+                        ${Math.floor(product.order_quantity / totalOrder * 100)}%
+                    </td>
+                    <td>
+                        ${product.revenue}
+                    </td>
+                    <td>
+                        ${Math.floor(product.revenue / totalRevenue * 100)}%
+                    </td>
+                </tr>
+
+            `;
+            topSalesProductList.insertAdjacentHTML('beforeend', listItem);
+        });
+        bottomSalesProducts.forEach(product => {
+            var listItem = `
+                <tr class="text-center">
+                    <td class="d-flex align-items-center gap-2">
+                        <img src="~/wwwroot/Images/${product.image_url}" width="40" height="40" />
+                        <h6 class="font-bold">${product.product_name}</h6>
+                    </td>
+                    <td >
+                        ${product.price}
+                    </td>
+                    <td>
+                        ${product.stock}
+                    </td>
+                    <td>
+                            ${convertDate(product.created_at)}
+                    </td>
+                </tr>
+
+            `;
+            bottomSalesProductList.insertAdjacentHTML('beforeend', listItem);
+        });
+        $("#productOrderCount").html(`${productOrderCount}`)
+        $("#outStock").html(`${outStock}`)
+
+        console.log(productOrderCount)
+        function convertDate(timestamp) {
+            const date = new Date(timestamp);
+
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const year = date.getFullYear();
+
+            const formattedDate = `${day}/${month}/${year}`;
+            return formattedDate
+        }
+       document.getElementById("exportExcel").addEventListener("click", function () {
+            var month = document.querySelector("select[name='month']").value;
+            var year = document.querySelector("input[name='year']").value;
+            window.location.href = `@Url.Action("ExportToExcel")?month=${month}&year=${year}`;
+        });
+    });
+</script>

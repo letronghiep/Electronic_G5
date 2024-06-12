@@ -43,6 +43,7 @@
 
         public int stock { get; set; }
 
+        public decimal price { get; set; }
         public int category_id { get; set; }
 
         [Column(TypeName = "datetime2")]
