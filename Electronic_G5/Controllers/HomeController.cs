@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -11,15 +12,18 @@ namespace Electronic_G5.Controllers
     {
         private ElectronicDb db = new ElectronicDb();
 
-       
+
+
+        [AllowAnonymous]
+
         public ActionResult Index()
         {
             //lấy all
-                var allproducts = db.Products.Select(p => new ProductViewModel
-                {
-                    Product = p,
-                    Images = db.Images.Where(i => i.product_id == p.product_id).ToList()
-                }).ToList();
+            var allproducts = db.Products.Select(p => new ProductViewModel
+            {
+                Product = p,
+                Images = db.Images.Where(i => i.product_id == p.product_id).ToList()
+            }).ToList();
             //new pro
             var latestProduct = db.Products.OrderByDescending(p => p.created_at).Select(p => new ProductViewModel
             {
@@ -39,12 +43,18 @@ namespace Electronic_G5.Controllers
 
             };
             return View(viewModel);
-            
+
         }
 
-        public ActionResult ChiTietSP(int? id)
+        public ActionResult ChiTietSP(int? product_id)
         {
-            Product product = db.Products.SingleOrDefault(p=>p.product_id==id);
+            if (product_id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest); ;
+            var product = db.Products.FirstOrDefault(
+                p => p.product_id == product_id);
+            if (product == null)
+            {
+                return HttpNotFound();
+            }
 
             return View(product);
         }

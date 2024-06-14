@@ -4,88 +4,14 @@
     ViewBag.Title = "Details";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
-
-<h2>Details</h2>
-
-<div>
-    <h4>Order</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Payment.payment_method)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Payment.payment_method)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Shipment.address)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Shipment.address)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.User.full_name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.User.full_name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.order_date)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.order_date)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.total_price)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.total_price)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.order_status)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.order_status)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.fulfillment_status)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.fulfillment_status)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.created_at)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.created_at)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.updated_at)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.updated_at)
-        </dd>
-
-    </dl>
+<div class="p-4 shadow-sm rounded-3">
+    <h3>Chi tiết đơn hàng: #@(Model.order_id)</h3>
+    <p class="text-sm text-gray-500">@Model.order_date</p>
+    <p class="font-weight-bold text-gray-700">Trạng thái: <span> @Model.order_status</span></p>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.order_id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+@section Scripts {
+    <script type="text/javascript">
+
+    </script>
+
+}

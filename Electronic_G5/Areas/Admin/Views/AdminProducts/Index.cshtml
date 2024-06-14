@@ -95,7 +95,7 @@
 </table>
 <div class="row">
     <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6">
-        @using (Html.BeginForm("Index", "Categories", FormMethod.Get))
+        @using (Html.BeginForm("Index", "Products", FormMethod.Get))
         {
             <p>
                 Kích thước trang: @Html.DropDownList("size", (List<SelectListItem>)ViewBag.size, new { @onchange = "this.form.submit();" })
@@ -107,6 +107,5 @@
     </div>
 </div>
 <nav class="database-pagination" style="display: flex; justify-content: center; margin-top: 20px">
-    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
     @Html.PagedListPager(Model, page => Url.Action("Index", new { page, pageSize = ViewBag.currentSize }))
 </nav>
