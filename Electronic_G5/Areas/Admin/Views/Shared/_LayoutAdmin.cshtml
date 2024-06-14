@@ -15,7 +15,7 @@
     @Scripts.Render("~/bundles/modernizr")
     <!-- Place the first <script> tag in your HTML's <head> -->
     <script src="https://cdn.tiny.cloud/1/cke32k0wq2yl0yduvpskdsobi8z1wbl0j6ah9s4jky5sgmes/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-
+    @*Response.Redirect("Login")*@
     <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
     <script>
         tinymce.init({
@@ -27,6 +27,12 @@
         });
     </script>
 </head>
+<style>
+    a {
+        text-decoration: none;
+        color: inherit
+    }
+</style>
 <body>
     <div id="wrapper">
 
@@ -106,7 +112,7 @@
                 </a>
             </li>
         </ul>
-        <div class="container body-content h-100 w-100">
+        <div class="container body-content mx-auto w-75">
             @RenderBody()
         </div>
     </div>

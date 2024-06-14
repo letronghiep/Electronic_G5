@@ -38,96 +38,93 @@
             background-color: #ddd;
         }
 </style>
-<h2>Danh mục sản phẩm</h2>
+<div class="card mb-3">
+    <div class="card-header">
+        <h4>Danh mục sản phẩm</h4>
+        <div class="mb-2 d-flex justify-content-between">
+            <div class="">
+                @using (Html.BeginForm("Index", "AdminCategories", FormMethod.Get, new { @class = "d-flex justify-content-between" }))
+                {
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="text" value="@ViewBag.Keyword" name="searchString" placeholder="Search Order" class="form-control" />
+                        <button type="submit" class="btn"><i class='bx bx-search-alt-2'></i></button>
+                    </div>
+                }
+            </div>
+            @Html.ActionLink(" + Thêm mới", "Create", null, new { @class = "btn btn-outline-primary" })
 
-<div class="mb-2">
-    <div>
-        @Html.ActionLink("Thêm mới", "Create", null, new { @class = "btn btn-primary btn-sm text-bg-primary mb-3" })
-        @using (Html.BeginForm("Index", "AdminCategories", FormMethod.Get, new { @class = "d-flex justify-content-between" }))
-        {
-            <div>
-                <label for="page">Hiển thị</label>
-                <input style="width: 50px" type="number" name="pageSize" value="@Model.PageSize" min="10" id="pageSize" onchange="updateTable()" />
-                <span>dữ liệu</span>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <input type="text" value="@ViewBag.Keyword" name="searchString" placeholder="Nhập danh mục" class="form-control" />
-                <input type="submit" value="Tìm kiếm" class="btn btn-info text-bg-primary btn-group" />
-            </div>
-        }
+        </div>
     </div>
+    <table class="table card-body">
+        <tr class="table-info text-center">
+            <th>
+                @Html.ActionLink("Danh mục cha", "Index", new { sortProperty = "parent_id", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
+            </th>
+            <th>
+                @Html.ActionLink("Tên danh mục", "Index", new { sortProperty = "category_name", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
 
-</div>
+            </th>
+            <th>
+                @Html.ActionLink("Ngày tạo", "Index", new { sortProperty = "created_at", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
 
-<table class="table table-bordered mx-auto my-3">
-    <tr class="table-info text-center">
-        <th>
-            @Html.ActionLink("Danh mục cha", "Index", new { sortProperty = "parent_id", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-        </th>
-        <th>
-            @Html.ActionLink("Tên danh mục", "Index", new { sortProperty = "category_name", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-
-        </th>
-        <th>
-            @Html.ActionLink("Ngày tạo", "Index", new { sortProperty = "created_at", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-
-        </th>
-        <th>
-            @Html.ActionLink("Ngày cập nhật", "Index", new { sortProperty = "updated_at", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.parent_id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.category_name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.created_at)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.updated_at)
-            </td>
-            @*<td>
-            @Html.ActionLink("Sửa", "Edit", new { id = item.category_id }) |
-            @Html.ActionLink("Chi tiết", "Details", new { id = item.category_id }) |
-            @Html.ActionLink("Xóa", "Delete", new { id = item.category_id })
-        </td>*@
-            <td align="center">
-                <a href="@Url.Action("Details", new {id = item.category_id})" class="btn btn-outline-info btn-sm text-black">
-                    <i class='bx bx-search-alt-2'></i>
-                </a>
-                <a href="@Url.Action("Edit", new {id = item.category_id})" class="btn btn-primary btn-sm">
-                    <i class='bx bxs-pencil'></i>
-                </a>
-                <a href="@Url.Action("Delete", new {id = item.category_id})" class="btn btn-danger btn-sm">
-                    <i class='bx bx-trash-alt'></i>
-                </a>
-            </td>
+            </th>
+            <th>
+                @Html.ActionLink("Ngày cập nhật", "Index", new { sortProperty = "updated_at", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
-
-<div class="row">
-    <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6">
-        @using (Html.BeginForm("Index", "Categories", FormMethod.Get))
+        @foreach (var item in Model)
         {
-            <p>
-                Kích thước trang: @Html.DropDownList("size", (List<SelectListItem>)ViewBag.size, new { @onchange = "this.form.submit();" })
-            </p>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.parent_id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.category_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.created_at)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.updated_at)
+                </td>
+                @*<td>
+                        @Html.ActionLink("Sửa", "Edit", new { id = item.category_id }) |
+                        @Html.ActionLink("Chi tiết", "Details", new { id = item.category_id }) |
+                        @Html.ActionLink("Xóa", "Delete", new { id = item.category_id })
+                    </td>*@
+                <td align="center">
+                    <a href="@Url.Action("Details", new {id = item.category_id})" class="btn btn-outline-info btn-sm text-black">
+                        <i class='bx bx-search-alt-2'></i>
+                    </a>
+                    <a href="@Url.Action("Edit", new {id = item.category_id})" class="btn btn-primary btn-sm">
+                        <i class='bx bxs-pencil'></i>
+                    </a>
+                    <a href="@Url.Action("Delete", new {id = item.category_id})" class="btn btn-danger btn-sm">
+                        <i class='bx bx-trash-alt'></i>
+                    </a>
+                </td>
+            </tr>
         }
+
+    </table>
+
+    <div class="row px-3">
+        <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6">
+            @using (Html.BeginForm("Index", "Categories", FormMethod.Get))
+            {
+                <p>
+                    Kích thước trang: @Html.DropDownList("size", (List<SelectListItem>)ViewBag.size, new { @onchange = "this.form.submit();" })
+                </p>
+            }
+        </div>
+        <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6 text-right">
+            Trang: @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+        </div>
     </div>
-    <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6 text-right">
-        Trang: @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
-    </div>
+    <nav class="database-pagination" style="display: flex; justify-content: center; margin-top: 20px">
+        @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, pageSize = ViewBag.currentSize }))
+    </nav>
 </div>
-<nav class="database-pagination" style="display: flex; justify-content: center; margin-top: 20px">
-    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, pageSize = ViewBag.currentSize }))
-</nav>

@@ -47,18 +47,22 @@ namespace Electronic_G5.Areas.Admin.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "image_id,product_id,image_url")] Image image)
+        //[ValidateAntiForgeryToken]
+        public ActionResult Create(int product_id, string image_url)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            //{
+            db.Images.Add(new Image
             {
-                db.Images.Add(image);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                product_id = product_id,
+                image_url = image_url,
+            });
+            db.SaveChanges();
+            return Json(new { Success = true });
+            //}
 
-            ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", image.product_id);
-            return View(image);
+            //ViewBag.product_id = new SelectList(db.Products, "product_id", "product_name", image.product_id);
+            //return View(image);
         }
 
         // GET: Admin/Images/Edit/5
@@ -117,7 +121,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
             Image image = db.Images.Find(id);
             db.Images.Remove(image);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return Json(new { success = true });
         }
 
         protected override void Dispose(bool disposing)
