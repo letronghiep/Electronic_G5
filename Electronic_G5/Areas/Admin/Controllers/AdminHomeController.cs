@@ -29,11 +29,15 @@ namespace Electronic_G5.Areas.Admin.Controllers
             var outStock = (from product in db.Products
                             where product.stock == 0
                             select product).ToList().Count();
+            var totalPrice = (from order in db.Orders 
+                              where order.order_date == DateTime.Now 
+                              select order).ToList().Sum(o => o.total_price);
+            ViewBag.TotalPrice = totalPrice;
             // Lấy tháng và năm hiện tại
             var currentDate = DateTime.Now;
             int month = currentDate.Month;
             int year = currentDate.Year;
-            
+
 
 
             // select top 5 sản phẩm bán chạy nhất
@@ -98,8 +102,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
                     Revenue = g.Sum(o => o.total_price)
                 })
                 .ToList();
-
-
+          
             ViewBag.MonthlyStats = JsonConvert.SerializeObject(monthlyStats);
             ViewBag.Month = month;
             ViewBag.Year = year;
