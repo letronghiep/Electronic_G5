@@ -1,5 +1,5 @@
 ﻿@model Electronic_G5.Models.Product
-<!DOCTYPE html>
+
 <html lang="vi" class="h-100">
 
 <head>
@@ -16,23 +16,50 @@
     <!-- Custom css - Các file css do chúng ta tự viết -->
     <link rel="stylesheet" href="~/assets/css/product_detail.css" type="text/css">
 </head>
+<header>
+    <div class="container-fluid">
+        <hr class="m-0">
+    </div>
+    <!---->
+    <div class="container">
+        <nav class="main-menu d-flex navbar navbar-expand-lg justify-content-between">
+            <!-- Thanh search -->
+            <div class="search-bar border rounded-2 px-3 border-dark-subtle me-3">
+                <form id="search-form" class="text-center d-flex align-items-center" action="" method="post">
+                    <input type="text" class="form-control border-0 bg-transparent"
+                           placeholder="Tìm kiếm" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                              d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
+                    </svg>
+                </form>
+            </div>
 
+            <!-- Thanh login và cart -->
+            <div class="d-flex align-items-end">
+                <ul class="d-flex justify-content-end list-unstyled m-0">
+                    <li>
+                        <a href="@Url.Action("Login","Users")" class="mx-3">
+                            <span class="iconify" data-icon="healthicons:person" data-inline="false"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Cart","Home")" class="mx-3">
+                            <span class="iconify position-relative" data-icon="mdi:cart" data-inline="false"></span>
+                            <span class="position-absolute translate-middle badge rounded-circle bg-primary pt-2">
+                                03
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+    </div>
+
+
+</header>
 <body>
-    <!-- header -->
-    <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark>
-        <div class="container">
-            <ul class="navbar-nav px-3">
-                <li class="nav-item text-nowrap">
-                    <a class="nav-link" href="cart.html">Giỏ hàng</a>
-                </li>
-                <li class="nav-item text-nowrap">
-                    <!-- Nếu chưa đăng nhập thì hiển thị nút Đăng nhập -->
-                    <a class="nav-link" href="login.html">Đăng nhập</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <!-- end header -->
 
     <main role="main">
         <!-- Block content - Đục lỗ trên giao diện bố cục chung, đặt tên là `content` -->
@@ -45,8 +72,9 @@
 
             <div class="card">
                 <div class="container-fliud">
+
                     <form name="frmsanphamchitiet" id="frmsanphamchitiet" method="post"
-                          action="@Url.Action("Cart","Home")">
+                          action="@Url.Action("ChiTietSP","Home",new { id = Model.product_id })">
                         <input type="hidden" name="product_id" id="sp_ma" value="@Model.product_id">
                         <input type="hidden" name="product_name" id="sp_ten" value="@Model.product_name">
                         <input type="hidden" name="sp_gia" id="sp_gia" value="10990000.00">
@@ -146,16 +174,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="container-fluid">
-                    <h3>Sản phẩm liên quan</h3>
-                    <div class="row">
-                        <div class="col">
-                            Vi xử lý Dual-core 1 Cortex-A9 tốc độ 1GHz
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
         </div>
         <!-- End block content -->
     </main>
