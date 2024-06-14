@@ -1,4 +1,6 @@
-﻿<section class="h-100 h-custom">
+﻿@model IEnumerable<Electronic_G5.Models.Cart>
+
+<section class="h-100 h-custom">
     <div class="container h-100 py-5">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col">
@@ -11,39 +13,45 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <p class="mb-0">Bạn đang có 4 sản phẩm trong giỏ hàng</p>
-                    </div>
-                    <div>
-                        <p class="mb-0">
-                            <span class="text-muted">Sắp xếp:</span> <a href="#!"
-                                                                        class="text-body">giá <i class="fas fa-angle-down mt-1"></i></a>
-                        </p>
+                        <p class="mb-0">Bạn đang có @Model.Count() sản phẩm trong giỏ hàng</p>
+                        <p>@ViewBag.error</p>
                     </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col" class="h5">Tên sản phẩm</th>
+                                
+                                <th scope="col" class="h5">Sản phẩm</th>
                                 <th scope="col">Phân loại</th>
                                 <th scope="col">Số lượng</th>
                                 <th scope="col">Giá</th>
                             </tr>
                         </thead>
                         <tbody>
+                          @foreach(var item in Model) {
+                              var imageUrl = "~/wwwroot/Images/" + item.Product.image_url;
                             <tr>
                                 <th scope="row">
                                     <div class="d-flex align-items-center">
-                                        <img src="https://i.imgur.com/2DsA49b.webp" class="img-fluid rounded-3"
-                                             style="width: 120px;" alt="Book">
+                                        @if (item.Product.image_url != null)
+                                        {
+                                            <img src="@Url.Content(imageUrl)" class="img-fluid rounded-4" alt="ảnh" width="150">
+                                        }
+                                        else
+                                        {
+                                            <img src="default-image.jpg" class="img-fluid rounded-4" alt="Default Image">
+                                        }
+                                        @*<img src="@item.Product.image_url" class="img-fluid rounded-3"
+                                             style="width: 120px;" alt="@item.Product.product_name">*@
                                         <div class="flex-column ms-4">
-                                            <p class="mb-2">Thinking, Fast and Slow</p>
-                                            <p class="mb-0">Daniel Kahneman</p>
+                                            <p class="mb-2">@item.Product.product_name</p>
+
                                         </div>
                                     </div>
                                 </th>
                                 <td class="align-middle">
-                                    <p class="mb-0" style="font-weight: 500;">Digital</p>
+                                    <p class="mb-0" style="font-weight: 500;">@item.Product.ProductOptions</p>
                                 </td>
                                 <td class="align-middle">
                                     <div class="d-flex flex-row">
@@ -52,7 +60,7 @@
                                             <i class="fas fa-minus"></i>
                                         </button>
 
-                                        <input id="form1" min="0" name="quantity" value="2" type="number"
+                                        <input id="form1" min="0" name="quantity" value="@item.quantity" type="number"
                                                class="form-control form-control-sm" style="width: 50px;" />
 
                                         <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
@@ -62,43 +70,11 @@
                                     </div>
                                 </td>
                                 <td class="align-middle">
-                                    <p class="mb-0" style="font-weight: 500;">$9.99</p>
+                                    <p class="mb-0" style="font-weight: 500;">@item.Product.price</p>
                                 </td>
                             </tr>
-                            <tr>
-                                <th scope="row" class="border-bottom-0">
-                                    <div class="d-flex align-items-center">
-                                        <img src="https://i.imgur.com/Oj1iQUX.webp" class="img-fluid rounded-3"
-                                             style="width: 120px;" alt="Book">
-                                        <div class="flex-column ms-4">
-                                            <p class="mb-2">Homo Deus: A Brief History of Tomorrow</p>
-                                            <p class="mb-0">Yuval Noah Harari</p>
-                                        </div>
-                                    </div>
-                                </th>
-                                <td class="align-middle border-bottom-0">
-                                    <p class="mb-0" style="font-weight: 500;">Paperback</p>
-                                </td>
-                                <td class="align-middle border-bottom-0">
-                                    <div class="d-flex flex-row">
-                                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-
-                                        <input id="form1" min="0" name="quantity" value="1" type="number"
-                                               class="form-control form-control-sm" style="width: 50px;" />
-
-                                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                                                onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                                <td class="align-middle border-bottom-0">
-                                    <p class="mb-0" style="font-weight: 500;">$13.50</p>
-                                </td>
-                            </tr>
+                            }
+                            
                         </tbody>
                     </table>
                 </div>
@@ -177,19 +153,19 @@
                             <div class="col-lg-4 col-xl-3">
                                 <div class="d-flex justify-content-between" style="font-weight: 500;">
                                     <p class="mb-2">Tiền hàng</p>
-                                    <p class="mb-2">$23.49</p>
+                                    <p class="mb-2">  @Model.Sum(item => item.Product.price * item.quantity)₫ </p>
                                 </div>
 
                                 <div class="d-flex justify-content-between" style="font-weight: 500;">
                                     <p class="mb-0">Phí vận chuyển</p>
-                                    <p class="mb-0">$2.99</p>
+                                    <p class="mb-0">10.000₫</p>
                                 </div>
 
                                 <hr class="my-4">
 
                                 <div class="d-flex justify-content-between mb-4" style="font-weight: 500;">
                                     <p class="mb-2">Tổng tiền</p>
-                                    <p class="mb-2">$26.48</p>
+                                    <p class="mb-2"> @Model.Sum(item => item.Product.price * item.quantity + 10000)₫</p>
                                 </div>
 
                                 <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block btn-lg">
