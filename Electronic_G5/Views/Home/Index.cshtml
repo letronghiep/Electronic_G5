@@ -362,7 +362,7 @@
                 data: { productId: productId, _quantity: 1 }, // Số lượng sản phẩm có thể được thay đổi
                 success: function (result) {
                     // Chuyển hướng đến trang giỏ hàng
-                    window.location.href = '@Url.Action("Cart", "Home")';
+                    window.location.href = '@Url.Action("Cart", "Carts")';
                 },
                 error: function (xhr, status, error) {
                     // Xử lý lỗi nếu có

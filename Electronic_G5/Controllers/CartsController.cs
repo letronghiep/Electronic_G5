@@ -178,9 +178,73 @@ namespace Electronic_G5.Controllers
             }
             return RedirectToAction("Cart","Home");
         }
-      
-         
+        public ActionResult Cart()
+        {
+            // kiểm tra xem đăng nhập chưa
+            if (Session["UserID"] == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            int userId = int.Parse(Session["UserID"].ToString());
+            // danh sách sp trong giỏ
+            var cartItems = db.Carts.Where(item => item.user_id == userId).ToList();
+
+            return View(cartItems);
+        }
+        public ActionResult UpdateCartItem(int productId, int newQuantity)
+        {
+            // Check if user is logged in
+            if (Session["UserID"] == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
+            // Parse user ID from session
+            int userId = int.Parse(Session["UserID"].ToString());
+
+            try
+            {
+                // Find the cart item for the current user and product
+                var cartItem = db.Carts.FirstOrDefault(item => item.product_id == productId && item.user_id == userId);
+
+                if (cartItem != null)
+                {
+                    // Update the quantity
+                    cartItem.quantity = newQuantity;
+
+                    // Save changes to the database
+                    db.SaveChanges();
+
+                    // Optionally, return JSON result indicating success or updated cart information
+                    return Json(new { success = true, message = "Cart item updated successfully" });
+                }
+                else
+                {
+                    // Handle case where cart item is not found (optional)
+                    return Json(new { success = false, message = "Cart item not found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (log the error, return error message, etc.)
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+        public ActionResult Checkout(User u)
+        {
+            return View(u);
+        }
+
+        [Route("BYID1/{category_id?}")]
+        public ActionResult BYID(int category_id)
+        {
+            var pro = db.Products.Where(p => p.category_id == category_id).ToList();
+            return View(pro);
+        }
+
+
 
     }
-    
+
 }

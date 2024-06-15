@@ -81,26 +81,6 @@ namespace Electronic_G5.Controllers
 
             return View(product);
         }
-        public ActionResult Cart()
-        {
-            // kiểm tra xem đăng nhập chưa
-            if (Session["UserID"] == null)
-            {
-                return RedirectToAction("Login", "Users");
-            }
-            int userId = int.Parse(Session["UserID"].ToString());
-            // danh sách sp trong giỏ
-            var cartItems = db.Carts.Where(item => item.user_id == userId).ToList();
-
-            return View(cartItems);
-        }
-
-        [Route("BYID1/{category_id?}")]
-        public ActionResult BYID(int category_id)
-        {
-            var pro = db.Products.Where(p => p.category_id == category_id).ToList();
-            return View(pro);
-        }
-       
+        
     }
 }
