@@ -276,7 +276,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
         // GET: Admin/AdminUsers/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null)
+            if (id == null) 
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -293,11 +293,35 @@ namespace Electronic_G5.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            User user = db.Users.Find(id);
+            try
+            {
+                User user = db.Users.Find(id);
+                var orderList = db.Orders.Where(o => o.User.user_id == id).ToList();
+                if (orderList.Any())
+                {
+                    db.Orders.RemoveRange(orderList);
+                }
+                var paymentList = db.Payments.Where(o => o.User.user_id == id).ToList();
+                if (paymentList.Any())
+                {
+                    db.Payments.RemoveRange(paymentList);
+                }
+                var shipmentList = db.Shipments.Where(o => o.User.user_id == id).ToList();
+                if (shipmentList.Any())
+                {
+                    db.Shipments.RemoveRange(shipmentList);
+                }
+                db.Users.Remove(user);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (Exception err)
+            {
 
-            db.Users.Remove(user);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+                ViewBag.error = err.Message;
+                return View();
+            }
+           
         }
 
         protected override void Dispose(bool disposing)

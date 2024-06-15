@@ -1,7 +1,8 @@
-namespace Electronic_G5.Models
+﻿namespace Electronic_G5.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
@@ -15,18 +16,29 @@ namespace Electronic_G5.Models
         }
 
         [Key]
+        [DisplayName("Mã hóa đơn")]
         public int order_id { get; set; }
 
+        [DisplayName("Ngày đặt hàng")]
+
         public DateTime order_date { get; set; }
+        [DisplayName("Tổng")]
 
         public decimal total_price { get; set; }
+        [DisplayName("Khách hàng")]
 
         public int user_id { get; set; }
+        [DisplayName("Trạng thái đơn hàng")]
 
         public string order_status { get; set; }
-        public string fulfillment_status { get; set; }
-        public int payment_id { get; set; }
+        [DisplayName("Trạng thái giao hàng")]
 
+        public string fulfillment_status { get; set; }
+        [DisplayName("Mã thanh toán")]
+
+        public int payment_id { get; set; }
+        [DisplayName("Mã giao hàng")]
+     
         public int shipment_id { get; set; }
 
         [Column(TypeName = "datetime2")]

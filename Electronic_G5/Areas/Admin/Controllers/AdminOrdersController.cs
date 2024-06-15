@@ -206,6 +206,22 @@ namespace Electronic_G5.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public ActionResult UpdateStatus(int id, string status)
+        {
+            var order = db.Orders.Find(id);
+            if (order != null)
+            {
+                db.Orders.Attach(order);
+                order.order_status = status;
+                db.Entry(order).Property(o => o.order_status).IsModified = true;
+                db.SaveChanges();
+                return Json(new { message = "Success", success = true });
+            }
+            return Json(new { message = "Failed", success = false });
+
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

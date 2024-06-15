@@ -4,90 +4,188 @@
     ViewBag.Title = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
-<h2>Orders</h2>
-<div class="mb-2">
-    <div>
-        @Html.ActionLink("Thêm mới", "Create", null, new { @class = "btn btn-primary btn-sm text-bg-primary mb-3" })
-        @using (Html.BeginForm("Index", "AdminOrders", FormMethod.Get, new { @class = "d-flex justify-content-between" }))
-        {
-            <div>
-                <label for="page">Hiển thị</label>
-                <input style="width: 50px" type="number" name="pageSize" value="@Model.PageSize" min="10" id="pageSize" />
-                <span>dữ liệu</span>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-                <input type="text" value="@ViewBag.Keyword" name="searchString" placeholder="Search Order" class="form-control" />
-                <input type="submit" value="Tìm kiếm" class="btn btn-info text-bg-primary btn-group" />
-            </div>
-        }
-    </div>
-
-</div>
-<table class="table">
-    <tr>
-        <th>
-            @Html.ActionLink("Mã hóa đơn", "Index", new { sortProperty = "order_id", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-        </th>
-        <th>
-            @Html.ActionLink("Giá", "Index", new { sortProperty = "total_price", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-        </th>
-        <th>
-            @Html.ActionLink("Khách hàng", "Index", new { sortProperty = "User.full_name", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-        </th>
-        <th>
-            @Html.ActionLink("Trạng thái đơn", "Index", new { sortProperty = "order_status", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-        </th>
-        <th>
-            @Html.ActionLink("Phương thức thanh toán", "Index", new { sortProperty = "Payment.payment_method", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-        </th>
-        <th>
-            @Html.ActionLink("Ngày đặt", "Index", new { sortProperty = "order_date", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                #@Html.DisplayFor(modelItem => item.order_id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.total_price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.full_name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.order_status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Payment.payment_method)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.order_date)
-            </td>
-            <td align="center">
-                <a href="@Url.Action("Details", new {id = item.order_id})" class="btn btn-outline-info btn-sm text-black">
-                    <i class='bx bx-search-alt-2'></i>
-                </a>
-                <a href="@Url.Action("Edit", new {id = item.order_id})" class="btn btn-primary btn-sm">
-                    <i class='bx bxs-pencil'></i>
-                </a>
-                <a href="@Url.Action("Delete", new {id = item.order_id})" class="btn btn-danger btn-sm">
-                    <i class='bx bx-trash-alt'></i>
-                </a>
-            </td>
-        </tr>
+<style>
+    input, select, textarea {
+        max-width: 100%;
     }
 
-</table>
-<div class="row">
-    <div class="text-right justify-content-end">
-        Trang: @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+    .ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+        background-color: #ddd;
+    }
+
+    ul.pagination li {
+        display: inline;
+    }
+
+        ul.pagination li a {
+            color: black;
+            float: left;
+            padding: 4px 12px;
+            text-decoration: none;
+            transition: background-color .3s;
+        }
+
+        ul.pagination li.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        ul.pagination li a:hover:not(.active) {
+            background-color: #ddd;
+        }
+</style>
+<div class="card mb-3">
+    <div class="card-header">
+        <h4>Đơn hàng</h4>
+        <div class="mb-2 d-flex justify-content-between">
+            <div class="">
+                @using (Html.BeginForm("Index", "AdminOrders", FormMethod.Get, new { @class = "d-flex justify-content-between" }))
+                {
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="text" value="@ViewBag.Keyword" name="searchString" placeholder="Tìm kiếm đơn hàng" class="form-control text-sm" />
+                        <button type="submit" class="btn"><i class='bx bx-search-alt-2'></i></button>
+                    </div>
+                }
+            </div>
+            @Html.ActionLink(" + Thêm mới", "Create", null, new { @class = "btn btn-outline-primary" })
+
+        </div>
+
     </div>
+    <table class="table card-body">
+        <tr>
+            <th>
+                @Html.ActionLink("Mã hóa đơn", "Index", new { sortProperty = "order_id", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
+            </th>
+            <th>
+                @Html.ActionLink("Giá", "Index", new { sortProperty = "total_price", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
+            </th>
+            <th>
+                @Html.ActionLink("Khách hàng", "Index", new { sortProperty = "User.full_name", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
+            </th>
+            <th>
+                @Html.ActionLink("Trạng thái đơn", "Index", new { sortProperty = "order_status", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
+            </th>
+            <th>
+                @Html.ActionLink("Phương thức thanh toán", "Index", new { sortProperty = "Payment.payment_method", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
+            </th>
+            <th>
+                @Html.ActionLink("Ngày đặt", "Index", new { sortProperty = "order_date", sortOrder = ViewBag.SortOrder, searchString = ViewBag.Keyword })
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    #@Html.DisplayFor(modelItem => item.order_id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.total_price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.full_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.order_status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Payment.payment_method)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.order_date)
+                </td>
+                <td align="center">
+                    <a href="@Url.Action("Details", new {id = item.order_id})" class="btn btn-outline-info btn-sm text-black">
+                        <i class='bx bx-search-alt-2'></i>
+                    </a>
+                    <a href="#" id="@item.order_id" data-id="@item.order_id" data-status="@item.order_status" class="btn btn-primary btn-sm btnCapnhat">
+                        <i class='bx bxs-pencil'></i>
+                    </a>
+                    <a href="@Url.Action("Delete", new {id = item.order_id})" class="btn btn-danger btn-sm">
+                        <i class='bx bx-trash-alt'></i>
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <div class="row px-3">
+        <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6">
+            @using (Html.BeginForm("Index", "AdminOrders", FormMethod.Get))
+            {
+                <p>
+                    Kích thước trang: @Html.DropDownList("size", (List<SelectListItem>)ViewBag.size, new { @onchange = "this.form.submit();" })
+                </p>
+            }
+        </div>
+        <div class="col-md-6 col-lg-6 col-xs-6 col-sm-6 text-right">
+            Trang: @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+        </div>
+    </div>
+    <nav class="database-pagination" style="display: flex; justify-content: center; margin-top: 10px">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, pageSize = ViewBag.currentSize }))
+    </nav>
 </div>
-<nav class="database-pagination" style="display: flex; justify-content: center; margin-top: 20px">
-    @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, pageSize = ViewBag.currentSize }))
-</nav>
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Cập nhật trạng thái đơn hàng</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="order_id" value="" />
+                <select id="order_status" name="order_status" class="form-control">
+                    <option value="Đang xử lý">Đang xử lý</option>
+                    <option value="Đã xác nhận">Đã xác nhận</option>
+                    <option value="Đang được giao">Đang được giao</option>
+                    <option value="Đã giao">Đã giao</option>
+
+                </select>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btnSave">Cập nhật</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btnCapnhat', function () {
+                var id = $(this).data("id");
+                var status = $(this).data("status");
+                console.log(status)
+                $("#order_id").val(id);
+                $("#order_status").val(status)
+                $("#modal-default").modal('show')
+            })
+        })
+        $("body").on('click', "#btnSave", function () {
+            var id = $("#order_id").val();
+            var status = $("#order_status").val();
+            $.ajax({
+                url: '/admin/AdminOrders/UpdateStatus',
+                type: 'POST',
+                data: { id: id, status: status },
+                success: function (res) {
+                    if (res.success) {
+                        location.reload();
+                    }
+                }
+            })
+        })
+    </script>
+}
