@@ -43,16 +43,19 @@
         }-->
 
         <!-- Example card -->
+        @foreach (var item in Model)
+        {
         <div class="card">
             <div class="card-header">
-                Đơn hàng item.order_id
+                Đơn hàng @item.order_id
             </div>
             <div class="card-body">
-                <h5 class="card-title">Ngày đặt hàng: item.created_at</h5>
-                <p class="card-text">Tổng tiền: item.total_price</p>
-                <a href="@Url.Action("OrderDetail","Orders")" class="btn btn-primary">Chi tiết đơn hàng</a>
+                <h5 class="card-title">Ngày đặt hàng: @item.created_at</h5>
+                <p class="card-text">Tổng tiền: @item.total_price</p>
+                <a href="@Url.Action("OrderDetail", "Orders",new { id = item.order_id })" class="btn btn-primary">Chi tiết đơn hàng</a>
             </div>
         </div>
+        }
     </div>
 
     <!-- Bootstrap JS, Popper.js, and jQuery (optional) -->

@@ -28,6 +28,7 @@
         [DisplayName("Khách hàng")]
 
         public int user_id { get; set; }
+
         [DisplayName("Trạng thái đơn hàng")]
 
         public string order_status { get; set; }
@@ -35,7 +36,6 @@
 
         public string fulfillment_status { get; set; }
         [DisplayName("Mã thanh toán")]
-
         public int payment_id { get; set; }
         [DisplayName("Mã giao hàng")]
      

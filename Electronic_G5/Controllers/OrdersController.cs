@@ -138,12 +138,20 @@ namespace Electronic_G5.Controllers
         }
         public ActionResult OderHistory()
         {
-            return View();
+
+            if (Session["UserID"] == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            int userId = int.Parse(Session["UserID"].ToString());
+            var orders = db.Orders.Where(o => o.user_id == userId).ToList();
+            return View(orders);
         }
 
-        public ActionResult OrderDetail()
+        public ActionResult OrderDetail(int id)
         {
-            return View();
+            var detail = db.Orders.Include(o=>o.Order_Items).FirstOrDefault(d=>d.order_id == id);
+            return View(detail);
         }
     }
 }
