@@ -37,6 +37,23 @@
             font-size: 0.75em;
             padding: 0.25em 0.5em;
         }
+
+        #dropdown.show {
+            display: block;
+            background-color: lightblue;
+        }
+
+        /* Thêm một số kiểu dáng cho dropdown */
+        #dropdown a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: black;
+        }
+
+            #dropdown a:hover {
+                background-color: #f0f0f0;
+            }
     </style>
 </head>
 
@@ -155,29 +172,38 @@
             <nav class="main-menu d-flex navbar navbar-expand-lg justify-content-between">
                 <!-- Thanh search -->
                 <div class="search-bar border rounded-2 px-3 border-dark-subtle me-3">
-                    <form id="search-form" class="text-center d-flex align-items-center" action="" method="post">
-                        <input type="text" class="form-control border-0 bg-transparent"
+                    <form id="search-form" class="text-center d-flex align-items-center" action="@Url.Action("Index","Home")" method="get">
+                        <input type="text" name="search" class="form-control border-0 bg-transparent"
                                placeholder="Tìm kiếm" />
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                            <path fill="currentColor"
-                                  d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
-                        </svg>
+                        <button type="submit" class="btn btn-link p-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                      d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
+                            </svg>
+                         </button>
                     </form>
                 </div>
 
                 <!-- Thanh login và cart -->
                 <div class="d-flex align-items-end">
                     <ul class="d-flex justify-content-end list-unstyled m-0">
-                        <li>
-                            <a href="@Url.Action("Login","Users")" class="mx-3">
+                        <li class="position-relative">
+                            <a href="#" class="mx-3" id="userIcon">
                                 <span class="iconify" data-icon="healthicons:person" data-inline="false"></span>
                             </a>
+                            <div id="dropdown" class="dropdown-menu position-absolute">
+                                <a href="@Url.Action("Register","Users")">Đăng ký</a>
+                                <a href="@Url.Action("Login","Users")">Đăng nhập</a>
+                                <a href="@Url.Action("OrderHistory", "Carts")">Xem lịch sử đặt hàng</a>
+                                <a href="@Url.Action("Logout", "Users")">Đăng xuất</a>
+                            </div>
+
                         </li>
                         <li>
-                            <a href="@Url.Action("Cart","Home")" class="mx-3">
+                            <a href="@Url.Action("Cart","Carts")" class="mx-3">
                                 <span class="iconify position-relative" data-icon="mdi:cart" data-inline="false"></span>
                                 <span class="position-absolute translate-middle badge rounded-circle bg-primary pt-2">
-                                    03
+                                    @Model.cart.Count()
                                 </span>
                             </a>
                         </li>
@@ -189,37 +215,7 @@
 
 
     </header>
-    <!--Category-->
-    <!--<section id="categories">
-        <div class="container my-3 py-5">
-            <div class="row my-4">
-                <div class="col text-center">
-                    <a href="#" class="categories-item">
-                        <img src="~/wwwroot/Images/dayloa.jpg" class="img-thumbnail" />
-                        <h5>Dây loa</h5>
-                    </a>
-                </div>
-                <div class="col text-center">
-                    <a href="#" class="categories-item">
-                        <img src="~/wwwroot/Images/pkdiy.jpg" class="img-thumbnail" />
-                        <h5>Phụ kiện D.I.Y</h5>
-                    </a>
-                </div>
-                <div class="col text-center">
-                    <a href="#" class="categories-item">
-                        <img src="~/wwwroot/Images/daynguon.jpg" class="img-thumbnail" />
-                        <h5>Dây nguồn - ổ điện</h5>
-                    </a>
-                </div>
-                <div class="col text-center">
-                    <a href="#" class="categories-item">
-                        <img src="~/wwwroot/Images/dgtcable.jpg" class="img-thumbnail" />
-                        <h5>Digital Cable</h5>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>-->
+
     <!--Tất cả sản phẩm-->
     <section id="all" class="my-5">
         <div class="container my-5 py-5">
@@ -231,9 +227,9 @@
             <div class="mb-4 mb-md-0">
                 <p class="m-0">
                     <a href="@Url.Action("Index", "Home")"><button>Tất cả sản phẩm</button></a>
-                    <a href="@Url.Action("Index", "Home", new { filter = "latest" })"><button>Sản phẩm mới nhất</button></a> 
-                    <a href="@Url.Action("Index", "Home", new { filter = "bestselling" })"><button>Sản phẩm bán chạy</button></a> 
-                    <a href="@Url.Action("Index", "Home", new { filter = "sort" })"><button>Sắp xếp theo giá</button></a> 
+                    <a href="@Url.Action("Index", "Home", new { filter = "latest" })"><button>Sản phẩm mới nhất</button></a>
+                    <a href="@Url.Action("Index", "Home", new { filter = "bestselling" })"><button>Sản phẩm bán chạy</button></a>
+                    <a href="@Url.Action("Index", "Home", new { filter = "sort" })"><button>Sắp xếp theo giá</button></a>
 
                 </p>
             </div>
@@ -288,37 +284,14 @@
                         <img src="~/wwwroot/Images/logo (2).png" alt="logo" width="200">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <div class="footer-menu">
                         <h3>Liên hệ</h3>
                         <p>Tele: +84 987 905 230</p>
                         <p>Email: Electronicshop@gmail.com</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="footer-menu">
-                        <h3>
-                            Help Center
-                        </h3>
-                        <ul class="menu-list list-unstyled">
-                            <li class="menu-item">
-                                <a href="#" class="nav-link">FAQs</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="nav-link">Payment</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="nav-link">Returns & Refunds</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="nav-link">Checkout</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" class="nav-link">Delivery Information</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </footer>
@@ -326,27 +299,27 @@
 </body>
 
 <script>
-    window.addEventListener('load', function () {
-        document.querySelector('.preloader-wrapper').classList.add('hidden');
-    });
-</script>
-<!-- Thêm JavaScript/jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.filter-button').click(function () {
-            var filter = $(this).attr('data-filter');
-            $('.filter-button').removeClass('active');
-            $(this).addClass('active');
-            if (filter == '*') {
-                $('.item').show();
-            } else {
-                $('.item').hide();
-                $(filter).show();
-            }
+        window.addEventListener('load', function () {
+            document.querySelector('.preloader-wrapper').classList.add('hidden');
         });
-    });
-</script>
+    </script>
+    <!-- Thêm JavaScript/jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.filter-button').click(function () {
+                var filter = $(this).attr('data-filter');
+                $('.filter-button').removeClass('active');
+                $(this).addClass('active');
+                if (filter == '*') {
+                    $('.item').show();
+                } else {
+                    $('.item').hide();
+                    $(filter).show();
+                }
+            });
+        });
+    </script>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -371,6 +344,24 @@
             });
         });
     });
+    //menu cấp 2
+    document.addEventListener("DOMContentLoaded", function () {
+        var userIcon = document.getElementById("userIcon");
+        var dropdown = document.getElementById("dropdown");
+
+        userIcon.addEventListener("click", function (event) {
+            event.preventDefault();
+            dropdown.classList.toggle("show");
+        });
+
+        // Đóng dropdown khi nhấn ra ngoài
+        document.addEventListener("click", function (event) {
+            if (!userIcon.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove("show");
+            }
+        });
+    });
+
 </script>
 
 

@@ -43,8 +43,6 @@
                                             {
                                                 <img src="default-image.jpg" class="img-fluid rounded-4" alt="Default Image">
                                             }
-                                            @*<img src="@item.Product.image_url" class="img-fluid rounded-3"
-                                                style="width: 120px;" alt="@item.Product.product_name">*@
                                             <div class="flex-column ms-4">
                                                 <p class="mb-2">@item.Product.product_name</p>
 
@@ -57,21 +55,21 @@
                                     <td class="align-middle">
                                         <div class="d-flex flex-row">
                                             <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown(); updateCartItem(this)">
                                                 <i class="fas fa-minus"></i>
                                             </button>
 
                                             <input id="form1" min="0" name="quantity" value="@item.quantity" type="number"
-                                                   class="form-control form-control-sm" style="width: 50px;" />
+                                                   class="form-control form-control-sm" style="width: 50px;" onchange="updateCartItem(this)" />
 
                                             <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp(); updateCartItem(this)">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        <p class="mb-0" style="font-weight: 500;">@item.Product.price</p>
+                                        <p class="mb-0 product-total-price" style="font-weight: 500;">@(@item.Product.price * @item.quantity) ₫</p>
                                     </td>
                                 </tr>
                             }
@@ -123,33 +121,35 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function() {
-        // Xử lý sự kiện khi người dùng thay đổi số lượng
-        $('.quantity-input').on('change', function() {
-            var productId = $(this).data('product-id');
-            var newQuantity = parseInt($(this).val());
+   function updateCartItem(element) {
+    const row = element.closest('tr');
+    const price = parseFloat(row.dataset.productPrice);
+    const quantity = parseInt(row.querySelector('input[name="quantity"]').value);
+    const totalPriceElement = row.querySelector('.product-total-price');
+    const newTotalPrice = price * quantity;
 
-            // Gửi yêu cầu cập nhật lên server
-            $.ajax({
-                url: '@Url.Action("UpdateCartItem", "Home")', // Thay đổi đường dẫn tương ứng với tên controller của bạn
-                type: 'POST',
-                data: { productId: productId, newQuantity: newQuantity },
-                success: function(response) {
-                    // Xử lý kết quả thành công (nếu cần)
-                    console.log(response);
-                    // Cập nhật giao diện hoặc hiển thị thông báo thành công
-                    if (response.success) {
-                        // Cập nhật giao diện hoặc thông báo thành công
-                    } else {
-                        // Xử lý khi có lỗi từ server (nếu cần)
-                    }
-                },
-                error: function(xhr, status, error) {
-                    // Xử lý khi có lỗi từ server
-                    console.log(error);
-                    // Hiển thị thông báo lỗi cho người dùng (nếu cần)
-                }
-            });
-        });
+    // Update the total price for this product
+    totalPriceElement.textContent = newTotalPrice.toLocaleString() + '₫';
+
+    // Update subtotal and total
+    updateCartTotals();
+}
+
+function updateCartTotals() {
+    const rows = document.querySelectorAll('#cart-items tr');
+    let subtotal = 0;
+
+    rows.forEach(row => {
+        const price = parseFloat(row.dataset.productPrice);
+        const quantity = parseInt(row.querySelector('input[name="quantity"]').value);
+        subtotal += price * quantity;
     });
+
+    const shippingFee = 10000;
+    const total = subtotal + shippingFee;
+
+    document.getElementById('subtotal').textContent = subtotal.toLocaleString() + '₫';
+    document.getElementById('total').textContent = total.toLocaleString() + '₫';
+}
+
 </script>

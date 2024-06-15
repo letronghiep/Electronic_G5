@@ -231,6 +231,7 @@
     <Compile Include="Controllers\CartsController.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
@@ -447,6 +448,13 @@
     <Content Include="Views\Carts\Edit.cshtml" />
     <Content Include="Views\Carts\Index.cshtml" />
     <Content Include="Views\Carts\Checkout.cshtml" />
+    <Content Include="Views\Orders\Create.cshtml" />
+    <Content Include="Views\Orders\Delete.cshtml" />
+    <Content Include="Views\Orders\Details.cshtml" />
+    <Content Include="Views\Orders\Edit.cshtml" />
+    <Content Include="Views\Orders\Index.cshtml" />
+    <Content Include="Views\Orders\OderHistory.cshtml" />
+    <Content Include="Views\Orders\OrderDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
