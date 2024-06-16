@@ -128,7 +128,6 @@ namespace Electronic_G5.Controllers
             }
             base.Dispose(disposing);
         }
-        
 
 
     }

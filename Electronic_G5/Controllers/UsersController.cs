@@ -151,7 +151,7 @@ namespace Electronic_G5.Controllers
             //    if (ModelState.IsValid)
             //    {
                     // Tìm user trong database
-                    var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password);
+                    var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password && u.role_id ==1);
                     
                     if (user != null)
                     {

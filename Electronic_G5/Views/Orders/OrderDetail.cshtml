@@ -1,0 +1,99 @@
+﻿@model Electronic_G5.Models.Order
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết đơn hàng</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Custom styles -->
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Chi tiết đơn hàng</h2>
+
+        <div class="card">
+            <div class="card-header">
+                Đơn hàng # @Model.order_id
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Ngày đặt hàng: @Model.order_date.ToString("dd/MM/yyyy")</h5>
+                <p class="card-text">Tổng tiền: @Model.total_price.ToString("C0")</p>
+                <p class="card-text">Trạng thái đơn hàng: @Model.order_status</p>
+                <p class="card-text">Trạng thái thanh toán: @Model.fulfillment_status</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Chi tiết sản phẩm
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Sản phẩm</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Đơn giá</th>
+                                <th scope="col">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Order_Items)
+                            {
+                                <tr>
+                                    <td>@item.order_item_id</td>
+                                    <td>@item.Product.product_name</td>
+                                    <td>@item.quantity</td>
+                                    <td>@item.price</td>
+                                    <td>@(@item.quantity * @item.price)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                Thông tin thanh toán
+            </div>
+            <div class="card-body">
+                <p class="card-text">Hình thức thanh toán: @Model.Payment.payment_method</p>
+                <p class="card-text">Địa chỉ giao hàng: @Model.Shipment.address</p>
+            </div>
+        </div>
+
+        <a href="@Url.Action("OderHistory", "Orders")" class="btn btn-primary">Quay lại lịch sử đơn hàng</a>
+    </div>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    @*<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>*@
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+

@@ -22,10 +22,9 @@ namespace Electronic_G5.Controllers
         }
         public ActionResult Menu2()
         {
-            var categories = db.Categories.Include(c => c.Category1);
+            var categories = db.Categories.Include(c => c.Category1).Where(c => c.category_name != "null");
             return PartialView(categories.ToList());
         }
-
         // GET: Categories/Details/5
         public ActionResult Details(int? id)
         {

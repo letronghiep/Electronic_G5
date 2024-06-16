@@ -347,8 +347,8 @@ namespace Electronic_G5.Areas.Admin.Controllers
                 //    if (ModelState.IsValid)
                 //    {
                 // Tìm user trong database
-                var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password);
-
+                var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password && u.user_id == 2);
+                
                 if (user != null)
                 {
                     // Tạo session cho user

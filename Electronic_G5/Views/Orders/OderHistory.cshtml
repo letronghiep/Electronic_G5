@@ -1,0 +1,67 @@
+﻿@model List<Electronic_G5.Models.Order>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử mua hàng</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Custom styles -->
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center mb-4">Lịch sử mua hàng</h2>
+        <!--foreach (var item in Model)
+        {-->
+            <!-- Example card -->
+            <!--<div class="card">
+                <div class="card-header">
+                    Đơn hàng item.order_id
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Ngày đặt hàng: item.created_at</h5>
+                    <p class="card-text">Tổng tiền: item.total_price</p>
+                    <a href="Url.Action("OrderDetail","Orders")" class="btn btn-primary">Chi tiết đơn hàng</a>
+                </div>
+            </div>
+        }-->
+
+        <!-- Example card -->
+        @foreach (var item in Model)
+        {
+        <div class="card">
+            <div class="card-header">
+                Đơn hàng @item.order_id
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Ngày đặt hàng: @item.created_at</h5>
+                <p class="card-text">Tổng tiền: @item.total_price</p>
+                <a href="@Url.Action("OrderDetail", "Orders",new { id = item.order_id })" class="btn btn-primary">Chi tiết đơn hàng</a>
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery (optional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    @*<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>*@
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+

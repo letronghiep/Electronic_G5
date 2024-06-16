@@ -1,6 +1,9 @@
 ﻿using Electronic_G5.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -16,37 +19,69 @@ namespace Electronic_G5.Controllers
 
         [AllowAnonymous]
 
-        public ActionResult Index()
+        public ActionResult Index(string filter, string search)
         {
-            //lấy all
-            var allproducts = db.Products.Select(p => new ProductViewModel
+            System.Diagnostics.Debug.WriteLine($"Filter: {filter}, Search: {search}");
+            List<ProductViewModel> products = new List<ProductViewModel>();
+            var query = db.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                decimal searchPrice;
+                bool isPrice = decimal.TryParse(search, out searchPrice);
+
+                if (isPrice)
+                {
+                    query = query.Where(p => p.price == searchPrice);
+                }
+                else
+                {
+                    query = query.Where(p => p.product_name.Contains(search));
+                }
+            }
+
+            switch (filter)
+            {
+                case "latest":
+                    query = query.OrderByDescending(p => p.created_at);
+                    break;
+
+                case "bestselling":
+                    // Hiển thị danh sách sản phẩm bán chạy nhất
+                    var topSalesProducts = db.Order_Items.GroupBy(o => o.product_id).Select(g => new
+                    {
+                        product_id = g.Key,
+                        order_quantity = g.Sum(oi => oi.quantity),
+                        product = g.FirstOrDefault().Product
+                    }).OrderByDescending(g => g.order_quantity).Select(g => g.product);
+
+                    query = query.Where(p => topSalesProducts.Any(tsp => tsp.product_id == p.product_id));
+                    break;
+                //sort
+
+
+                default:
+                    break;
+            }
+            System.Diagnostics.Debug.WriteLine("Query:" + query);
+            var productList = query.ToList(); // Chuyển đổi thành danh sách trước
+
+            products = productList.Select(p => new ProductViewModel
             {
                 Product = p,
                 Images = db.Images.Where(i => i.product_id == p.product_id).ToList()
             }).ToList();
-            //new pro
-            var latestProduct = db.Products.OrderByDescending(p => p.created_at).Select(p => new ProductViewModel
-            {
-                Product = p,
-                Images = db.Images.Where(i => i.product_id == p.product_id).ToList()
-            }).ToList();
-            // Loại bỏ sản phẩm mới nhất ra khỏi danh sách tất cả sản phẩm
-            var filteredAllProducts = allproducts.Except(latestProduct).ToList();
-            //best seller
-
-
             //hiển thị lên view
             var viewModel = new HomeViewModel
             {
-                AllProducts = filteredAllProducts,
-                LatestProducts = latestProduct,
+                Products = products,
 
             };
             return View(viewModel);
 
         }
 
-        public ActionResult ChiTietSP(int? product_id)
+        public ActionResult ChiTietSP(int product_id, int? page)
         {
             if (product_id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest); ;
             var product = db.Products.FirstOrDefault(
@@ -55,32 +90,23 @@ namespace Electronic_G5.Controllers
             {
                 return HttpNotFound();
             }
+            var relatedProducts = db.Products
+                                .Where(p => p.category_id == product.category_id && p.product_id != product_id) // Lọc sản phẩm cùng danh mục và khác sản phẩm hiện tại
+                                
+                                .ToList();
+            // Số sản phẩm trên mỗi trang
+            int pageSize = 4; // Ví dụ mỗi trang hiển thị 4 sản phẩm
 
+            // Số trang hiện tại
+            int pageNumber = (page ?? 1); // Nếu page null thì mặc định là trang 1
+
+            // Chia danh sách sản phẩm liên quan thành từng trang
+            var pagedRelatedProducts = relatedProducts.ToPagedList(pageNumber, pageSize);
+
+            ViewBag.Product = product;
+            ViewBag.related = relatedProducts;
             return View(product);
         }
-        public ActionResult Cart()
-        {
-            return View();
-        }
-
-        [Route("BYID1/{category_id?}")]
-        public ActionResult BYID(int category_id)
-        {
-            var pro = db.Products.Where(p => p.category_id == category_id).ToList();
-            return View(pro);
-        }
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+        
     }
 }
