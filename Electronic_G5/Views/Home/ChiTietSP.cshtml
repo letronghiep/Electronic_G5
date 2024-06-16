@@ -1,5 +1,6 @@
-﻿@model Electronic_G5.Models.Product
-
+﻿
+@model Electronic_G5.Models.Product
+@using PagedList.Mvc;
 <html lang="vi" class="h-100">
 
 <head>
@@ -15,7 +16,8 @@
 
     <!-- Custom css - Các file css do chúng ta tự viết -->
     <link rel="stylesheet" href="~/assets/css/product_detail.css" type="text/css">
-    
+
+
 
 </head>
 <header>
@@ -132,7 +134,7 @@
                                     </strong>!
                                 </p>
                                 <!--option-->
-                                
+
                                 <h5 class="sizes">
                                     sizes:
                                     <span class="size" data-toggle="tooltip" title="cỡ Nhỏ">s</span>
@@ -169,25 +171,63 @@
                     <h3>Thông tin chi tiết về Sản phẩm</h3>
                     <div class="row">
                         <div class="col">
-                           @Model.description
+                            @Model.description
                         </div>
                     </div>
                 </div>
             </div>
-           
-        </div>
-        <!-- End block content -->
+            <!-- Phần sản phẩm liên quan -->
+            <div class="card mt-4">
+                <div class="container-fluid">
+                    <h3>Sản phẩm liên quan</h3>
+                    <div class="row">
+                        @foreach (var relatedProduct in ViewBag.related)
+                        {
+                            var imageUrl = "~/wwwroot/Images/" + relatedProduct.image_url;
+                            <div class="col-md-3 mb-4">
+                                <div class="card position-relative">
+                                    <a href="@Url.Action("ChiTietSP","Home", new {product_id = relatedProduct.product_id})">
+                                        @if (relatedProduct.image_url != null)
+                                        {
+                                            <img src="@Url.Content(imageUrl)" class="img-fluid rounded-4" alt="ảnh">
+                                        }
+                                        else
+                                        {
+                                            <img src="default-image.jpg" class="img-fluid rounded-4" alt="Default Image">
+                                        }
+                                    </a>                                    <div class="card-body p-0">
+                                        <a style="text-decoration:none; color: black" href="@Url.Action("ChiTietSP","Home", new {product_id = relatedProduct.product_id})">
+                                            <h3 class="card-title pt-4 m-0">@relatedProduct.product_name</h3>
+                                        </a>
+                                        <div class="card-text justify-content-lg-between">
+                                            <h3 class="price" style="color: #ff9f1a "><span>@relatedProduct.price</span></h3>
+                                            <h6 class="secondary-font ">Đã bán 200</h6>
+
+                                            <div class="d-flex flex-wrap mt-3">
+                                                <a href="@Url.Action("AddToCart", "Carts")" data-product-id="@relatedProduct.product_id" class="btn-cart me-3 px-4 pt-3 pb-3">
+                                                    <button class="text-uppercase m-lg-1">Thêm vào giỏ hàng</button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Phân trang-->
+                            </div>
+                        }
+                    </div>
+
+
+                </div>
+                <!-- End block content -->
     </main>
 
     <!-- footer -->
-    
     <!-- end footer -->
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <!--<script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/popperjs/popper.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>-->
-
     <!-- Custom script - Các file js do mình tự viết -->
     <!--<script src="../assets/js/app.js"></script>-->
 
