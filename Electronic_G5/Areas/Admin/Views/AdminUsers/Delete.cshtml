@@ -7,12 +7,12 @@
 <div class="card">
     <div class="card-header">
         <h4>Xóa người dùng</h4>
-
+        <h5 class="text-danger">Bạn muốn xóa người dùng này?</h5>
     </div>
     <div class="card-body">
         <dl class="dl-horizontal">
             <dt>
-                @Html.DisplayNameFor(model => model.Role.role_name)
+                Nhóm người dùng
             </dt>
 
             <dd>
@@ -64,13 +64,13 @@
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.image)
+                <img width="80" src="~/wwwroot/Images/@Model.image" />
             </dd>
 
 
 
             <dt>
-                @Html.DisplayNameFor(model => model.created_at)
+                Ngày tạo
             </dt>
 
             <dd>
@@ -78,7 +78,7 @@
             </dd>
 
             <dt>
-                @Html.DisplayNameFor(model => model.updated_at)
+                Ngày cập nhật
             </dt>
 
             <dd>
@@ -95,7 +95,7 @@
         <div class="form-actions no-color px-3 mb-3">
             <input type="submit" value="Delete" class="btn btn-danger text-bg-danger" />
             <button class="btn">
-                @Html.ActionLink("Back to List", "Index")
+                @Html.ActionLink("Quay lại", "Index")
 
             </button>
         </div>

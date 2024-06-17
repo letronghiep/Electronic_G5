@@ -64,130 +64,131 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="row g-2">
-    <h4>Sửa sản phẩm</h4>
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Product.product_id)
-    <div class="row">
-        <div class="form-group">
-            <div class="order-1 col-md-4 text-end ml-auto">
-                @*<button type="button" id="btnSave" class="btn btn-primary">Thêm</button>*@
-                <button type="submit" id="btnSave" class="btn btn-primary">Thêm</button>
-            </div>
-        </div>
-        <div class="col-8 shadow p-3">
+    <div class="row g-2">
+        <h4>Sửa sản phẩm</h4>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Product.product_id)
+        <div class="row">
             <div class="form-group">
-                @Html.LabelFor(model => model.Product.product_name, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
-                <div class="col-md-12">
-                    @Html.EditorFor(model => model.Product.product_name, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Product.product_name, "", new { @class = "text-danger" })
+                <div class="order-1 col-md-4 text-end ml-auto">
+                    @*<button type="button" id="btnSave" class="btn btn-primary">Thêm</button>*@
+                    <button type="submit" id="btnSave" class="btn btn-primary">Thêm</button>
                 </div>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Product.image_url, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
-                <div class="col-md-12">
-                    <div class="image-upload-container">
-                        <div class="image-upload-box" style="background-image: url(@Url.Content(imageUrl))" id="imageUploadBox">
-                            <p>Kéo thả tệp hoặc <label for="imageInput" class="text-decoration-underline text-primary">Chọn từ thiết bị</label></p>
-                            <div class="upload-icon">
-                                <img src="~/assets/image/upload.png" alt="Upload Icon" />
+            <div class="col-8 shadow p-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.product_name, htmlAttributes: new { @class = "control-label col-md-12 font-weight-bold" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.Product.product_name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Product.product_name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.image_url, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+                    <div class="col-md-12">
+                        <div class="image-upload-container">
+                            <div class="image-upload-box" style="background-image: url(@Url.Content(imageUrl))" id="imageUploadBox">
+                                <p>Kéo thả tệp hoặc <label for="imageInput" class="text-decoration-underline text-primary">Chọn từ thiết bị</label></p>
+                                <div class="upload-icon">
+                                    <img src="~/assets/image/upload.png" alt="Upload Icon" />
+                                </div>
+                                <input type="file" name="imageInput" id="imageInput" accept="image/*" style="display: none;" />
                             </div>
-                            <input type="file" name="imageInput" id="imageInput" accept="image/*" style="display: none;" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Product.description, htmlAttributes: new { @class = "control-label col-md-12 font-weight-bold" })
+                    <div class="col-md-12">
+                        @Html.EditorFor(model => model.Product.description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Product.description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-3 shadow">
+                    <h5>Tổ chức</h5>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Product.category_id, "Danh mục", htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                        <div class="col-md-12">
+                            @*@Html.DropDownList("category_id", null, htmlAttributes: new { @class = "form-control", @id = "Product_category_id" })*@
+                            @Html.DropDownListFor(model => model.Product.category_id,
+                            new SelectList(ViewBag.category_id as System.Collections.IEnumerable, "Value", "Text"),
+                            "Select Category",
+                            new { @class = "form-control", @id = "Product_category_id" })
+                            @Html.ValidationMessageFor(model => model.Product.category_id, "", new { @class = "text-danger" })
                         </div>
                     </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Product.SKU, htmlAttributes: new { @class = "control-label col-md-12 font-weight-bold" })
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.Product.SKU, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Product.SKU, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Product.stock, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.Product.stock, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Product.stock, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Product.price, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                        <div class="col-md-12">
+                            @Html.EditorFor(model => model.Product.price, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Product.price, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 shadow mt-3">
+                    <h5 style="padding-left: 12px">Lựa chọn</h5>
 
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Product.description, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
-                <div class="col-md-12">
-                    @Html.EditorFor(model => model.Product.description, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Product.description, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="p-3 shadow">
-                <h5>Tổ chức</h5>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Product.category_id, "Danh mục", htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
-                    <div class="col-md-12">
-                        @*@Html.DropDownList("category_id", null, htmlAttributes: new { @class = "form-control", @id = "Product_category_id" })*@
-                        @Html.DropDownListFor(model => model.Product.category_id,
-                        new SelectList(ViewBag.category_id as System.Collections.IEnumerable, "Value", "Text"),
-                        "Select Category",
-                        new { @class = "form-control", @id = "Product_category_id" })
-                        @Html.ValidationMessageFor(model => model.Product.category_id, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Product.SKU, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
-                    <div class="col-md-12">
-                        @Html.EditorFor(model => model.Product.SKU, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Product.SKU, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Product.stock, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
-                    <div class="col-md-12">
-                        @Html.EditorFor(model => model.Product.stock, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Product.stock, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Product.price, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
-                    <div class="col-md-12">
-                        @Html.EditorFor(model => model.Product.price, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.Product.price, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </div>
-            <div class="p-3 shadow mt-3">
-                <h5 style="padding-left: 12px">Lựa chọn</h5>
-
-                <div id="productOptions">
-                    @for (int i = 0; i < Model.ProductOptions.Count; i++)
+                    <div id="productOptions">
+                        @for (int i = 0; i < Model.ProductOptions.Count; i++)
                         {
                             <div class="option-list">
-                                <h5>Option @(i + 1) <a href="#" class="remove-variant">Remove</a></h5>
+                                <a href="#" class="remove-option text-end float-end">Xóa</a>
                                 @Html.HiddenFor(model => model.ProductOptions[i].product_option_id)
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.ProductOptions[i].product_option_name, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-10">
+                                    <div class="col-md-12">
                                         @Html.DropDownListFor(model => model.ProductOptions[i].product_option_name, new SelectList(new List<string> { "Size", "Color", "Weight", "Smell" }), htmlAttributes: new { @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.ProductOptions[i].product_option_name, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.ProductOptions[i].product_option_value, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-10">
+                                    <div class="col-md-12">
                                         @Html.EditorFor(model => model.ProductOptions[i].product_option_value, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.ProductOptions[i].product_option_value, "", new { @class = "text-danger" })
                                     </div>
-                                    <div class="col-md-10">
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
                                         @Html.EditorFor(model => model.ProductOptions[i].product_option_price, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.ProductOptions[i].product_option_price, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
                         }
-                </div>
-                <button type="button" id="add_option" class="btn btn-outline-primary w-100">Thêm lựa chọn</button>
+                    </div>
+                    <button type="button" id="add_option" class="btn btn-outline-primary w-100">Thêm lựa chọn</button>
 
-            </div>
-            <div class="p-3 shadow mt-3">
-                <h5>Gallery</h5>
-                <div>
-                    <input class="form-control" type="file" id="imageUpload" name="imageUpload" />
-                    <button type="button" id="uploadImageButton" class="btn btn-outline-primary mt-2 w-100">Tải ảnh lên</button>
                 </div>
-                <div id="imageContainer" class="d-flex flex-wrap gap-2 mt-2">
-                    @Html.Partial("_ImageList", Model.Images)
+                <div class="p-3 shadow mt-3">
+                    <h5>Gallery</h5>
+                    <div>
+                        <input class="form-control" type="file" id="imageUpload" name="imageUpload" />
+                        <button type="button" id="uploadImageButton" class="btn btn-outline-primary mt-2 w-100">Tải ảnh lên</button>
+                    </div>
+                    <div id="imageContainer" class="d-flex flex-wrap gap-2 mt-2">
+                        @Html.Partial("_ImageList", Model.Images)
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 @if (@ViewBag.error != null)
@@ -219,7 +220,7 @@
 
         $(document).ready(function () {
             var optionIndex = parseInt(@Model.ProductOptions.Count);
-            var images = @Html.Raw(Json.Encode(Model.Images));
+             var images = @Html.Raw(@Model.Images);
             $("#add_option").click(function () {
                 var newOption = `
                         <div class="option-list">
@@ -248,39 +249,64 @@
                         </div>
                     `;
 
-                $("#productOptions").append(newOption);
-                optionIndex++;
+                    $("#productOptions").append(newOption);
+                    optionIndex++;
             });
 
-            $("#productOptions").on("click", ".remove-option", function () {
-                $(this).closest(".option-list").remove();
-                return false;
-            });
+                 $("#productOptions").on("click", ".remove-option", function () {
+                            $(this).closest(".option-list").remove();
+                            return false;
+                 });
+            // Upload Image
+            $('#uploadImageButton').click(function () {
+                var formData = new FormData();
+                var files = $('#imageUpload')[0].files;
 
-            // Upload image
-            $('#uploadImage').click(function () {
-                var fileData = new FormData();
-                fileData.append('file', $('#newImage')[0].files[0]);
+                if (files.length > 0) {
+                    formData.append('file', files[0]);
+
+                    $.ajax({
+                        url: '@Url.Action("UploadImage", "AdminProducts")',
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            if (response.success) {
+                                images.push(response.image);
+                                $('#imageContainer').html(response.html);
+                                $("#imageUpload").val('');
+                            } else {
+                                alert('Failed to upload image. Please try again.');
+                            }
+                        },
+                        error: function () {
+                            alert('Error occurred. Please try again.');
+                        }
+                    });
+                } else {
+                    alert('Please select a file to upload.');
+                }
+            });
+             $(document).on('click', '.remove-image', function () {
+                var imageId = $(this).data('id');
+                images = images.filter(function (image) {
+                    return image.image_id !== imageId;
+                });
+
                 $.ajax({
-                    url: '@Url.Action("UploadImage", "AdminProducts")',
+                    url: '@Url.Action("RemoveImage", "AdminProducts")',
                     type: 'POST',
-                    data: fileData,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        $('#imagesList').append(data);
-                        $('#newImage').val('');
+                    data: { id: imageId },
+                    success: function (response) {
+                        $('#imageContainer').html(response.html);
+                    },
+                    error: function () {
+                        alert('Failed to remove image. Please try again.');
                     }
                 });
             });
 
-            // Remove image
-            $(document).on('click', '.remove-image', function () {
-                var imageId = $(this).data('id');
-                $.post('@Url.Action("RemoveImage", "AdminProducts")', { id: imageId }, function () {
-                    $('#image-' + imageId).remove();
-                });
-            });
         });
     </script>
 }

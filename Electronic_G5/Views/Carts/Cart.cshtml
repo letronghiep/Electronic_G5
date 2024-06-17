@@ -1,5 +1,10 @@
 ﻿@model IEnumerable<Electronic_G5.Models.Cart>
+@{
+    var cart = Session["CartSession"] as List<Electronic_G5.Models.Cart>;
+    var cartCount = cart != null ? cart.Count : 0;
+    var vietnamCulture = new System.Globalization.CultureInfo("vi-VN");
 
+}
 <section class="h-100 h-custom">
     <div class="container h-100 py-5">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -13,12 +18,13 @@
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <p class="mb-0">Bạn đang có @Model.Count() sản phẩm trong giỏ hàng</p>
+                        <p class="mb-0">Bạn đang có @cartCount sản phẩm trong giỏ hàng</p>
                         <p>@ViewBag.error</p>
                     </div>
                 </div>
+
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table" id="cart-items">
                         <thead>
                             <tr>
 
@@ -28,53 +34,68 @@
                                 <th scope="col">Giá</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                var imageUrl = "~/wwwroot/Images/" + item.Product.image_url;
-                                <tr>
-                                    <th scope="row">
-                                        <div class="d-flex align-items-center">
-                                            @if (item.Product.image_url != null)
-                                            {
-                                                <img src="@Url.Content(imageUrl)" class="img-fluid rounded-4" alt="ảnh" width="150">
-                                            }
-                                            else
-                                            {
-                                                <img src="default-image.jpg" class="img-fluid rounded-4" alt="Default Image">
-                                            }
-                                            <div class="flex-column ms-4">
-                                                <p class="mb-2">@item.Product.product_name</p>
+                        @if (cart != null)
+                        {
+                            <tbody>
+                                @foreach (var item in cart)
+                                {
+                                    <tr class="cart_item" data-productId="@item.product_id" data-productPrice="@item.price">
+                                        <th scope="row">
+                                            <div class="d-flex align-items-center">
+                                                @if (item.Product.image_url != null)
+                                                {
+                                                    var imageUrl = "~/wwwroot/Images/" + item.Product.image_url;
+                                                    <img src="@Url.Content(imageUrl)" class="img-fluid rounded-4" alt="ảnh" width="150">
+                                                }
+                                                else
+                                                {
+                                                    <img src="default-image.jpg" class="img-fluid rounded-4" alt="Default Image">
+                                                }
+                                                <div class="flex-column ms-4">
+                                                    <p class="mb-2">@item.Product.product_name</p>
 
+                                                </div>
                                             </div>
-                                        </div>
-                                    </th>
-                                    <td class="align-middle">
-                                        <p class="mb-0" style="font-weight: 500;">@item.Product.ProductOptions</p>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="d-flex flex-row">
-                                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown(); updateCartItem(this)">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
+                                        </th>
+                                        <td class="align-middle">
+                                            @*<p class="mb-0" style="font-weight: 500;">@item.Product.ProductOptions</p>*@
+                                            @foreach (var option in item.Product.ProductOptions)
+                                            {
+                                                <p class="mb-0" style="font-weight: 500;">@option.product_option_value</p>
 
-                                            <input id="form1" min="0" name="quantity" value="@item.quantity" type="number"
-                                                   class="form-control form-control-sm" style="width: 50px;" onchange="updateCartItem(this)" />
+                                            }
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="d-flex flex-row">
+                                                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                                                        onclick="this.parentNode.querySelector('input[type=number]').stepDown(); updateCartItem(this)">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
 
-                                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp(); updateCartItem(this)">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td class="align-middle">
-                                        <p class="mb-0 product-total-price" style="font-weight: 500;">@(@item.Product.price * @item.quantity) ₫</p>
-                                    </td>
-                                </tr>
-                            }
+                                                <input id="quantity" min="0" name="quantity" value="@item.quantity" type="number"
+                                                       class="form-control form-control-sm" style="width: 50px;" onchange="updateCartItem(this)" />
 
-                        </tbody>
+                                                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                                                        onclick="this.parentNode.querySelector('input[type=number]').stepUp(); updateCartItem(this)">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle">
+                                            <p class="mb-0 product-total-price" id="subtotal" style="font-weight: 500;">@((@item.Product.price * @item.quantity).ToString("N0", vietnamCulture)) ₫</p>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        }
+                        else
+                        {
+                            <tbody>
+                                <h5>Không có sản phẩm trong giỏ hàng</h5>
+                            </tbody>
+                        }
                     </table>
                 </div>
 
@@ -82,10 +103,10 @@
                     <div class="card-body p-4">
 
                         <div class="row">
-                            <div class="col-lg-12 col-xl-12 " >
+                            <div class="col-lg-12 col-xl-12 ">
                                 <div class="d-flex justify-content-between" style="font-weight: 500;">
                                     <p class="mb-2">Tiền hàng</p>
-                                    <p class="mb-2" >  @Model.Sum(item => item.Product.price * item.quantity)₫ </p>
+                                    <p class="mb-2 " id="productPrice">  @Model.Sum(item => (item.Product.price * item.quantity)).ToString("N0", vietnamCulture)₫ </p>
                                 </div>
 
                                 <div class="d-flex justify-content-between" style="font-weight: 500;">
@@ -97,15 +118,13 @@
 
                                 <div class="d-flex justify-content-between mb-4" style="font-weight: 500;">
                                     <p class="mb-2">Tổng tiền</p>
-                                    <p class="mb-2"> @Model.Sum(item => item.Product.price * item.quantity + 10000)₫</p>
+                                    <p class="mb-2" id="total"> @Model.Sum(item => item.price * item.quantity + 10000).ToString("N0", vietnamCulture)₫</p>
                                 </div>
 
-                                <a href="@Url.Action("Checkout","Carts")">
-                                    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block btn-lg">
-                                        <div class="d-flex justify-content-between">
-                                            <span>Thanh toán</span>
-                                        </div>
-                                    </button>
+                                <a href="@Url.Action("Checkout","Carts")" class="btn btn-primary btn-block btn-lg">
+
+                                    <span class="text-center">Thanh toán</span>
+
                                 </a>
 
                             </div>
@@ -118,38 +137,71 @@
         </div>
     </div>
 </section>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-   function updateCartItem(element) {
-    const row = element.closest('tr');
-    const price = parseFloat(row.dataset.productPrice);
-    const quantity = parseInt(row.querySelector('input[name="quantity"]').value);
-    const totalPriceElement = row.querySelector('.product-total-price');
-    const newTotalPrice = price * quantity;
+    <script>
 
-    // Update the total price for this product
-    totalPriceElement.textContent = newTotalPrice.toLocaleString() + '₫';
 
-    // Update subtotal and total
-    updateCartTotals();
+    function updateCartItem(input) {
+        const row = input.closest('tr');
+        console.log(row.dataset)
+        const productId = row.dataset.productid;
+        const quantity = $("#quantity").val();
+        console.log(quantity)
+        $.ajax({
+            url: '@Url.Action("UpdateCartItem", "Carts")',
+            type: 'POST',
+            data: {
+                product_id: productId,
+                quantity: quantity
+            },
+            success: function(response) {
+                if (response.success) {
+                    const price = row.dataset.productprice;
+                    const totalPriceElement = row.querySelector('.product-total-price');
+                    console.log("Prices@@", price)
+                    const newTotalPrice = price * quantity;
+                    totalPriceElement.textContent = newTotalPrice.toLocaleString('vi-VN') + '₫';
+                    updateCartTotals();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function(err) {
+                console.log(err);
+                alert('Có lỗi xảy ra, vui lòng thử lại.');
+            }
+        });
+    }
+        function updateCartItemQuantity(button, change) {
+            const input = button.parentNode.querySelector('input[name="quantity"]');
+            let currentValue = parseInt(input.value);
+            currentValue += change;
+            if (currentValue < 1) {
+                currentValue = 1;
+            }
+            input.value = currentValue;
+            updateCartItem(input);
+        }
+    function updateCartTotals() {
+        const rows = document.querySelectorAll('.cart_item');
+        let subtotal = 0;
+        rows.forEach(row => {
+            const price = parseFloat(row.dataset.productprice);
+            const quantity = parseInt(row.querySelector('input[name="quantity"]').value);
+            console.log("Rowss")
+            console.log(price)
+            console.log(quantity)
+            subtotal += price * quantity;
+        });
+
+        const shippingFee = 10000;
+        const total = subtotal + shippingFee;
+        document.getElementById('productPrice').textContent = subtotal.toLocaleString("vi-VN") + '₫';
+
+        document.getElementById('subtotal').textContent = subtotal.toLocaleString("vi-VN") + '₫';
+        document.getElementById('total').textContent = total.toLocaleString("vi-VN") + '₫';
+    }
+    </script>
 }
-
-function updateCartTotals() {
-    const rows = document.querySelectorAll('#cart-items tr');
-    let subtotal = 0;
-
-    rows.forEach(row => {
-        const price = parseFloat(row.dataset.productPrice);
-        const quantity = parseInt(row.querySelector('input[name="quantity"]').value);
-        subtotal += price * quantity;
-    });
-
-    const shippingFee = 10000;
-    const total = subtotal + shippingFee;
-
-    document.getElementById('subtotal').textContent = subtotal.toLocaleString() + '₫';
-    document.getElementById('total').textContent = total.toLocaleString() + '₫';
-}
-
-</script>

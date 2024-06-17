@@ -7,13 +7,13 @@ namespace Electronic_G5.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class alterUser : IMigrationMetadata
+    public sealed partial class updateCart : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(alterUser));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(updateCart));
         
         string IMigrationMetadata.Id
         {
-            get { return "202406060354406_alterUser"; }
+            get { return "202406161747315_updateCart"; }
         }
         
         string IMigrationMetadata.Source

@@ -74,7 +74,7 @@
             </div>
             <div class="col-8 shadow p-3">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Product.product_name, htmlAttributes: new { @class = "control-label col-md-2 font-weight-bold" })
+                    @Html.LabelFor(model => model.Product.product_name, htmlAttributes: new { @class = "control-label col-md-12 font-weight-bold" })
                     <div class="col-md-12">
                         @Html.EditorFor(model => model.Product.product_name, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.Product.product_name, "", new { @class = "text-danger" })
@@ -105,14 +105,14 @@
             </div>
             <div class="col-4">
                 <div class="p-3 shadow">
-                    <h5>Tổ chức</h5>
+                    <h5>Nhóm sản phẩm</h5>
                     <div class="form-group">
                         @Html.LabelFor(model => model.Product.category_id, "Danh mục", htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
                         <div class="col-md-12">
                             @*@Html.DropDownList("category_id", null, htmlAttributes: new { @class = "form-control", @id = "Product_category_id" })*@
                             @Html.DropDownListFor(model => model.Product.category_id,
                             new SelectList(ViewBag.category_id as System.Collections.IEnumerable, "Value", "Text"),
-                            "Select Category",
+                            "Chọn một danh mục",
                             new { @class = "form-control", @id = "Product_category_id" })
                             @Html.ValidationMessageFor(model => model.Product.category_id, "", new { @class = "text-danger" })
                         </div>

@@ -1,7 +1,57 @@
 ﻿@model IEnumerable<Electronic_G5.Models.Category>
-    @foreach (var item in Model)
+
+<style>
+    /* CSS for dropdown menus */
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        z-index: 1000;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        top: 100%;
+        width: 100%;
+    }
+
+    .dropdown:hover .dropdown-menu {
+        display: block; /* Show dropdown menu on hover */
+    }
+</style>
+
+<ul class="d-flex gap-4 h-100 py-1" style="list-style: none">
+    @foreach (var item in Model.Where(x => x.parent_id == 1))
+    {
+        var child = Model.Where(x => x.parent_id == item.category_id);
+        var hasChildren = child.Any();
+        var parentClass = child.Count() > 0 ? "class=dropdown-toggle data-toggle=dropdown" : "";
+        <li class="dropdown position-relative">
+            <a @parentClass style="text-decoration:none" href="@Url.Action("BYID", "Home", new { category_id = item.category_id })">
+                @item.category_name
+            </a>
+            @if (hasChildren)
             {
-                <li class="nav-link">
-                    <a style="text-decoration:none" href="BYID1/@item.category_id">@item.category_name </a>
-                </li>
-            }  
+                <ul class="dropdown-menu" style="border-top: 3px solid transparent">
+                    @foreach (var children in child)
+                    {
+                        <li class="px-3">
+                            <a href="@Url.Action("BYID", "Home", new { category_id = children.category_id })">
+                                @children.category_name
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+
+</ul>
+
+@*<script>
+    $(document).ready(function () {
+        // Show dropdown menu on hover
+        $('.dropdown').hover(function () {
+            $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+        }, function () {
+            $(this).find('.dropdown-menu').first().stop(true, true).slideUp(100);
+        });
+    })
+</script>*@

@@ -12,6 +12,7 @@ namespace Electronic_G5.Controllers
 {
     public class CartsController : Controller
     {
+        private const string CartSession = "CartSession";
         private ElectronicDb db = new ElectronicDb();
 
         // GET: Carts
@@ -132,51 +133,69 @@ namespace Electronic_G5.Controllers
             }
             base.Dispose(disposing);
         }
-        public ActionResult AddToCart(int productId, int _quantity)
+        [HttpPost]
+        public ActionResult AddToCart(int product_id, int quantity, decimal price)
         {
             //lấy user_id từ session đã lưu
             if (Session["UserID"] == null)
             {
-                return RedirectToAction("Login","Users");
+                return Json(new { success = false, message = "Vui long dang nhap." });
             }
             int userId = int.Parse(Session["UserID"].ToString());
-          
+
             //kiểm tra sản phẩm có trong giỏ chưa
             try
             {
-                var existingItem = db.Carts.FirstOrDefault(item => item.product_id == productId && item.user_id == userId);
-                if (existingItem != null)
+                var product = db.Products.Include(x => x.ProductOptions).FirstOrDefault(x => x.product_id == product_id);
+                var cart = Session[CartSession];
+                if (cart != null)
                 {
-                    existingItem.quantity += _quantity;
+                    var list = (List<Cart>)cart;
+                    if (list.Exists(x => x.product_id == product_id && x.user_id == userId))
+                    {
+                        foreach (var item in list)
+                        {
+                            if (item.product_id == product_id)
+                            {
+                                item.quantity += quantity;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var item = new Cart();
+                        item.product_id = product_id;
+                        item.Product = product;
+                        item.quantity = quantity;
+                        item.price = price;
+                        item.user_id = userId;
+                        list.Add(item);
+                    }
+                    Session[CartSession] = list;
                 }
                 else
                 {
                     //tạo sp mới trong giỏ hàng
                     Cart newItem = new Cart();
-                    newItem.quantity = _quantity;
+                    newItem.quantity = quantity;
+                    newItem.Product = product;
                     newItem.user_id = userId;
-                    newItem.product_id = productId;
-                    //var newItem = new Cart
-                    //{
-                    //    product_id = productId,
-                    //    quantity = _quantity,
-                    //    user_id = userId
-                    //};
-                    db.Carts.Add(newItem);
-                }
-               
-                System.Diagnostics.Debug.WriteLine(productId);
-                System.Diagnostics.Debug.WriteLine(_quantity);
-                System.Diagnostics.Debug.WriteLine(userId);
+                    newItem.product_id = product_id;
+                    newItem.price = price;
+                    var list = new List<Cart>();
+                    list.Add(newItem);
+                    Session[CartSession] = list;
 
-                db.SaveChanges();
-            } 
+                }
+                return Json(new { success = true });
+            }
             catch (Exception ex)
             {
 
-               ViewBag.error = "loi" + ex.Message;
+                ViewBag.error = "loi" + ex.Message;
+                return Json(new { success = false });
+
             }
-            return RedirectToAction("Cart","Home");
         }
         public ActionResult Cart()
         {
@@ -187,16 +206,23 @@ namespace Electronic_G5.Controllers
             }
             int userId = int.Parse(Session["UserID"].ToString());
             // danh sách sp trong giỏ
-            var cartItems = db.Carts.Where(item => item.user_id == userId).ToList();
-
+            //var cartItems = db.Carts.Where(item => item.user_id == userId).ToList();
+            var cart = Session[CartSession];
+            var cartItems = new List<Cart>();
+            if (cart != null)
+            {
+                cartItems = (List<Cart>)cart;
+            }
             return View(cartItems);
         }
-        public ActionResult UpdateCartItem(int productId, int newQuantity)
+        [HttpPost]
+        public ActionResult UpdateCartItem(int product_id, int quantity)
         {
             // Check if user is logged in
             if (Session["UserID"] == null)
             {
-                return RedirectToAction("Login", "Users");
+                TempData["ReturnUrl"] = Request.UrlReferrer.ToString();
+                return Json(new { success = false, message = "Vui lòng đăng nhập." });
             }
 
             // Parse user ID from session
@@ -205,24 +231,27 @@ namespace Electronic_G5.Controllers
             try
             {
                 // Find the cart item for the current user and product
-                var cartItem = db.Carts.FirstOrDefault(item => item.product_id == productId && item.user_id == userId);
+                var cart = Session[CartSession] as List<Cart>;
 
-                if (cartItem != null)
+                if (cart != null)
                 {
-                    // Update the quantity
-                    cartItem.quantity = newQuantity;
+                    var cartItem = cart.FirstOrDefault(item => item.product_id == product_id);
+                    if (cartItem != null)
+                    {
+                        // Update the quantity
+                        cartItem.quantity = quantity;
+                        Session[CartSession] = cart;
+                        return Json(new { success = true });
+                    }
+                    return Json(new { success = false, message = "Sản phẩm không tồn tại trong giỏ hàng." });
 
-                    // Save changes to the database
-                    db.SaveChanges();
-
-                    // Optionally, return JSON result indicating success or updated cart information
-                    return Json(new { success = true, message = "Cart item updated successfully" });
                 }
                 else
                 {
                     // Handle case where cart item is not found (optional)
-                    return Json(new { success = false, message = "Cart item not found" });
+                    return Json(new { success = false, message = "Sản phẩm không tồn tại trong giỏ hàng." });
                 }
+
             }
             catch (Exception ex)
             {
@@ -231,16 +260,123 @@ namespace Electronic_G5.Controllers
             }
         }
 
-        public ActionResult Checkout(User u)
+        public ActionResult Checkout()
         {
-            return View(u);
-        }
+            if (Session["UserID"] == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            else
+            {
+                var userId = int.Parse(Session["UserID"].ToString());
+                var user = db.Users.FirstOrDefault(u => u.user_id == userId);
+                return View(user);
 
-        [Route("BYID1/{category_id?}")]
-        public ActionResult BYID(int category_id)
+            }
+        }
+        [HttpPost]
+        public ActionResult Checkout(User user, List<Cart> listCarts, Payment payment, Shipment shipment)
         {
-            var pro = db.Products.Where(p => p.category_id == category_id).ToList();
-            return View(pro);
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Adding carts to the database
+                    if (listCarts != null && listCarts.Any())
+                    {
+                        db.Carts.AddRange(listCarts);
+                        foreach (var cart in listCarts) {
+                            var prod = db.Products.FirstOrDefault(p => p.product_id == cart.product_id);
+                            if (prod != null) {
+                                prod.stock -= cart.quantity;
+                                prod.quantity_sold += cart.quantity;
+                            }
+                            
+                        }
+                        db.SaveChanges();
+                    }
+
+                    // Adding payment to the database
+                    Payment payment1 = null;
+                    if (payment != null)
+                    {
+                        payment1 = new Payment
+                        {
+                            payment_date = DateTime.Now,
+                            payment_method = payment.payment_method,
+                            amount = payment.amount,
+                            created_at = DateTime.Now,
+                            updated_at = DateTime.Now,
+                            user_id = user.user_id,
+                        };
+                        db.Payments.Add(payment1);
+                        db.SaveChanges();
+                    }
+
+                    // Adding shipment to the database
+                    Shipment shipment1 = null;
+                    if (shipment != null)
+                    {
+                        shipment1 = new Shipment
+                        {
+                            shipment_date = DateTime.Now,
+                            address = shipment.address,
+                            city = shipment.city,
+                            state = shipment.state,
+                            country = shipment.country,
+                            created_at = DateTime.Now,
+                            updated_at = DateTime.Now,
+                            user_id = user.user_id,
+                            zip_code = shipment.zip_code,
+                        };
+                        db.Shipments.Add(shipment1);
+                        db.SaveChanges();
+                    }
+
+                    // Adding order to the database
+                    var newOrder = new Order
+                    {
+                        order_date = DateTime.Now,
+                        created_at = DateTime.Now,
+                        updated_at = DateTime.Now,
+                        fulfillment_status = "Đang chờ xử lý",
+                        order_status = "Đang xử lý",
+                        total_price = listCarts.Sum(c => c.price * c.quantity),
+                        payment_id = payment1.payment_id,
+                        shipment_id = shipment1.shipment_id,
+                        user_id = user.user_id,
+                    };
+                    db.Orders.Add(newOrder);
+                    db.SaveChanges();
+
+                    // Adding order items to the database
+                    if (listCarts != null && listCarts.Any())
+                    {
+                        var orderItems = listCarts.Select(item => new Order_Items
+                        {
+                            created_at = DateTime.Now,
+                            updated_at = DateTime.Now,
+                            order_id = newOrder.order_id,
+                            quantity = item.quantity,
+                            product_id = item.product_id,
+                            price = item.price,
+                            Order = newOrder
+                        }).ToList();
+                        db.Order_Items.AddRange(orderItems);
+                        db.SaveChanges();
+                    }
+                    transaction.Commit();
+                    Session[CartSession] = null;
+                    return RedirectToAction("OrderComplete", "Orders");
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    // Log the error (uncomment the line below after adding a logger)
+                    // _logger.LogError(ex, "Error during checkout");
+                    return View("Error");
+                }
+            }
         }
 
 

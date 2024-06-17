@@ -81,7 +81,7 @@ namespace Electronic_G5.Controllers
 
         }
 
-        public ActionResult ChiTietSP(int product_id, int? page)
+        public ActionResult ChiTietSP(int? product_id, int? page)
         {
             if (product_id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest); ;
             var product = db.Products.FirstOrDefault(
@@ -107,6 +107,14 @@ namespace Electronic_G5.Controllers
             ViewBag.related = relatedProducts;
             return View(product);
         }
-        
+        [Route("BYID/{category_id?}")]
+        public ActionResult BYID(int? category_id)
+        {
+            if(category_id == null) return HttpNotFound();
+            var pro = db.Products.Where(p => p.category_id == category_id).ToList();
+            System.Diagnostics.Debug.WriteLine("KO");
+            return View(pro);
+        }
+
     }
 }

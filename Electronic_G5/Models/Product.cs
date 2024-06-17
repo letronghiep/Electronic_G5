@@ -35,14 +35,16 @@
         [DisplayName("Ảnh")]
         public string image_url { get; set; }
 
-        [StringLength(100)]
+        [StringLength(500)]
         [DisplayName("Mô tả")]
         [AllowHtml]
         public string description { get; set; }
         [DisplayName("Số lượng")]
 
         public int stock { get; set; }
+        [DisplayName("Số lượng bán")]
 
+        public int quantity_sold { get; set; }
         public decimal price { get; set; }
         public int category_id { get; set; }
 

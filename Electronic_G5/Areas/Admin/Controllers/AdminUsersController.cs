@@ -155,6 +155,11 @@ namespace Electronic_G5.Areas.Admin.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             User user = db.Users.Find(id);
+            var orders = (from oi in db.Orders
+                               where oi.user_id == id
+                               select oi).ToList();
+            ViewBag.orderCounts = orders.Count();
+            ViewBag.orders = orders;
             if (user == null)
             {
                 return HttpNotFound();
@@ -276,7 +281,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
         // GET: Admin/AdminUsers/Delete/5
         public ActionResult Delete(int? id)
         {
-            if (id == null) 
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -321,7 +326,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
                 ViewBag.error = err.Message;
                 return View();
             }
-           
+
         }
 
         protected override void Dispose(bool disposing)
@@ -348,7 +353,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
                 //    {
                 // Tìm user trong database
                 var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password && u.user_id == 2);
-                
+
                 if (user != null)
                 {
                     // Tạo session cho user
