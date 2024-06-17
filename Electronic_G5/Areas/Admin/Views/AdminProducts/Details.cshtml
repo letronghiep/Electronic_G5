@@ -3,87 +3,88 @@
 @{
     ViewBag.Title = "Details";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    var vietnamCulture = new System.Globalization.CultureInfo("vi-VN");
+
 }
 
-<h2>Details</h2>
+<style>
+    .product-option {
+        cursor: pointer;
+        padding: 1px 16px;
+        border: 1px solid #000;
+        width: fit-content
+    }
 
-<div>
-    <h4>Product</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Category.category_name)
-        </dt>
+        .product-option.active {
+            border: 2px solid yellow;
+        }
+</style>
+<!-- Block content - Đục lỗ trên giao diện bố cục chung, đặt tên là `content` -->
+<div class="container mt-4">
 
-        <dd>
-            @Html.DisplayFor(model => model.Category.category_name)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.product_name)
-        </dt>
+    <div class="row">
+        <div class="col-md-12">
+            <form name="frmsanphamchitiet" id="frmsanphamchitiet" method="post"
+                  action="@Url.Action("ChiTietSP", "Home", new { id = Model.product_id })">
+                <input type="hidden" name="product_id" id="sp_ma" value="@Model.product_id">
+                <input type="hidden" name="product_name" id="sp_ten" value="@Model.product_name">
+                <input type="hidden" name="price" id="price" value="@Model.price">
+                <input type="hidden" name="image_url" id="hinhdaidien" value="@Model.image_url">
 
-        <dd>
-            @Html.DisplayFor(model => model.product_name)
-        </dd>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="tab-pane" id="pic-1">
+                            <img id="mainImage" src="~/wwwroot/Images/@Model.image_url" class="img-fluid w-100" alt="@Model.product_name">
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mt-2">
+                            @if (Model.Images != null && Model.Images.Count() > 0)
+                            {
+                                foreach (var item in Model.Images)
+                                {
+                                    <div class="col-4 gap-2 p-1">
+                                        <img id="" src="~/wwwroot/Images/@item.image_url" class="img-fluid gallery_item w-100" data-img="@Url.Content("~/wwwroot/Images/" + item.image_url)">
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h3 class="product-title">@Model.product_name</h3>
+                        <h5 class="price font-weight-bold">
+                            <span id="productPrice">@Model.price.ToString("N0", vietnamCulture) </span><sup>đ</sup>
+                        </h5>
+                        @foreach (var item in Model.ProductOptions)
+                        {
+                            <p class="product-option">@item.product_option_value</p>
+                        }
+                        <!-- option -->
+                        <div class="form-input clearfix product-quantity mb-3">
+                            <label class="d-block mb-2">Số lượng</label>
+                            <span>@Model.stock</span>
+                        </div>
+                        <div class="form-input clearfix product-quantity mb-3">
+                            <label class="d-block mb-2">Đã bán</label>
+                            <span>@Model.quantity_sold</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SKU)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.SKU)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.price)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.price)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.image_url)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.image_url)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.stock)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.stock)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.created_at)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.created_at)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.updated_at)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.updated_at)
-        </dd>
-
-    </dl>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Thông tin chi tiết về Sản phẩm</h3>
+            <div class="row">
+                <div class="col">
+                    @Html.Raw(Model.description)
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.product_id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Sửa", "Edit", new { id = Model.product_id }, new { @class = "btn btn-outline-primary", style = "width: 140px" })
+    @Html.ActionLink("Quay lại", "Index")
 </p>

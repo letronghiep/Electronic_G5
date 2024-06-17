@@ -5,86 +5,146 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2>Details</h2>
+<div class="container-fluid">
+    <div class="mb-9">
+        <div class="row align-items-center justify-content-between g-3 mb-4">
 
-<div>
-    <h4>User</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Role.role_name)
-        </dt>
+            <div class="col-auto">
+                <h2 class="mb-0">Chi tiết khách hàng</h2>
+            </div>
+            <div class="row g-3">
+                @*<div class="col-auto"><button class="btn btn-phoenix-danger">Xóa khách hàng</button></div>*@
+                <div class="form-group">
+                    <div class="order-1 col-md-4 text-end ml-auto">
+                        <div class="btn">
+                            @Html.ActionLink("Quay lại", "Index", null, new { @class = "text-decoration-none btn" })
+                        </div>
+                        @Html.ActionLink("Sửa thông tin", "Edit", new { id = Model.user_id }, new { @class = "text-decoration-none btn btn-outline-primary" })
+                    </div>
+                </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Role.role_name)
-        </dd>
+            </div>
+        </div>
+        <div class="row g-5">
+            <div class="col-12 col-xxl-4">
+                <div class="row g-3 g-xxl-0 h-100">
+                    <div class="col-12 col-md-7 col-xxl-12 mb-xxl-3">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column justify-content-between pb-3">
+                                <div class="row align-items-center g-5 mb-3 text-center text-sm-start">
+                                    <div class="col-12 col-sm-auto mb-sm-2">
+                                        <div class="avatar avatar-5xl"><img class="rounded-circle" src="~/wwwroot/Images/@Model.image" alt=""></div>
+                                    </div>
+                                    <div class="col-12 flex-1">
+                                        <h3 class="text-center">@Model.full_name</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5 col-xxl-12 mb-xxl-3">
+                        <div class="card h-100">
+                            <div class="card-body pb-3">
+                                <div class="d-flex align-items-center mb-3">
+                                    <h3 class="me-1">Địa chỉ mặc định</h3><button class="btn btn-link p-0"><i class="bi bi-pencil-fill fs-8 ms-3 text-body-quaternary"></i></button>
+                                </div>
+                                <h5 class="text-body-secondary">Địa chỉ</h5>
+                                <p class="text-body-secondary">@Model.address</p>
+                                <div class="mb-3">
+                                    <h5 class="text-body-secondary">Email</h5><a href="mailto:@Model.email">@Model.email</a>
+                                </div>
+                                <h5 class="text-body-secondary">Số điện thoại</h5><a class="text-body-secondary" href="tel:+1234567890">@Model.phone_number</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-xxl-8">
+                <div class="mb-6">
+                    <h3 class="mb-4">Đặt hàng <span class="text-body-tertiary fw-normal" id="orderCounts"></span></h3>
+                    <div class="border-top border-bottom border-translucent" id="customerOrdersTable" data-list='{"valueNames":["order","total","order_status","payment_status"],"page":6,"pagination":true}'>
+                        <div class="table-responsive scrollbar">
+                            <table class="table table-sm fs-9 mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="sort white-space-nowrap align-middle ps-0 pe-3" scope="col" data-sort="order" style="width:10%;">Mã đơn</th>
+                                        <th class="sort align-middle text-end pe-7" scope="col" data-sort="total" style="width:10%;">Tổng tiền</th>
+                                        <th class="sort align-middle white-space-nowrap pe-3" scope="col" data-sort="order_status" style="width:15%;">Trạng thái đơn</th>
+                                        <th class="sort align-middle white-space-nowrap text-start" scope="col" data-sort="payment_status" style="width:30%;">Phương thức thanh toán</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list" id="listOrder">
+                                    @foreach (var order in ViewBag.orders)
+                                    {
+                                        <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                                            <td class="order align-middle white-space-nowrap ps-0"><a class="fw-semibold" href="#!">#@order.order_id</a></td>
+                                            <td class="total align-middle text-end fw-semibold pe-7 text-body-highlight">@order.total_price.ToString("C")</td>
+                                            <td class="order_status align-middle white-space-nowrap text-start fw-bold text-body-tertiary">
+                                                <span class="badge badge-phoenix fs-10 @(order.order_status == "Đã thanh toán" ? "badge-phoenix-success" : "badge-phoenix-warning")">
+                                                    <span class="badge-label">@order.order_status</span>
+                                                    <i class="bi bi-check-circle ms-1" style="height:12.8px;width:12.8px;"></i>
+                                                </span>
+                                            </td>
+                                            <td class="payment_status align-middle white-space-nowrap text-start fw-bold text-body-tertiary">
+                                                <span class="badge badge-phoenix fs-10 @(order.Payment.payment_method == "Thanh toán trực tiếp" ? "badge-phoenix-success" : "badge-phoenix-warning")">
+                                                    <span class="badge-label">@order.Payment.payment_method</span>
+                                                    <i class="bi bi-credit-card ms-1" style="height:12.8px;width:12.8px;"></i>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
+                            <div class="col-auto d-flex">
+                                <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info">1 đến 6 <span class="text-body-tertiary"> đơn hàng của </span>@ViewBag.orderCounts</p>
+                                <a class="fw-semibold" href="#!" data-list-view="*">Xem tất cả</a>
+                                <a class="fw-semibold d-none" href="#!" data-list-view="less">Thu gọn</a>
+                            </div>
+                            <div class="col-auto d-flex">
+                                <button class="page-link disabled" data-list-pagination="prev" disabled=""><i class="bi bi-chevron-left"></i></button>
+                                <ul class="mb-0 pagination"><li class="active"><button class="page" type="button" data-i="1" data-page="6">1</button></li><li><button class="page" type="button" data-i="2" data-page="6">2</button></li><li><button class="page" type="button" data-i="3" data-page="6">3</button></li></ul>
+                                <button class="page-link pe-0" data-list-pagination="next"><i class="bi bi-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.full_name)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.full_name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.email)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.email)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.password)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.password)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.address)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.address)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.phone_number)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.phone_number)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.image)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.image)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.created_at)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.created_at)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.updated_at)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.updated_at)
-        </dd>
-
-    </dl>
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.user_id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var orderCounts = @Html.Raw(ViewBag.orderCounts ?? "0");
+            $("#orderCounts").html(`(${orderCounts})`);
+
+            // Initialize List.js for the order table
+            var orderList = new List('customerOrdersTable', {
+                valueNames: ['order', 'total', 'order_status', 'payment_status'],
+                page: 6, // Number of items per page
+                pagination: true
+            });
+
+            // Initialize List.js for the wishlist table
+            var wishlistList = new List('customerWishlistTable', {
+                valueNames: ['products', 'color', 'size', 'price', 'quantity', 'total'],
+                page: 5, // Number of items per page
+                pagination: true
+            });
+
+            // Initialize List.js for the ratings table
+            var ratingsList = new List('customerRatingsTable', {
+                valueNames: ['product', 'rating', 'review', 'status', 'date'],
+                page: 5, // Number of items per page
+                pagination: true
+            });
+        });
+    </script>
+}

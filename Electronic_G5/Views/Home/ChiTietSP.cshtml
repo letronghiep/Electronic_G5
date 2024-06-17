@@ -1,236 +1,173 @@
-﻿
-@model Electronic_G5.Models.Product
+﻿@model Electronic_G5.Models.Product
 @using PagedList.Mvc;
-<html lang="vi" class="h-100">
+@{
+    ViewBag.Title = "ChiTietSP";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var vietnamCulture = new System.Globalization.CultureInfo("vi-VN");
+    var unDecrease = Model.stock - Model.quantity_sold;
+}
+<style>
+    .product-option {
+        cursor: pointer;
+        padding: 1px 16px;
+        border: 1px solid #000;
+        width: fit-content
+    }
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>detail</title>
+        .product-option.active {
+            border: 2px solid yellow;
+        }
+</style>
+<!-- Block content - Đục lỗ trên giao diện bố cục chung, đặt tên là `content` -->
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <form name="frmsanphamchitiet" id="frmsanphamchitiet" method="post"
+                  action="@Url.Action("ChiTietSP", "Home", new { id = Model.product_id })">
+                <input type="hidden" name="product_id" id="sp_ma" value="@Model.product_id">
+                <input type="hidden" name="product_name" id="sp_ten" value="@Model.product_name">
+                <input type="hidden" name="price" id="price" value="@Model.price">
+                <input type="hidden" name="image_url" id="hinhdaidien" value="@Model.image_url">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css" type="text/css">
-    <!-- Font awesome -->
-    <link rel="stylesheet" href="../vendor/font-awesome/css/font-awesome.min.css" type="text/css">
-
-    <!-- Custom css - Các file css do chúng ta tự viết -->
-    <link rel="stylesheet" href="~/assets/css/product_detail.css" type="text/css">
-
-
-
-</head>
-<header>
-    <div class="container-fluid">
-        <hr class="m-0">
-    </div>
-    <!---->
-    <div class="container">
-        <nav class="main-menu d-flex navbar navbar-expand-lg justify-content-between">
-            <!-- Thanh search -->
-            <div class="search-bar border rounded-2 px-3 border-dark-subtle me-3">
-                <form id="search-form" class="text-center d-flex align-items-center" action="" method="post">
-                    <input type="text" class="form-control border-0 bg-transparent"
-                           placeholder="Tìm kiếm" />
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="currentColor"
-                              d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
-                    </svg>
-                </form>
-            </div>
-
-            <!-- Thanh login và cart -->
-            <div class="d-flex align-items-end">
-                <ul class="d-flex justify-content-end list-unstyled m-0">
-                    <li>
-                        <a href="@Url.Action("Login","Users")" class="mx-3">
-                            <span class="iconify" data-icon="healthicons:person" data-inline="false"></span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("Cart","Home")" class="mx-3">
-                            <span class="iconify position-relative" data-icon="mdi:cart" data-inline="false"></span>
-                            <span class="position-absolute translate-middle badge rounded-circle bg-primary pt-2">
-                                04
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-
-            </div>
-        </nav>
-    </div>
-
-
-</header>
-<body>
-
-    <main role="main">
-        <!-- Block content - Đục lỗ trên giao diện bố cục chung, đặt tên là `content` -->
-        <div class="container mt-4">
-            <div id="thongbao" class="alert alert-danger d-none face" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-
-            <div class="card">
-                <div class="container-fliud">
-
-                    <form name="frmsanphamchitiet" id="frmsanphamchitiet" method="post"
-                          action="@Url.Action("ChiTietSP","Home",new { id = Model.product_id })">
-                        <input type="hidden" name="product_id" id="sp_ma" value="@Model.product_id">
-                        <input type="hidden" name="product_name" id="sp_ten" value="@Model.product_name">
-                        <input type="hidden" name="sp_gia" id="sp_gia" value="@Model.price">
-                        <input type="hidden" name="image_url" id="hinhdaidien" value="@Model.Images">
-
-                        <div class="wrapper row">
-                            <div class="preview col-md-6">
-                                <div class="preview-pic tab-content">
-                                    <div class="tab-pane" id="pic-1">
-                                        @if (Model.image_url != null)
-                                        {
-                                            <img src="@Model.image_url" class="img-fluid rounded-4" alt="@Model.product_name">
-                                        }
-                                        else
-                                        {
-                                            <img src="default-image.jpg" class="img-fluid rounded-4" alt="Default Image">
-                                        }
-                                    </div>
-                                    <div class="tab-pane" id="pic-2">
-                                        <img src="../assets/img/product/samsung-galaxy-tab.jpg">
-                                    </div>
-                                    <div class="tab-pane active" id="pic-3">
-                                        <img src="../assets/img/product/samsung-galaxy-tab-4.jpg">
-                                    </div>
-                                </div>
-                                <ul class="preview-thumbnail nav nav-tabs">
-                                    <li class="active">
-                                        <a data-target="#pic-1" data-toggle="tab" class="">
-                                            <img src="../assets/img/product/samsung-galaxy-tab-10.jpg">
-                                        </a>
-                                    </li>
-                                    <li class="">
-                                        <a data-target="#pic-2" data-toggle="tab" class="">
-                                            <img src="../assets/img/product/samsung-galaxy-tab.jpg">
-                                        </a>
-                                    </li>
-                                    <li class="">
-                                        <a data-target="#pic-3" data-toggle="tab" class="active">
-                                            <img src="../assets/img/product/samsung-galaxy-tab-4.jpg">
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="details col-md-6">
-                                <h3 class="product-title">@Model.product_name</h3>
-                                <small class="text-muted">Giá cũ: <s><span>@Model.price</span></s></small>
-                                <h4 class="price">Giá hiện tại: <span>@Model.price</span></h4>
-                                <p class="vote">
-                                    <strong>100%</strong> hàng <strong>Chất lượng</strong>, đảm bảo
-                                    <strong>
-                                        Uy
-                                        tín
-                                    </strong>!
-                                </p>
-                                <!--option-->
-
-                                <h5 class="sizes">
-                                    sizes:
-                                    <span class="size" data-toggle="tooltip" title="cỡ Nhỏ">s</span>
-                                    <span class="size" data-toggle="tooltip" title="cỡ Trung bình">m</span>
-                                    <span class="size" data-toggle="tooltip" title="cỡ Lớn">l</span>
-                                    <span class="size" data-toggle="tooltip" title="cỡ Đại">xl</span>
-                                </h5>
-
-                                <h5 class="colors">
-                                    colors:
-                                    <span class="color orange not-available" data-toggle="tooltip"
-                                          title="Hết hàng"></span>
-                                    <span class="color green"></span>
-                                    <span class="color blue"></span>
-                                </h5>
-
-                                <div class="form-group">
-                                    <label for="soluong">Số lượng đặt mua:</label>
-                                    <input type="number" class="form-control" id="soluong" name="quantity">
-                                </div>
-                                <br />
-                                <div class="action">
-                                    <a class="add-to-cart btn btn-default" id="btnThemVaoGioHang">Thêm vào giỏ hàng</a>
-                                </div>
-                            </div>
-
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="tab-pane" id="pic-1">
+                            <img id="mainImage" src="~/wwwroot/Images/@Model.image_url" class="img-fluid w-100" alt="@Model.product_name">
                         </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="container-fluid">
-                    <h3>Thông tin chi tiết về Sản phẩm</h3>
-                    <div class="row">
-                        <div class="col">
-                            @Model.description
+                        <div class="d-flex align-items-center gap-2 mt-2">
+                            @if (Model.Images != null && Model.Images.Count() > 0)
+                            {
+                                foreach (var item in Model.Images)
+                                {
+                                    <div class="col-4 gap-2 p-1">
+                                        <img id="" src="~/wwwroot/Images/@item.image_url" class="img-fluid gallery_item w-100" data-img="@Url.Content("~/wwwroot/Images/" + item.image_url)">
+                                    </div>
+                                }
+                            }
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- Phần sản phẩm liên quan -->
-            <div class="card mt-4">
-                <div class="container-fluid">
-                    <h3>Sản phẩm liên quan</h3>
-                    <div class="row">
-                        @foreach (var relatedProduct in ViewBag.related)
+                    <div class="col-md-8">
+                        <h3 class="product-title">@Model.product_name</h3>
+                        <h5 class="price font-weight-bold">
+                            <span id="productPrice">@Model.price.ToString("N0", vietnamCulture) </span><sup>đ</sup>
+                        </h5>
+                        @foreach (var item in Model.ProductOptions)
                         {
-                            var imageUrl = "~/wwwroot/Images/" + relatedProduct.image_url;
-                            <div class="col-md-3 mb-4">
-                                <div class="card position-relative">
-                                    <a href="@Url.Action("ChiTietSP","Home", new {product_id = relatedProduct.product_id})">
-                                        @if (relatedProduct.image_url != null)
-                                        {
-                                            <img src="@Url.Content(imageUrl)" class="img-fluid rounded-4" alt="ảnh">
-                                        }
-                                        else
-                                        {
-                                            <img src="default-image.jpg" class="img-fluid rounded-4" alt="Default Image">
-                                        }
-                                    </a>                                    <div class="card-body p-0">
-                                        <a style="text-decoration:none; color: black" href="@Url.Action("ChiTietSP","Home", new {product_id = relatedProduct.product_id})">
-                                            <h3 class="card-title pt-4 m-0">@relatedProduct.product_name</h3>
-                                        </a>
-                                        <div class="card-text justify-content-lg-between">
-                                            <h3 class="price" style="color: #ff9f1a "><span>@relatedProduct.price</span></h3>
-                                            <h6 class="secondary-font ">Đã bán 200</h6>
-
-                                            <div class="d-flex flex-wrap mt-3">
-                                                <a href="@Url.Action("AddToCart", "Carts")" data-product-id="@relatedProduct.product_id" class="btn-cart me-3 px-4 pt-3 pb-3">
-                                                    <button class="text-uppercase m-lg-1">Thêm vào giỏ hàng</button>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Phân trang-->
-                            </div>
+                            <p class="product-option">@item.product_option_value</p>
                         }
+                        <!-- option -->
+                        <div class="form-input clearfix product-quantity mb-3">
+                            <label class="d-block mb-2">Số lượng</label>
+                            <div class="input-group " style="width: fit-content">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary p-minus" type="button">-</button>
+                                </div>
+                                <input name="quantity" class="quantity form-control text-center" type="number" min="1" value="1" style="width: 60px">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary p-plus" type="button">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action">
+                            <button type="submit" class="add-to-cart btn btn-primary" id="btnThemVaoGioHang">Thêm vào giỏ hàng</button>
+                        </div>
                     </div>
-
-
                 </div>
-                <!-- End block content -->
-    </main>
+            </form>
+        </div>
+    </div>
 
-    <!-- footer -->
-    <!-- end footer -->
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <!--<script src="../vendor/jquery/jquery.min.js"></script>
-    <script src="../vendor/popperjs/popper.min.js"></script>
-    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>-->
-    <!-- Custom script - Các file js do mình tự viết -->
-    <!--<script src="../assets/js/app.js"></script>-->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Thông tin chi tiết về Sản phẩm</h3>
+            <div class="row">
+                <div class="col">
+                    @Html.Raw(Model.description)
+                </div>
+            </div>
+        </div>
+    </div>
 
-</body>
+    <!-- Phần sản phẩm liên quan -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h3>Sản phẩm liên quan</h3>
+            <div class="row">
+                @foreach (var product in ViewBag.related)
+                {
+                    var imageUrl = "~/wwwroot/Images/" + product.image_url;
+                    <div class="card col-md-4 col-lg-3 my-3 shadow-sm">
+                        <input type="hidden" id="sp_ma" value="@product.product_id" />
+                        <input name="quantity" class="quantity" type="hidden" value="1">
+                        <span class="d-none" id="productPrice">@product.price</span>
+                        @*<div class="card position-relative">*@
+                        <a href="@Url.Action("ChiTietSP","Home", new {product_id = product.product_id})">
+                            @if (product.image_url != null)
+                            {
+                                <img src="@Url.Content(imageUrl)" class="img-fluid w-100" alt="ảnh">
+                            }
+                            else
+                            {
+                                <img src="default-image.jpg" class="img-fluid" alt="Default Image">
+                            }
+                        </a>
+                        <div class="card-body p-2">
+                            <a href="@Url.Action("ChiTietSP","Home", new {product_id = product.product_id})">
+                                <h6 class="card-title pt-4 m-0 text-center font-weight-bold">@product.product_name</h6>
+                            </a>
+                            <div class="card-text text-center">
 
-</html>
+
+                                <p class="secondary-font text-primary">@product.price.ToString("N0", vietnamCulture) đ</p>
+
+                                <p>Đã bán: @product.quantity_sold</p>
+                                <div class="d-flex flex-wrap mt-3">
+                                    <a href="#" data-productId="@product.product_id" class="btn w-100 btn-cart add-to-cart">
+                                        Thêm vào giỏ hàng
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End block content -->
+@section Scripts {
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('.product-option').click(function () {
+                    // Remove active class from all options
+                    $('.product-option').removeClass('active');
+                    // Add active class to the clicked option
+                    $(this).addClass('active');
+                    // Update the product price
+                    var optionPrice = $(this).data('price'); 
+                    $('#productPrice').text(optionPrice);
+                });
+
+                $('.gallery_item').click(function () {
+                    var largeImageUrl = $(this).data('img');
+                    $('#mainImage').attr('src', largeImageUrl);
+                });
+                $('.p-plus').click(function () {
+                    var $input = $(this).closest('.input-group').find('.quantity');
+                    var val = parseInt($input.val());
+                    $input.val(val + 1);
+                });
+                $('.p-minus').click(function () {
+                    var $input = $(this).closest('.input-group').find('.quantity');
+                    var val = parseInt($input.val());
+                    if (val > 1) {
+                        $input.val(val - 1);
+                    }
+                });
+                
+            });
+        </script>
+    }

@@ -200,10 +200,27 @@ namespace Electronic_G5.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+
             Order order = db.Orders.Find(id);
-            db.Orders.Remove(order);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                var orderItems = db.Order_Items.Where(i => i.order_id == id);
+                if (orderItems.Any()) {
+                    db.Order_Items.RemoveRange(orderItems);
+                
+                }
+
+                db.Orders.Remove(order);
+
+                db.SaveChanges();
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.err = "Loi xay ra khi xoa";
+                return View();
+            }
         }
 
         [HttpPost]

@@ -1,12 +1,54 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var cart = Session["CartSession"] as List<Electronic_G5.Models.Cart>;
+    var cartCount = cart != null ? cart.Sum(c => c.quantity) : 0;
+    var userId = Session["UserID"];
+}
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="~/assets/css/vendor.css?v=@DateTime.Now.Ticks">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style_client.css?v=@DateTime.Now.Ticks">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/home.css?v=@DateTime.Now.Ticks">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css?v=@DateTime.Now.Ticks">
+
+    <script src="https://code.iconify.design/2/2.0.3/iconify.min.js"></script>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+
     <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            height: 100vh
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit
+        }
         /* Custom navbar styles */
         .navbar-custom {
             background-color: lightblue;
@@ -14,6 +56,8 @@
 
             .navbar-custom .navbar-nav .nav-link {
                 color: white;
+                height: 100%;
+                padding: 5px 0;
             }
 
                 .navbar-custom .navbar-nav .nav-link:hover {
@@ -31,54 +75,140 @@
             .navbar-custom .navbar-toggler-icon {
                 background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
             }
-
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light">
-        <div class="container-fluid">
+        <div class="container">
             <!-- Thêm container-fluid để bao bọc nội dung -->
             <div class="row align-items-center justify-content-between w-100">
                 <!-- Sử dụng row và các class align-items-center, justify-content-between để căn giữa và căn đều nội dung -->
-                <div class="col-sm-4 col-lg-3 text-center text-sm-start">
-                    <!-- Thêm text-sm-start để căn trái với màn hình lớn -->
-                    <div class="main-logo">
-                        <a href="@Url.Action("Index","Home")">
-                            <img src="~/wwwroot/Images/logo (2).png" alt="logo" class="img-fluid" width="150">
-                        </a>
-                    </div>
-                </div>
-                <div class="col-sm-8 col-lg-9 text-center text-sm-end">
+                <div class="col-3">
                     <!-- Thêm text-sm-end để căn phải với màn hình lớn -->
                     <div>
-                        <h1 class="text-dark"><a href="@Url.Action("Index","Home")">Electronic Accessories</a></h1>
+                        <h3 class="text-dark" style="max-width: 150px"><a href="@Url.Action("Index","Home")">Electronic Accessories</a></h3>
+                    </div>
+                </div>
+                <div class="col-4 search-bar border rounded-2 px-3 border-dark-subtle me-3">
+                    <form id="search-form" class="text-center d-flex align-items-center" action="@Url.Action("Index","Home")" method="get">
+                        <div class="d-flex border w-100 input-group">
+                            <input type="text" name="search" class="form-control bg-transparent rounded"
+                                   placeholder="Tìm kiếm" />
+                            <button type="submit" class="btn btn-link p-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                          d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
+                                </svg>
+                            </button>
+
+                        </div>
+
+                    </form>
+                </div>
+                <div class="col-sm-4 col-lg-3 ">
+                    <!-- Thêm text-sm-start để căn trái với màn hình lớn -->
+                    <div class="main-logo float-end">
+                        <a href="@Url.Action("Index","Home")">
+                            <img src="~/wwwroot/Images/logo (2).png" alt="logo" class="img-fluid" width="100">
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
-    <nav class="navbar navbar-custom navbar-expand-sm navbar-toggleable-sm navbar-dark ">
+    <nav class="navbar-custom navbar-expand-sm navbar-toggleable-sm navbar-dark ">
         <div class="container">
             <div class="navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav mx-auto">
                     <!-- Thêm class mx-auto để căn giữa các thành phần trong nav -->
-                    @{ Html.RenderAction("Menu2", "Categories");}
+                    @{Html.RenderAction("Menu2", "Categories");}
                 </ul>
             </div>
         </div>
     </nav>
+    <div class="container">
+        <nav class="main-menu d-flex navbar navbar-expand-lg justify-content-between">
 
+            <!-- Thanh search -->
+            <!-- Thanh login và cart -->
+            <div class="d-flex align-items-end justify-content-end w-100">
+                <ul class="d-flex justify-content-end list-unstyled m-0">
+                    <li class="position-relative">
+                        @*@if (Session["UserID"] == null)
+                            {*@
+                        <a href="#" class="mx-3" id="userIcon">
+                            <span class="iconify" data-icon="healthicons:person" data-inline="false"></span>
+                        </a>
+
+                        <!--}
+                        else
+                        {
+                            <a href="#" class="mx-3" id="userIcon">-->
+                        @*<span class="iconify" data-icon="healthicons:person" data-inline="false"></span>*@
+                        <!--<span>Xin chào, </span>
+                            </a>
+                        }-->
+                        <div id="dropdown" class="dropdown-menu">
+                            @if (Session["UserID"] == null)
+                            {
+                                <a href="@Url.Action("Register","Users")" class="dropdown-item">Đăng ký</a>
+                                <a href="@Url.Action("Login","Users")" class="dropdown-item">Đăng nhập</a>
+
+                            }
+                            else
+                            {
+
+                                <a href="@Url.Action("OderHistory", "Orders")" class="dropdown-item">Xem lịch sử đặt hàng</a>
+                                <a href="@Url.Action("Logout", "Users")" class="dropdown-item">Đăng xuất</a>
+                            }
+                        </div>
+
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Cart","Carts")" class="mx-3">
+                            <span class="iconify position-relative" data-icon="mdi:cart" data-inline="false"></span>
+                            <span class="position-absolute translate-middle badge rounded-circle bg-primary pt-2">
+                                @*@Model.cart.Count()*@
+                                @cartCount
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+    </div>
 
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+
     </div>
+    <footer id="footer" class="mt-5 bg-danger">
+        <div class="container py-5 my-4">
+            <div class="row">
+
+                <div class="col-md-3">
+                    <div class="footer-menu">
+                        <img src="~/wwwroot/Images/logo (2).png" alt="logo" width="200">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="footer-menu">
+                        <h3>Liên hệ</h3>
+                        <p>Tele: +84 987 905 230</p>
+                        <p>Email: Electronicshop@gmail.com</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+
+    <script src="~/Scripts/jsCart.js"></script>
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

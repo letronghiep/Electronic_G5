@@ -147,11 +147,32 @@ namespace Electronic_G5.Controllers
             var orders = db.Orders.Where(o => o.user_id == userId).ToList();
             return View(orders);
         }
-
+        public ActionResult OrderComplete()
+        {
+            return View();
+        }
         public ActionResult OrderDetail(int id)
         {
-            var detail = db.Orders.Include(o=>o.Order_Items).FirstOrDefault(d=>d.order_id == id);
-            return View(detail);
+            // Attempt to retrieve the order with its associated order items
+            var order = db.Orders.Include(o => o.Order_Items)
+                                 .FirstOrDefault(o => o.order_id == id);
+
+            // Check if the order was found
+            if (order == null)
+            {
+                // Log the error (consider using a logging framework)
+                System.Console.WriteLine($"Order with ID {id} not found.");
+
+                // Optionally, you can return a "Not Found" view or redirect to an error page
+                return HttpNotFound();
+            }
+
+            // Log the order details for debugging purposes (optional)
+            System.Console.WriteLine(order);
+
+            // Return the order details to the view
+            return View(order);
         }
+
     }
 }

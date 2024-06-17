@@ -94,7 +94,9 @@ namespace Electronic_G5.Models
                 .HasMany(e => e.ProductOptions)
                 .WithRequired(e => e.Product)
                 .WillCascadeOnDelete(false);
-
+            modelBuilder.Entity<Cart>()
+                .Property(e => e.price)
+                .HasPrecision(10, 2);
             modelBuilder.Entity<Role>()
                 .HasMany(e => e.Users)
                 .WithRequired(e => e.Role)

@@ -148,36 +148,45 @@ namespace Electronic_G5.Controllers
         {
             try
             {
-            //    if (ModelState.IsValid)
-            //    {
-                    // Tìm user trong database
-                    var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password && u.role_id ==1);
-                    
-                    if (user != null)
+                //    if (ModelState.IsValid)
+                //    {
+                // Tìm user trong database
+                var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password && u.role_id == 1);
+
+                if (user != null)
+                {
+                    // Tạo session cho user
+                    //Session["email"] = user.email.ToString();
+                    //Session["password"] = user.password.ToString();
+                    Session["UserID"] = user.user_id.ToString();
+                    Session["UserName"] = user.full_name.ToString();
+
+                    if (remember)
                     {
-                        // Tạo session cho user
-                        //Session["email"] = user.email.ToString();
-                        //Session["password"] = user.password.ToString();
-                        Session["UserID"] = user.user_id.ToString();
-                        Session["UserName"] = user.full_name.ToString();
+                        // Lưu thông tin đăng nhập vào cookie
+                        HttpCookie cookie = new HttpCookie("UserLogin");
+                        cookie.Values.Add("email", model.email);
+                        cookie.Values.Add("password", model.password);
+                        cookie.Expires = DateTime.Now.AddDays(15);
+                        Response.Cookies.Add(cookie);
+                    }
 
-                        if (remember)
-                        {
-                            // Lưu thông tin đăng nhập vào cookie
-                            HttpCookie cookie = new HttpCookie("UserLogin");
-                            cookie.Values.Add("email", model.email);
-                            cookie.Values.Add("password", model.password);
-                            cookie.Expires = DateTime.Now.AddDays(15);
-                            Response.Cookies.Add(cookie);
-                        }
-
-                        return RedirectToAction("Index", "Home");
+                    //return RedirectToAction("Index", "Home");
+                    if (TempData["ReturnUrl"] != null && Url.IsLocalUrl(TempData["ReturnUrl"].ToString()))
+                    {
+                        return Redirect(TempData["ReturnUrl"].ToString());
                     }
                     else
                     {
-                        ViewBag.error = "Email hoặc mật khẩu không đúng.";
+                        return RedirectToAction("Index", "Home");
                     }
-               // }
+
+                }
+                else
+                {
+                    ViewBag.error = "Email hoặc mật khẩu không đúng.";
+                }
+                // }
                 return View(model);
             }
             catch (Exception ex)
@@ -241,7 +250,7 @@ namespace Electronic_G5.Controllers
                 System.Diagnostics.Debug.WriteLine("phone:", model.phone_number);
                 System.Diagnostics.Debug.WriteLine("image:", model.image);
                 System.Diagnostics.Debug.WriteLine("role_id:", model.role_id);
-                
+
                 db.SaveChanges();
 
                 // Đăng nhập người dùng mới sau khi đăng ký thành công
@@ -272,7 +281,7 @@ namespace Electronic_G5.Controllers
                 ViewBag.error = "Có lỗi xác thực. Vui lòng kiểm tra lại thông tin.";
                 return View(model);
             }
-            catch(DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 ViewBag.error = "Có lỗi: " + ex.StackTrace;
                 return View(model);

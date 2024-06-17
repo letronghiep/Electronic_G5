@@ -9,6 +9,7 @@ namespace Electronic_G5.Models
     public partial class Cart
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column(Order = 0)]
         public int cart_id { get; set; }
 
@@ -20,7 +21,7 @@ namespace Electronic_G5.Models
         public int user_id { get; set; }
 
         public int product_id { get; set; }
-
+        public decimal price { get; set; }
         public virtual Product Product { get; set; }
 
         public virtual User User { get; set; }
