@@ -23,10 +23,10 @@ namespace Electronic_G5.Areas.Admin.Controllers
         public ActionResult Index()
         {
             //kiểm tra xem đăng nhập chưa
-            //if (Session["UserID"] == null)
-            //{
-            //    return RedirectToAction("Login", "AdminUsers", new { area = "Admin" });
-            //}
+            if (Session["UserID"] == null)
+            {
+                return RedirectToAction("Login", "AdminUsers", new { area = "Admin" });
+            }
             //Lấy số sản phẩm đang trong qua trình xử lý
             var pendingProductCount = (from order in db.Orders
                                        where order.order_status == "Đang xử lý"

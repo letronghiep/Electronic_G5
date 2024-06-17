@@ -19,6 +19,7 @@ using Antlr.Runtime.Misc;
 using System.Data.Entity.Validation;
 using System.IO;
 using System.Data.Entity.Infrastructure;
+using System.Security.AccessControl;
 
 namespace Electronic_G5.Areas.Admin.Controllers
 {
@@ -354,6 +355,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
                 // Tìm user trong database
                 var user = db.Users.FirstOrDefault(u => u.email == model.email && u.password == model.password && u.user_id == 2);
 
+
                 if (user != null)
                 {
                     // Tạo session cho user
@@ -361,6 +363,7 @@ namespace Electronic_G5.Areas.Admin.Controllers
                     //Session["password"] = user.password.ToString();
                     Session["UserID"] = user.user_id.ToString();
                     Session["UserName"] = user.full_name.ToString();
+
 
                     if (remember)
                     {
@@ -372,10 +375,13 @@ namespace Electronic_G5.Areas.Admin.Controllers
                         Response.Cookies.Add(cookie);
                     }
 
-                    return RedirectToAction("Index", "AdminHome");
+                    return RedirectToAction("Index", "AdminHome", new {area = "Admin"});
                 }
                 else
                 {
+
+                    System.Diagnostics.Debug.WriteLine("mail" + user.email);
+                    System.Diagnostics.Debug.WriteLine("mail" + user.password);
                     ViewBag.error = "Email hoặc mật khẩu không đúng.";
                 }
                 // }
@@ -388,14 +394,86 @@ namespace Electronic_G5.Areas.Admin.Controllers
                 return View(model);
             }
         }
+        public ActionResult Register()
+        {
+            return View();
+        }
 
+        // POST: Users/Register
+        [HttpPost]
+
+        public ActionResult Register(User model)
+        {
+            try
+            {
+                //if (ModelState.IsValid)
+                //{
+                // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu chưa
+                if (db.Users.Any(u => u.email == model.email))
+                {
+                    ModelState.AddModelError("Email", "Email đã được sử dụng.");
+                    return View(model);
+                }
+
+                // Tạo một đối tượng User mới từ dữ liệu đăng ký
+                User user = new User();
+                user.full_name = model.full_name;
+                user.email = model.email;
+                user.password = model.password;
+                user.address = model.address;
+                user.phone_number = model.phone_number;
+                user.image = model.image;
+                user.role_id = model.role_id;
+                user.created_at = DateTime.Now;
+                user.updated_at = DateTime.Now;
+
+                // Thêm người dùng mới vào cơ sở dữ liệu
+                db.Users.Add(user);
+                db.SaveChanges();
+
+                // Đăng nhập người dùng mới sau khi đăng ký thành công
+                //Session["UserId"] = newUser.UserId;
+                Session["email"] = user.email;
+                Session["password"] = user.password;
+
+                // Chuyển hướng đến trang chính sau khi đăng ký thành công
+                return RedirectToAction("Login", "AdminUsers", new {area = "Admin"});
+               
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        ModelState.AddModelError(validationError.PropertyName, validationError.ErrorMessage);
+                        System.Diagnostics.Debug.WriteLine($"{validationError.PropertyName}: {validationError.ErrorMessage}");
+
+                    }
+                }
+                ViewBag.error = "Có lỗi xác thực. Vui lòng kiểm tra lại thông tin.";
+                return View(model);
+            }
+            catch (DbUpdateException ex)
+            {
+                ViewBag.error = "Có lỗi: " + ex.StackTrace;
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                // Hiển thị lỗi chung
+                ViewBag.error = "Có lỗi xảy ra: " + ex.Message;
+                return View(model);
+            }
+
+        }
         // GET: Users/Logout
         public ActionResult Logout()
         {
             // Xóa thông tin người dùng từ session hoặc cookie
             Session.Clear();
             // Chuyển hướng đến trang đăng nhập sau khi đăng xuất
-            return RedirectToAction("Login");
+            return RedirectToAction("Login","AdminHome", new {area = "Admin"});
         }
     }
 }
