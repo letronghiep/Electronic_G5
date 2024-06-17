@@ -20,26 +20,11 @@ namespace Electronic_G5.Controllers
             var categories = db.Categories.Include(c => c.Category1);
             return View(categories.ToList());
         }
-        public ActionResult Menu2()
+        public PartialViewResult Menu2()
         {
             var categories = db.Categories.Include(c => c.Category1).Where(c => c.category_name != "null");
             return PartialView(categories.ToList());
         }
-        // GET: Categories/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Category category = db.Categories.Find(id);
-            if (category == null)
-            {
-                return HttpNotFound();
-            }
-            return View(category);
-        }
-
         // GET: Categories/Create
         public ActionResult Create()
         {

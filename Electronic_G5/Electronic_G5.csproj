@@ -395,6 +395,7 @@
     <Content Include="Areas\Admin\Views\AdminProducts\Details.cshtml" />
     <Content Include="Areas\Admin\Views\AdminProducts\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\AdminProducts\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\AdminUsers\Register.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -441,7 +442,6 @@
     <Content Include="Views\Categories\Menu2.cshtml" />
     <Content Include="Views\Home\ChiTietSP.cshtml" />
     <Content Include="Views\Carts\Cart.cshtml" />
-    <Content Include="Views\Home\BYID1.cshtml" />
     <Content Include="Views\Carts\Create.cshtml" />
     <Content Include="Views\Carts\Delete.cshtml" />
     <Content Include="Views\Carts\Details.cshtml" />
